@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "next": "15.3.3",
+    "next-yak": "^5.6.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -24,6 +25,7 @@
     "eslint-plugin-import-helpers": "^2.0.1",
     "eslint-plugin-prettier": "^5.4.1",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "eslint-plugin-yak": "^1.0.1",
     "prettier": "3.5.3",
     "typescript": "^5"
   },

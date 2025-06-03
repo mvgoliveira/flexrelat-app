@@ -1,10 +1,12 @@
 import { FlatCompat } from "@eslint/eslintrc";
+import yakPlugin from "eslint-plugin-yak";
 
 const compat = new FlatCompat({
     baseDirectory: import.meta.dirname,
 });
 
 const eslintConfig = [
+    yakPlugin.configs.recommended,
     ...compat.config({
         extends: [
             "next",

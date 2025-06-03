@@ -24,8 +24,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }>): ReactElement {
     return (
-        <html lang="en" suppressHydrationWarning>
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+        <html lang="pt-BR">
+            <body
+                className={`${geistSans.variable} ${geistMono.variable}`}
+                suppressHydrationWarning
+            >
+                {children}
+            </body>
         </html>
     );
 }
