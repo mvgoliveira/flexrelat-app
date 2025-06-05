@@ -110,8 +110,7 @@ export const Theme = {
         fs900: "0.25px",
     },
     fontFamily: {
-        space: "'Space Grotesk', sans-serif",
-        inter: "'Inter', sans-serif",
+        inter: "var(--font-inter), sans-serif",
     },
     fontWeight: {
         regular: 400,
