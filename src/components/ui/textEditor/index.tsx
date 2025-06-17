@@ -19,7 +19,7 @@ const extensions = [
         pageGap: 20,
         pageBreakBackground: "#f7f7f7",
         pageHeaderHeight: 50,
-        // pageHeaderMargin: 20,
+        pageHeaderMargin: 20,
     }),
 ];
 
