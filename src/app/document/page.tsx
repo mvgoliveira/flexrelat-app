@@ -1,9 +1,11 @@
 "use client";
+import { DocumentContent } from "@/components/layouts/document/content";
 import { Layout } from "@/components/layouts/document/layout";
 import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeader";
 import { ReactElement, useState } from "react";
-import { MdOutlineDashboard, MdOutlineViewList } from "react-icons/md";
+import { FaThList } from "react-icons/fa";
 import { RiRobot2Fill } from "react-icons/ri";
+import { TbLayoutGridAdd } from "react-icons/tb";
 
 export type LeftTabsValue = "elements" | "components" | "models";
 export type RightTabsValue = "ai" | "styles" | "properties";
@@ -11,12 +13,12 @@ export type RightTabsValue = "ai" | "styles" | "properties";
 const leftTabs: TabHeaderType<LeftTabsValue>[] = [
     {
         value: "components",
-        icon: <MdOutlineDashboard size={12} />,
+        icon: <TbLayoutGridAdd size={12} />,
         text: "Componentes",
     },
     {
         value: "elements",
-        icon: <MdOutlineViewList size={12} />,
+        icon: <FaThList size={10} />,
         text: "Elementos",
     },
 ];
@@ -46,7 +48,7 @@ export default function Dashboard(): ReactElement {
             </Layout.LeftNavBar>
 
             <Layout.Content>
-                <></>
+                <DocumentContent />
             </Layout.Content>
 
             <Layout.RightNavBar>

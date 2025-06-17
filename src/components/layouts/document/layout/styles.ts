@@ -4,7 +4,9 @@ export const Root = styled.div`
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: 300px 1fr 300px;
-    height: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
 `;
 
 export const StyledHeader = styled.header`
@@ -23,6 +25,7 @@ export const StyledContent = styled.article`
     flex-direction: column;
     height: 100%;
     width: 100%;
+    overflow: hidden;
 `;
 
 export const StyledLeftNavbar = styled.article`
