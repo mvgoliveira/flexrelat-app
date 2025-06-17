@@ -159,7 +159,7 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
 
             const _maxPage = maxPage + 1;
 
-            node.style.minHeight = `${
+            targetNode.style.height = `${
                 _maxPage * this.options.pageHeight +
                 (_maxPage - 1) * (_pageGap + 2 * _pageGapBorderSize)
             }px`;
@@ -219,7 +219,7 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
     const pageWidget = Decoration.widget(
         0,
         view => {
-            const _extraPages = 5;
+            const _extraPages = 2;
             const _pageGap = pageOptions.pageGap;
             const _pageHeaderHeight = pageOptions.pageHeaderHeight;
             const _pageHeight = pageOptions.pageHeight - _pageHeaderHeight * 2;
@@ -236,29 +236,21 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
             const paginationElement = document.querySelector("[data-rm-pagination]");
 
             let previousPageCount = paginationElement ? paginationElement.children.length : 0;
+
             previousPageCount =
                 previousPageCount > _extraPages ? previousPageCount - _extraPages : 0;
 
-            const totalPageGap = _pageGap + _pageHeaderHeight * 2;
+            const totalPageGap = _pageGap + _pageHeaderHeight * 2 + _pageGapBorderSize * 2;
 
-            const actualPageContentHeight =
-                totalHeight - previousPageCount * (totalPageGap + _pageGapBorderSize * 2);
+            const actualPageContentHeight = totalHeight - previousPageCount * totalPageGap;
 
             let pages = Math.ceil(actualPageContentHeight / _pageHeight);
-
             pages = pages > 0 ? pages - 1 : 0;
 
             const el = document.createElement("div");
             el.dataset.rmPagination = "true";
 
-            const pageBreakDefinition = ({
-                firstPage = false,
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                lastPage = false,
-            }: {
-                firstPage: boolean;
-                lastPage: boolean;
-            }) => {
+            const pageBreakDefinition = () => {
                 const pageContainer = document.createElement("div");
                 pageContainer.classList.add("rm-page-break");
 
@@ -267,9 +259,7 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
                 page.style.position = "relative";
                 page.style.float = "left";
                 page.style.clear = "both";
-                page.style.marginTop = firstPage
-                    ? `calc(${_pageHeaderHeight}px + ${_pageHeight}px)`
-                    : _pageHeight + "px";
+                page.style.marginTop = `calc(${_pageHeaderHeight}px + ${_pageHeight}px)`;
 
                 const pageBreak = document.createElement("div");
                 pageBreak.classList.add("breaker");
@@ -337,25 +327,17 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
                 return pageContainer;
             };
 
-            const page = pageBreakDefinition({ firstPage: false, lastPage: false });
-
-            const firstPage = pageBreakDefinition({
-                firstPage: true,
-                lastPage: false,
-            });
-
+            const pageTemplate = pageBreakDefinition();
             const fragment = document.createDocumentFragment();
 
             for (let i = 0; i < pages + _extraPages; i++) {
-                if (i === 0) {
-                    fragment.appendChild(firstPage.cloneNode(true));
-                } else {
-                    fragment.appendChild(page.cloneNode(true));
-                }
+                const pageClone = pageTemplate.cloneNode(true) as HTMLElement;
+                pageClone.dataset.pageIndex = `${i + 1}`;
+                fragment.appendChild(pageClone);
             }
+
             el.append(fragment);
             el.id = "pages";
-
             return el;
         },
         { side: -1 }
@@ -393,6 +375,5 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
         },
         { side: 1 }
     );
-
     return [pageWidget, firstHeaderWidget, lastFooterWidget];
 }
