@@ -1,6 +1,13 @@
 import styled from "@emotion/styled";
 
-export const Root = styled.div`
+interface IRootProps {
+    marginRight: number;
+    marginLeft: number;
+    marginTop: number;
+    marginBottom: number;
+}
+
+export const Root = styled.div<IRootProps>`
     display: flex;
     flex-direction: column;
     background: ${({ theme }) => theme.colors.white};
@@ -16,6 +23,23 @@ export const Root = styled.div`
     .rm-pagination-gap {
         border-top: 1px solid ${({ theme }) => theme.colors.gray30};
         border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
-        height: 10px !important;
+    }
+
+    .rm-with-pagination {
+        padding: ${({ marginLeft, marginRight }) => `0 ${marginRight}px 0 ${marginLeft}px`};
+    }
+
+    .rm-page-footer,
+    .rm-first-page-header,
+    .rm-page-header {
+        min-width: ${({ marginLeft, marginRight }) =>
+            `calc(100% + ${marginLeft}px + ${marginRight}px)`} !important;
+        margin-left: ${({ marginLeft }) => `${-marginLeft}px`} !important;
+    }
+
+    .rm-pagination-gap {
+        min-width: ${({ marginLeft, marginRight }) =>
+            `calc(100% + ${marginLeft}px + ${marginRight}px + 2px)`} !important;
+        margin-left: ${({ marginLeft }) => `${-marginLeft}px`} !important;
     }
 `;

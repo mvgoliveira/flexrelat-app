@@ -2,32 +2,90 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { ReactElement, useEffect, useState } from "react";
 
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
 import { Root } from "./styles";
 
-const extensions = [
-    StarterKit,
-    Paragraph,
-    Text,
-    TablePlus,
-    TableRowPlus,
-    TableCellPlus,
-    TableHeaderPlus,
-    PaginationPlus.configure({
-        pageHeight: 842,
-        pageGap: 20,
-        pageBreakBackground: "#f7f7f7",
-        pageHeaderHeight: 50,
-        pageHeaderMargin: 20,
-    }),
-];
-
 interface ITextEditorProps {
     onChange?: (text: string) => void;
+    marginRight?: number;
+    marginLeft?: number;
+    marginTop?: number;
+    marginBottom?: number;
 }
 
-const TextEditor = ({ onChange }: ITextEditorProps) => {
+const TextEditor = ({
+    onChange,
+    marginLeft = 113.39,
+    marginRight = 75.59,
+    marginTop = 50,
+    marginBottom = 75.59,
+}: ITextEditorProps): ReactElement => {
+    const [extensions, setExtensions] = useState([
+        StarterKit,
+        Paragraph,
+        Text,
+        TablePlus,
+        TableRowPlus,
+        TableCellPlus,
+        TableHeaderPlus,
+        PaginationPlus.configure({
+            pageHeight: 842,
+            pageGap: 20,
+            pageBreakBackground: "#f7f7f7",
+            headerHeight: marginTop,
+            headerLeft: "Header left",
+            headerRight: "Header right",
+            footerLeft: "Footer left",
+            footerRight: "Footer right",
+        }),
+    ]);
+
+    useEffect(() => {
+        setExtensions([
+            StarterKit,
+            Paragraph,
+            Text,
+            TablePlus,
+            TableRowPlus,
+            TableCellPlus,
+            TableHeaderPlus,
+            PaginationPlus.configure({
+                pageHeight: 842,
+                pageGap: 20,
+                pageBreakBackground: "#f7f7f7",
+                headerHeight: marginTop,
+                headerLeft: "Header left",
+                headerRight: "Header right",
+                footerLeft: "Footer left",
+                footerRight: "Footer right",
+            }),
+        ]);
+
+        return () => {
+            setExtensions([
+                StarterKit,
+                Paragraph,
+                Text,
+                TablePlus,
+                TableRowPlus,
+                TableCellPlus,
+                TableHeaderPlus,
+                PaginationPlus.configure({
+                    pageHeight: 842,
+                    pageGap: 20,
+                    pageBreakBackground: "#f7f7f7",
+                    headerHeight: marginTop,
+                    headerLeft: "Header left",
+                    headerRight: "Header right",
+                    footerLeft: "Footer left",
+                    footerRight: "Footer right",
+                }),
+            ]);
+        };
+    }, [marginTop]);
+
     const currentEditor = useEditor({
         extensions,
         content: `
@@ -75,7 +133,13 @@ const TextEditor = ({ onChange }: ITextEditorProps) => {
     });
 
     return (
-        <Root className="card">
+        <Root
+            className="card"
+            marginLeft={marginLeft}
+            marginRight={marginRight}
+            marginBottom={marginBottom}
+            marginTop={marginTop}
+        >
             <EditorContent editor={currentEditor} />
         </Root>
     );
