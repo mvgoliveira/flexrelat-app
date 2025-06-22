@@ -1,14 +1,21 @@
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import TextEditor from "@/components/ui/textEditor";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 
-import { DocumentContainer, Root } from "./styles";
+import { DocumentRoot, Root } from "./styles";
 
 export const DocumentContent = (): ReactElement => {
+    const [zoom, setScale] = useState<number>(0.83);
+    const [pageWidth, setPageWidth] = useState<number>(794);
+    const [pageHeight, setPageHeight] = useState<number>(1123);
+
     return (
         <Root>
-            <DocumentContainer>
-                <TextEditor />
-            </DocumentContainer>
+            <ScrollArea>
+                <DocumentRoot className="DocumentRoot">
+                    <TextEditor pageWidth={pageWidth} pageHeight={pageHeight} zoom={zoom} />
+                </DocumentRoot>
+            </ScrollArea>
         </Root>
     );
 };

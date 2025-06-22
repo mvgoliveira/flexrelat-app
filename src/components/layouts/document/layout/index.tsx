@@ -7,8 +7,8 @@ const Layout = ({ children }: IReactChildren): ReactElement => {
     return <Root>{children}</Root>;
 };
 
-const Header = (): ReactElement => {
-    return <StyledHeader></StyledHeader>;
+const Header = ({ children }: IReactChildren): ReactElement => {
+    return <StyledHeader>{children}</StyledHeader>;
 };
 Layout.Header = Header;
 

@@ -12,6 +12,8 @@
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@radix-ui/react-scroll-area": "^1.2.9",
+    "@tanstack/react-query": "^5.81.2",
     "@tiptap/core": "^2.14.0",
     "@tiptap/extension-table": "^2.14.0",
     "@tiptap/extension-table-cell": "^2.14.0",
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@tanstack/eslint-plugin-query": "^5.81.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
