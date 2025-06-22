@@ -1,6 +1,6 @@
 import { Theme } from "@/themes";
 import { IReactChildren } from "@/types/core";
-import React, { ReactElement } from "react";
+import React, { ReactElement, RefObject } from "react";
 
 import { StyledTypography } from "./styles";
 
@@ -20,6 +20,10 @@ export interface ITypography extends IReactChildren {
     fontSize?: FontSizeBreakpoints;
     fontFamily?: keyof typeof Theme.fontFamily;
     textAlign?: "left" | "right" | "center";
+    contentEditable?: boolean;
+    onBlur?: () => void;
+    onChange?: () => void;
+    ref?: RefObject<HTMLHeadingElement | null>;
 }
 
 const Typography = ({
@@ -36,6 +40,10 @@ const Typography = ({
         xxl: "fs100",
     },
     textAlign = "left",
+    contentEditable = false,
+    onBlur,
+    ref,
+    onChange,
     children,
 }: ITypography): ReactElement => {
     let size: keyof typeof Theme.fontSize | undefined = "fs100";
@@ -52,6 +60,7 @@ const Typography = ({
     return (
         // @ts-ignore
         <StyledTypography
+            ref={ref}
             as={tag}
             tag={tag}
             color={color}
@@ -59,6 +68,10 @@ const Typography = ({
             fontFamily={fontFamily}
             textAlign={textAlign}
             fontSize={fontSize}
+            contentEditable={contentEditable}
+            suppressContentEditableWarning
+            onBlur={onBlur}
+            onInput={onChange}
         >
             {children}
         </StyledTypography>

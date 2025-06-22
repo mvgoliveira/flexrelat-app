@@ -13,7 +13,7 @@ export const Theme = {
         gray50: "#C7C7C7",
         gray60: "#BFBFBF",
         gray70: "#949494",
-        gray80: "#7A7A7A",
+        gray80: "#373737",
         gray90: "#171717",
         gray100: "#1C1B1F",
         black: "#000",
@@ -69,6 +69,18 @@ export const Theme = {
         yellow60: "#C9B541",
         yellow70: "#A88F33",
         yellow80: "#876F25",
+
+        // BLUE SCALE
+        blue10: "#F2F7FF",
+        blue20: "#D6E7FF",
+        blue30: "#B3D4FF",
+        blue40: "#8FC0FF",
+        blue50: "#3073FF",
+        blue60: "#1F5BFF",
+        blue70: "#1A4FFF",
+        blue80: "#125FFF",
+        blue90: "#0B4FFF",
+        blue100: "#033FFF",
     },
     fontSize: {
         fs25: "0.533rem", // 8px

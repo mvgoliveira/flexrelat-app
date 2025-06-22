@@ -1,43 +1,34 @@
-import { Typography } from "@/components/features/typography";
+import { IReactChildren } from "@/types/core";
 import { ButtonHTMLAttributes, ReactElement } from "react";
 
 import { ButtonContainer, StyledButton } from "./styles";
-import { VARIANTS, VARIANTS_STYLES } from "./variants";
+import { VARIANTS } from "./variants";
 
 interface IButtonProps {
     variant?: VARIANTS;
-    text: string;
-    icon?: ReactElement;
-    iconPosition?: "left" | "right";
     height?: string;
     width?: string;
+    padding?: string;
 }
 
 export const Button = ({
     variant = "primary",
-    text,
-    icon,
-    iconPosition = "left",
     height = "100%",
     width = "100%",
+    padding = "0",
+    children,
     ...props
-}: IButtonProps & ButtonHTMLAttributes<HTMLButtonElement>): ReactElement => {
+}: IButtonProps & ButtonHTMLAttributes<HTMLButtonElement> & IReactChildren): ReactElement => {
     return (
-        <ButtonContainer height={height} width={width} variant={variant}>
-            <StyledButton height={height} width={width} variant={variant} {...props}>
-                {icon && iconPosition === "left" && icon}
-
-                <Typography
-                    tag="p"
-                    fontSize={{ xs: "fs75" }}
-                    color={VARIANTS_STYLES[variant].$color}
-                    fontWeight="regular"
-                    textAlign="center"
-                >
-                    {text}
-                </Typography>
-
-                {icon && iconPosition === "right" && icon}
+        <ButtonContainer height={height} width={width}>
+            <StyledButton
+                padding={padding}
+                height={height}
+                width={width}
+                variant={variant}
+                {...props}
+            >
+                {children}
             </StyledButton>
         </ButtonContainer>
     );

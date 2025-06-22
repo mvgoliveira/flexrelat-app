@@ -1,10 +1,18 @@
 import styled from "@emotion/styled";
 
 export const Root = styled.div`
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 40px 1fr;
     width: 100%;
     height: 100%;
+`;
+
+export const DocumentHeader = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: ${({ theme }) => theme.colors.white};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
 `;
 
 export const DocumentRoot = styled.div`

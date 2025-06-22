@@ -60,5 +60,10 @@ export const StyledTypography = styled.h1<ITypography>`
                 fontSize?.xxl as keyof typeof theme.letterSpacing
             ]};
         }
+
+        &:focus {
+            outline: 1px solid ${theme.colors.blue50};
+            border-radius: 2px;
+        }
     `}
 `;

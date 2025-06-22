@@ -33,9 +33,9 @@ export const NavHeader = ({
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs75" }}
+                            fontSize={{ xs: "fs50" }}
                             color={activeTab === item.value ? "black" : "gray70"}
-                            fontWeight="medium"
+                            fontWeight="regular"
                         >
                             {item.text}
                         </Typography>
