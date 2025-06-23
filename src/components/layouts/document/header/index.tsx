@@ -45,14 +45,13 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                     metadata.onChangeStatus("success");
 
-                    if (titleRef) {
-                        if (titleRef.current) {
-                            titleRef.current.textContent = response.title;
-                            titleRef.current.style.color = Theme.colors.gray100;
-                        }
+                    if (titleRef && titleRef.current && newTitle !== "Relatório sem título") {
+                        titleRef.current.textContent = response.title;
+                        titleRef.current.style.color = Theme.colors.gray100;
+                        setTitle(response.title);
+                    } else if (newTitle === "Relatório sem título") {
+                        setTitle("");
                     }
-
-                    setTitle(response.title);
                 } catch (error) {
                     if (titleRef) {
                         if (titleRef.current) {
@@ -68,6 +67,11 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
     const handleBlurTitle = async () => {
         if (titleRef.current && titleRef.current.textContent !== title) {
+            if (!titleRef.current.textContent) {
+                titleRef.current!.style.color = Theme.colors.gray70;
+                titleRef.current!.textContent = "Relatório sem título";
+            }
+
             saveTitle(titleRef.current.textContent || "");
         }
 
@@ -78,8 +82,14 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     };
 
     const handleChangeTitle = async () => {
-        if (titleRef.current) {
+        if (titleRef.current && titleRef.current.textContent !== "Relatório sem título") {
             titleRef.current.style.color = Theme.colors.gray100;
+        }
+    };
+
+    const handleClickTitle = () => {
+        if (titleRef.current && titleRef.current.textContent === "Relatório sem título") {
+            titleRef.current.textContent = "";
         }
     };
 
@@ -121,6 +131,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                                 contentEditable
                                 onBlur={handleBlurTitle}
                                 onChange={handleChangeTitle}
+                                onClick={handleClickTitle}
                                 ref={titleRef}
                             >
                                 {title === "" ? "Relatório sem título" : title}

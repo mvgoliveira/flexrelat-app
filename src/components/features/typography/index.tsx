@@ -23,6 +23,7 @@ export interface ITypography extends IReactChildren {
     contentEditable?: boolean;
     onBlur?: () => void;
     onChange?: () => void;
+    onClick?: () => void;
     ref?: RefObject<HTMLHeadingElement | null>;
 }
 
@@ -41,9 +42,10 @@ const Typography = ({
     },
     textAlign = "left",
     contentEditable = false,
-    onBlur,
     ref,
+    onBlur,
     onChange,
+    onClick,
     children,
 }: ITypography): ReactElement => {
     let size: keyof typeof Theme.fontSize | undefined = "fs100";
@@ -72,6 +74,7 @@ const Typography = ({
             suppressContentEditableWarning
             onBlur={onBlur}
             onInput={onChange}
+            onClick={onClick}
         >
             {children}
         </StyledTypography>

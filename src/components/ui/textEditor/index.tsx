@@ -59,6 +59,7 @@ const TextEditor = ({
                 <li>Support for <code>colgroup</code> and <code>rowspan</code></li>
                 <li>And even resizable columns (optional)</li>
             </ul>
+            <p></p>
             <p>
                 Here is an example:
             </p>

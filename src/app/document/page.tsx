@@ -6,9 +6,8 @@ import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeade
 import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
 import { useQuery } from "@tanstack/react-query";
 import { ReactElement, useState } from "react";
-import { FaThList } from "react-icons/fa";
-import { RiRobot2Fill } from "react-icons/ri";
-import { TbLayoutGridAdd } from "react-icons/tb";
+import { MdOutlineAutoAwesomeMosaic, MdOutlineFormatListNumbered } from "react-icons/md";
+import { RiRobot2Line } from "react-icons/ri";
 
 export type LeftTabsValue = "elements" | "components" | "models";
 export type RightTabsValue = "ai" | "styles" | "properties";
@@ -16,12 +15,12 @@ export type RightTabsValue = "ai" | "styles" | "properties";
 const leftTabs: TabHeaderType<LeftTabsValue>[] = [
     {
         value: "components",
-        icon: <TbLayoutGridAdd size={12} />,
+        icon: <MdOutlineAutoAwesomeMosaic size={12} />,
         text: "Componentes",
     },
     {
         value: "elements",
-        icon: <FaThList size={10} />,
+        icon: <MdOutlineFormatListNumbered size={14} />,
         text: "Elementos",
     },
 ];
@@ -29,7 +28,7 @@ const leftTabs: TabHeaderType<LeftTabsValue>[] = [
 const rightTabs: TabHeaderType<RightTabsValue>[] = [
     {
         value: "ai",
-        icon: <RiRobot2Fill size={12} />,
+        icon: <RiRobot2Line size={12} />,
         text: "Inteligência Artificial",
     },
 ];
