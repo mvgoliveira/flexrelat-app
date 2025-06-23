@@ -128,7 +128,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                                 color="black"
                                 fontWeight="medium"
                                 textAlign="left"
-                                contentEditable
+                                contentEditable="plaintext-only"
                                 onBlur={handleBlurTitle}
                                 onChange={handleChangeTitle}
                                 onClick={handleClickTitle}

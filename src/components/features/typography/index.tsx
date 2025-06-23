@@ -20,7 +20,7 @@ export interface ITypography extends IReactChildren {
     fontSize?: FontSizeBreakpoints;
     fontFamily?: keyof typeof Theme.fontFamily;
     textAlign?: "left" | "right" | "center";
-    contentEditable?: boolean;
+    contentEditable?: boolean | "plaintext-only";
     onBlur?: () => void;
     onChange?: () => void;
     onClick?: () => void;
@@ -59,6 +59,14 @@ const Typography = ({
         }
     });
 
+    const handleInput = (e: React.FormEvent<HTMLHeadingElement>) => {
+        if (e.currentTarget.innerHTML === "\n") {
+            e.currentTarget.innerHTML = "";
+        }
+
+        if (onChange) onChange();
+    };
+
     return (
         // @ts-ignore
         <StyledTypography
@@ -73,8 +81,17 @@ const Typography = ({
             contentEditable={contentEditable}
             suppressContentEditableWarning
             onBlur={onBlur}
-            onInput={onChange}
+            onInput={handleInput}
             onClick={onClick}
+            onKeyDown={e => {
+                if (e.key === "Enter") e.preventDefault();
+            }}
+            onPaste={e => {
+                e.preventDefault();
+                const text = e.clipboardData.getData("text/plain").replace(/[\r\n]+/g, " ");
+                e.currentTarget.textContent = text;
+                e.currentTarget.style.color = Theme.colors.gray100;
+            }}
         >
             {children}
         </StyledTypography>

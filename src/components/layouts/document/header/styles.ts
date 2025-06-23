@@ -47,7 +47,12 @@ export const TitleContent = styled.div<{ hasTitle: boolean }>`
 
     h1 {
         color: ${({ theme, hasTitle }) => (hasTitle ? theme.colors.gray100 : theme.colors.gray70)};
-        min-width: 20px;
+        min-width: 9px;
+
+        [contenteditable="true"] {
+            all: unset;
+            white-space: pre-wrap;
+        }
     }
 `;
 
