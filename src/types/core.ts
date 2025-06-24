@@ -6,12 +6,11 @@ export interface IReactChildren {
 }
 
 export interface ISVGsDynamicColor {
-    fillColor?: keyof typeof Theme.colors;
+    color?: keyof typeof Theme.colors;
 }
 
 export interface ISVGsDynamicSize {
-    width?: number;
-    height?: number;
+    size?: number;
 }
 
 export interface ISVGsDynamicColorAndSize extends ISVGsDynamicColor, ISVGsDynamicSize {}

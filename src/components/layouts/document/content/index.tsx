@@ -1,7 +1,8 @@
-import { ScrollArea } from "@/components/ui/ScrollArea";
+import { ScrollArea } from "@/components/ui/scrollArea";
 import TextEditor from "@/components/ui/textEditor";
 import { ReactElement, useState } from "react";
 
+import { DocumentToolbar } from "../documentToolbar";
 import { DocumentHeader, DocumentRoot, Root } from "./styles";
 
 export const DocumentContent = (): ReactElement => {
@@ -11,7 +12,9 @@ export const DocumentContent = (): ReactElement => {
 
     return (
         <Root>
-            <DocumentHeader></DocumentHeader>
+            <DocumentHeader>
+                <DocumentToolbar />
+            </DocumentHeader>
 
             <ScrollArea>
                 <DocumentRoot className="DocumentRoot">

@@ -13,6 +13,7 @@ export const DocumentHeader = styled.div`
     width: 100%;
     background: ${({ theme }) => theme.colors.white};
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
+    overflow: hidden;
 `;
 
 export const DocumentRoot = styled.div`

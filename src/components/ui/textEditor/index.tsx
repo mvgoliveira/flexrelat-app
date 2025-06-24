@@ -1,5 +1,10 @@
+import { Theme } from "@/themes";
+import Focus from "@tiptap/extension-focus";
+import GapCursor from "@tiptap/extension-gapcursor";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
+import TextStyle from "@tiptap/extension-text-style";
+import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ReactElement, useState } from "react";
@@ -32,14 +37,25 @@ const TextEditor = ({
         StarterKit,
         Paragraph,
         Text,
-        TablePlus,
+        TextStyle.configure({ mergeNestedSpanStyles: true }),
+        Focus.configure({
+            className: "has-focus",
+            mode: "shallowest",
+        }),
+        UniqueID.configure({
+            types: ["heading", "paragraph", "blockquote", "tableCell", "tableHeader", "tableRow"],
+        }),
+        GapCursor,
+        TablePlus.configure({
+            resizable: false,
+        }),
         TableRowPlus,
-        TableCellPlus,
         TableHeaderPlus,
+        TableCellPlus,
         PaginationPlus.configure({
             pageHeight: pageHeight,
             pageGap: 10,
-            pageBreakBackground: "#f7f7f7",
+            pageBreakBackground: Theme.colors.gray10,
             headerHeight: marginTop,
             headerLeft: "",
             headerRight: "",
@@ -50,6 +66,7 @@ const TextEditor = ({
 
     const currentEditor = useEditor({
         extensions,
+        autofocus: false,
         content: `
             <h3>
                 Have you seen our tables? They are amazing!
@@ -59,36 +76,34 @@ const TextEditor = ({
                 <li>Support for <code>colgroup</code> and <code>rowspan</code></li>
                 <li>And even resizable columns (optional)</li>
             </ul>
-            <p></p>
             <p>
                 Here is an example:
             </p>
             <table>
                 <tbody>
-                <tr>
-                    <th colwidth="200">Name</th>
-                    <th colspan="3" colwidth="150,100">Description</th>
-                </tr>
-                <tr>
-                    <td>Cyndi Lauper</td>
-                    <td>Singer</td>
-                    <td>Songwriter</td>
-                    <td>Actress</td>
-                </tr>
-                <tr>
-                    <td>Marie Curie</td>
-                    <td>Scientist</td>
-                    <td>Chemist</td>
-                    <td>Physicist</td>
-                </tr>
-                <tr>
-                    <td>Indira Gandhi</td>
-                    <td>Prime minister</td>
-                    <td colspan="2">Politician</td>
-                </tr>
+                    <tr>
+                        <th colwidth="200">Name</th>
+                        <th colspan="3" colwidth="150,100">Description</th>
+                    </tr>
+                    <tr>
+                        <td>Cyndi Lauper</td>
+                        <td>Singer</td>
+                        <td>Songwriter</td>
+                        <td>Actress</td>
+                    </tr>
+                    <tr>
+                        <td>Marie Curie</td>
+                        <td>Scientist</td>
+                        <td>Chemist</td>
+                        <td>Physicist</td>
+                    </tr>
+                    <tr>
+                        <td>Indira Gandhi</td>
+                        <td>Prime minister</td>
+                        <td colspan="2">Politician</td>
+                    </tr>
                 </tbody>
             </table>
-            <p></p>
         `,
         onUpdate: ({ editor }) => {
             const value = editor.getText();
