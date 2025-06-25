@@ -5,6 +5,7 @@ import { Layout } from "@/components/layouts/document/layout";
 import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeader";
 import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { ReactElement, useState } from "react";
 import { MdOutlineAutoAwesomeMosaic, MdOutlineFormatListNumbered } from "react-icons/md";
 import { RiRobot2Line } from "react-icons/ri";
@@ -33,9 +34,10 @@ const rightTabs: TabHeaderType<RightTabsValue>[] = [
     },
 ];
 
-const documentId = "cc8bf6cd-68d3-48ba-abcb-fcf450605f44";
+// const documentId = "cc8bf6cd-68d3-48ba-abcb-fcf450605f44";
 
 export default function Dashboard(): ReactElement {
+    const { documentId } = useParams();
     const [activeLeftTab, setActiveLeftTab] = useState<LeftTabsValue>("components");
     const [activeRightTab, setActiveRightTab] = useState<RightTabsValue>("ai");
     const [saveStatus, setSaveStatus] = useState<"pending" | "success" | "error">("success");
@@ -43,7 +45,7 @@ export default function Dashboard(): ReactElement {
     const { status, data } = useQuery({
         queryKey: ["get_document_data", documentId],
         queryFn: async (): Promise<DocumentData> => {
-            const response: DocumentData = await getDocumentByDocumentId(documentId);
+            const response: DocumentData = await getDocumentByDocumentId(documentId as string);
             return response;
         },
         refetchInterval: 5 * 60 * 1000, // 5 minutes

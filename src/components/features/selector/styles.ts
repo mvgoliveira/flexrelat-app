@@ -30,7 +30,6 @@ export const StyledButton = styled.div<IStyledButtonProps>`
     border-radius: 4px;
 
     > div {
-        font-size: ${({ theme }) => theme.fontSize.fs75};
         font-family: ${({ theme }) => theme.fontFamily.inter};
         font-weight: ${({ theme }) => theme.fontWeight.regular};
         display: flex;
@@ -47,7 +46,7 @@ export const StyledButton = styled.div<IStyledButtonProps>`
                 overflow: hidden;
                 text-overflow: ellipsis;
                 color: ${({ theme, variant }) => theme.colors[VARIANTS_STYLES[variant].color]};
-                font-size: ${({ theme }) => theme.fontSize.fs75};
+                font-size: ${({ theme }) => theme.fontSize.fs50};
                 white-space: nowrap;
             }
         }

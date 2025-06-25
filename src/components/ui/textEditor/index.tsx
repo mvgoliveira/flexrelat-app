@@ -4,11 +4,11 @@ import GapCursor from "@tiptap/extension-gapcursor";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import TextStyle from "@tiptap/extension-text-style";
-import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ReactElement, useState } from "react";
 
+import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
 import { Root } from "./styles";
 
@@ -42,13 +42,8 @@ const TextEditor = ({
             className: "has-focus",
             mode: "shallowest",
         }),
-        UniqueID.configure({
-            types: ["heading", "paragraph", "blockquote", "tableCell", "tableHeader", "tableRow"],
-        }),
         GapCursor,
-        TablePlus.configure({
-            resizable: false,
-        }),
+        TablePlus,
         TableRowPlus,
         TableHeaderPlus,
         TableCellPlus,
@@ -112,17 +107,21 @@ const TextEditor = ({
     });
 
     return (
-        <Root
-            zoom={zoom}
-            marginLeft={marginLeft}
-            marginRight={marginRight}
-            marginBottom={marginBottom}
-            marginTop={marginTop}
-            pageWidth={pageWidth}
-            pageHeight={pageHeight}
-        >
-            <EditorContent editor={currentEditor} />
-        </Root>
+        <>
+            {currentEditor && <TextBubbleMenu editor={currentEditor} />}
+
+            <Root
+                zoom={zoom}
+                marginLeft={marginLeft}
+                marginRight={marginRight}
+                marginBottom={marginBottom}
+                marginTop={marginTop}
+                pageWidth={pageWidth}
+                pageHeight={pageHeight}
+            >
+                <EditorContent editor={currentEditor} />
+            </Root>
+        </>
     );
 };
 

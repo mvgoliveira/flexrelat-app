@@ -1,48 +1,48 @@
-import { mergeAttributes } from "@tiptap/core";
-import Table from "@tiptap/extension-table";
-import { DOMOutputSpec } from "@tiptap/pm/model";
+import { Node, mergeAttributes } from "@tiptap/core";
 
 import { TableRowGroup } from "./TableRowGroup";
-export const TablePlus = Table.extend({
+
+export const TablePlus = Node.create({
+    name: "table",
+    group: "block",
     content: "(tableRowGroup|tableRow)+",
+    tableRole: "table",
+    selectable: true,
+    draggable: true,
     addExtensions() {
         return [TableRowGroup];
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    renderHTML({ node, HTMLAttributes }) {
-        const table: DOMOutputSpec = [
+
+    parseHTML() {
+        return [{ tag: "table" }];
+    },
+    renderHTML({ HTMLAttributes }) {
+        return [
             "table",
-            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-                border: 1,
-            }),
+            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { border: 1 }),
             0,
         ];
-        return table;
     },
+
     addNodeView() {
         return ({ node }) => {
             const dom = document.createElement("table");
-            let maxCellCount = 0;
-            node.forEach(child => {
-                if (child.type.name === "tableRowGroup") {
-                    child.forEach(row => {
-                        if (row.type.name === "tableRow") {
-                            if (row.childCount > maxCellCount) {
-                                maxCellCount = row.childCount;
-                            }
-                        }
-                    });
-                } else if (child.type.name === "tableRow") {
-                    if (child.childCount > maxCellCount) {
-                        maxCellCount = child.childCount;
-                    }
-                }
-            });
 
-            dom.style.setProperty("--cell-count", maxCellCount.toString());
+            let max = 0;
+            node.forEach(child => {
+                const count =
+                    child.type.name === "tableRowGroup"
+                        ? Math.max(
+                              ...Array.from(
+                                  { length: child.content.childCount },
+                                  (_, i) => child.content.child(i).childCount
+                              )
+                          )
+                        : child.childCount;
+                if (count > max) max = count;
+            });
+            dom.style.setProperty("--cell-count", max.toString());
             return { dom, contentDOM: dom };
         };
     },
 });
-
-export default TablePlus;

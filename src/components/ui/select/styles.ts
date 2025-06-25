@@ -50,8 +50,6 @@ export const StyledViewport = styled(Select.Viewport)`
 export const StyledItem = styled(Select.Item)`
     ${({ theme }) => css`
         all: unset;
-        font-size: ${theme.fontSize.fs75};
-        line-height: ${theme.lineHeight.fs75};
         color: ${theme.colors.black};
         display: flex;
         align-items: center;
