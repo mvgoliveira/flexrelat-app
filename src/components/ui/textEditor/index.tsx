@@ -1,12 +1,14 @@
 import { Theme } from "@/themes";
+import { isChangeOrigin } from "@tiptap/extension-collaboration";
 import Focus from "@tiptap/extension-focus";
 import GapCursor from "@tiptap/extension-gapcursor";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import TextStyle from "@tiptap/extension-text-style";
+import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
@@ -33,7 +35,7 @@ const TextEditor = ({
     pageHeight = 1123,
     zoom = 1,
 }: ITextEditorProps): ReactElement => {
-    const [extensions, setExtensions] = useState([
+    const extensions = [
         StarterKit,
         Paragraph,
         Text,
@@ -47,6 +49,19 @@ const TextEditor = ({
         TableRowPlus,
         TableHeaderPlus,
         TableCellPlus,
+        UniqueID.configure({
+            filterTransaction: transaction => !isChangeOrigin(transaction),
+            types: [
+                // "heading",
+                // "paragraph",
+                // "tableRow",
+                // "tableHeader",
+                // "tableCell",
+                // "bulletList",
+                // "orderedList",
+                // "listItem",
+            ],
+        }),
         PaginationPlus.configure({
             pageHeight: pageHeight,
             pageGap: 10,
@@ -57,7 +72,7 @@ const TextEditor = ({
             footerLeft: "",
             footerRight: "",
         }),
-    ]);
+    ];
 
     const currentEditor = useEditor({
         extensions,

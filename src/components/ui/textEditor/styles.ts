@@ -25,6 +25,29 @@ export const Root = styled.div<IRootProps>`
         }
     }
 
+    .tiptap {
+        [data-id] {
+            border: 2px solid ${({ theme }) => theme.colors.black};
+            border-radius: 0.5rem;
+            padding: 2.5rem 1rem 1rem;
+            position: relative;
+
+            &::before {
+                background-color: ${({ theme }) => theme.colors.black};
+                border-radius: 0 0 0.5rem 0;
+                color: ${({ theme }) => theme.colors.white};
+                content: attr(data-id);
+                font-size: 0.75rem;
+                font-weight: bold;
+                left: 0;
+                line-height: 1.5;
+                padding: 0.25rem 0.5rem;
+                position: absolute;
+                top: 0;
+            }
+        }
+    }
+
     .rm-pagination-gap {
         border-top: 1px solid ${({ theme }) => theme.colors.gray30};
         border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
@@ -115,22 +138,7 @@ export const Root = styled.div<IRootProps>`
             position: absolute;
             z-index: 2;
         }
-
-        /* .column-resize-handle {
-            background: ${({ theme }) => theme.colors.purple50};
-            bottom: -2px;
-            pointer-events: none;
-            position: absolute;
-            right: -2px;
-            top: 0;
-            width: 4px;
-        } */
     }
-
-    /* .resize-cursor {
-        cursor: ew-resize;
-        cursor: col-resize;
-    } */
 
     ul {
         list-style-type: disc;
@@ -161,20 +169,6 @@ export const Root = styled.div<IRootProps>`
         border-radius: 4px;
         font-size: ${({ theme }) => theme.fontSize.fs75};
         font-family: monospace;
-    }
-
-    .ProseMirror-selectednode {
-        outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
-        outline-offset: 5px;
-        background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
-        box-shadow:
-            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)},
-            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
-
-        tr {
-            outline: 1px solid ${({ theme }) => theme.colors.purple50};
-            background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
-        }
     }
 
     .multi-selected {
