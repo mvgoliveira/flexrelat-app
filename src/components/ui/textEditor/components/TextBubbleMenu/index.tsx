@@ -1,7 +1,7 @@
 import { Typography } from "@/components/features/typography";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import { MdAutoAwesome, MdAutoFixHigh } from "react-icons/md";
 
 import { ControlledBubbleMenu } from "../../plugins/BubbleMenu";
@@ -22,107 +22,104 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
     const [selectedContent, setSelectedContent] = useState<SelectedContent[]>([]);
 
     const onClick = () => {
-        // const sel = editor.state.selection as NodeSelection;
-        for (const sel of selectedContent) {
-            const { from, to } = sel;
+        // achar o menor from e maior to
+        selectedContent.sort((a, b) => a.from - b.from);
+        const minFrom = selectedContent.reduce((min, sel) => Math.min(min, sel.from), Infinity);
+        const maxTo = selectedContent.reduce((max, sel) => Math.max(max, sel.to), -Infinity);
 
-            const newContent = [
-                {
-                    type: "bulletList",
-                    content: [
-                        {
-                            type: "listItem",
-                            content: [
-                                {
-                                    type: "paragraph",
-                                    attrs: {
-                                        id: "2ba3b961-303e-46f7-a5fe-54fa3c44199a",
-                                    },
-                                    content: [
-                                        {
-                                            type: "text",
-                                            text: "Fully customizable tables with structured layouts, supporting multiple rows, individual cells, and optional headers for better data organization and readability.",
-                                        },
-                                    ],
+        const newContent = [
+            {
+                type: "bulletList",
+                content: [
+                    {
+                        type: "listItem",
+                        content: [
+                            {
+                                type: "paragraph",
+                                attrs: {
+                                    id: "2ba3b961-303e-46f7-a5fe-54fa3c44199a",
                                 },
-                            ],
-                        },
-                        {
-                            type: "listItem",
-                            content: [
-                                {
-                                    type: "paragraph",
-                                    attrs: {
-                                        id: "52bced01-0c20-48fa-b995-5fc692cc49a0",
+                                content: [
+                                    {
+                                        type: "text",
+                                        text: "Fully customizable tables with structured layouts, supporting multiple rows, individual cells, and optional headers for better data organization and readability.",
                                     },
-                                    content: [
-                                        {
-                                            type: "text",
-                                            text: "Includes advanced table features like ",
-                                        },
-                                        {
-                                            type: "text",
-                                            marks: [
-                                                {
-                                                    type: "code",
-                                                },
-                                            ],
-                                            text: "colgroup",
-                                        },
-                                        {
-                                            type: "text",
-                                            text: " for grouping columns and ",
-                                        },
-                                        {
-                                            type: "text",
-                                            marks: [
-                                                {
-                                                    type: "code",
-                                                },
-                                            ],
-                                            text: "rowspan",
-                                        },
-                                        {
-                                            type: "text",
-                                            text: " to allow cells to span across multiple rows, enhancing table flexibility.",
-                                        },
-                                    ],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        type: "listItem",
+                        content: [
+                            {
+                                type: "paragraph",
+                                attrs: {
+                                    id: "52bced01-0c20-48fa-b995-5fc692cc49a0",
                                 },
-                            ],
-                        },
-                        {
-                            type: "listItem",
-                            content: [
-                                {
-                                    type: "paragraph",
-                                    attrs: {
-                                        id: "0a39cd51-b353-42f1-9fa9-cf235a06d8c3",
+                                content: [
+                                    {
+                                        type: "text",
+                                        text: "Includes advanced table features like ",
                                     },
-                                    content: [
-                                        {
-                                            type: "text",
-                                            text: "Support for resizable columns, giving users the ability to dynamically adjust widths for a better viewing experience and improved content control.",
-                                        },
-                                    ],
+                                    {
+                                        type: "text",
+                                        marks: [
+                                            {
+                                                type: "code",
+                                            },
+                                        ],
+                                        text: "colgroup",
+                                    },
+                                    {
+                                        type: "text",
+                                        text: " for grouping columns and ",
+                                    },
+                                    {
+                                        type: "text",
+                                        marks: [
+                                            {
+                                                type: "code",
+                                            },
+                                        ],
+                                        text: "rowspan",
+                                    },
+                                    {
+                                        type: "text",
+                                        text: " to allow cells to span across multiple rows, enhancing table flexibility.",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        type: "listItem",
+                        content: [
+                            {
+                                type: "paragraph",
+                                attrs: {
+                                    id: "0a39cd51-b353-42f1-9fa9-cf235a06d8c3",
                                 },
-                            ],
-                        },
-                    ],
-                },
-            ];
+                                content: [
+                                    {
+                                        type: "text",
+                                        text: "Support for resizable columns, giving users the ability to dynamically adjust widths for a better viewing experience and improved content control.",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
 
-            editor.commands.command(({ tr, state, dispatch }) => {
-                const nodes = newContent.map(n => state.schema.nodeFromJSON(n));
-                tr.replaceWith(from, to, nodes);
-                if (dispatch) dispatch(tr);
-                return true;
-            });
-        }
+        editor.commands.command(({ tr, state, dispatch }) => {
+            const nodes = newContent.map(n => state.schema.nodeFromJSON(n));
+            console.log(nodes);
+            tr.replaceWith(minFrom, maxTo, nodes);
+            if (dispatch) dispatch(tr);
+            return true;
+        });
     };
-
-    useEffect(() => {
-        console.log(selectedContent);
-    }, [selectedContent]);
 
     return (
         // <ControlledBubbleMenu open={!editor.view.state.selection.empty} editor={editor}>
