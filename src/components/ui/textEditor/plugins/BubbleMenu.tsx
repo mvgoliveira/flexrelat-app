@@ -50,51 +50,54 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
         refs.setReference({
             getBoundingClientRect() {
                 const { ranges } = editor.state.selection;
+                const from = Math.min(...ranges.map(range => range.$from.pos));
+                const to = Math.max(...ranges.map(range => range.$to.pos));
 
-                const allSelectionsFrom = [
-                    ...ranges.map(range => range.$from.pos),
-                    ...prevSelection.flatMap(sel => sel.ranges.map(range => range.$from.pos)),
-                ];
-
-                const allSelectionsTo = [
-                    ...ranges.map(range => range.$to.pos),
-                    ...prevSelection.flatMap(sel => sel.ranges.map(range => range.$to.pos)),
-                ];
-
-                const from = Math.min(...allSelectionsFrom);
-                const to = Math.max(...allSelectionsTo);
-
+                // If the selection is a node selection, return the node's bounding rect
                 if (isNodeSelection(editor.state.selection)) {
-                    let rect: DOMRect | null = null;
-                    for (let pos = from; pos <= to; ) {
-                        const node = editor.view.nodeDOM(pos) as HTMLElement | null;
-                        if (node && node.getBoundingClientRect) {
-                            const nodeRect = node.getBoundingClientRect();
-                            if (!rect) {
-                                rect = nodeRect;
-                            } else {
-                                rect = new DOMRect(
-                                    Math.min(rect.left, nodeRect.left),
-                                    Math.min(rect.top, nodeRect.top),
-                                    Math.max(rect.right, nodeRect.right) -
-                                        Math.min(rect.left, nodeRect.left),
-                                    Math.max(rect.bottom, nodeRect.bottom) -
-                                        Math.min(rect.top, nodeRect.top)
-                                );
-                            }
-                            const nodeSize = node.nodeType === 3 ? 1 : (node as any).nodeSize || 1;
-                            pos += nodeSize;
-                        } else {
-                            pos++;
-                        }
+                    const domInfo = editor.view.domAtPos(from + 1);
+                    const tableEl = (domInfo.node as HTMLElement).closest("table");
+                    if (tableEl) {
+                        const cells = Array.from(
+                            tableEl.querySelectorAll("th, td")
+                        ) as HTMLElement[];
+                        const rects = cells.map(c => c.getBoundingClientRect());
+                        const top = Math.min(...rects.map(r => r.top));
+                        const left = Math.min(...rects.map(r => r.left));
+                        const bottom = Math.max(...rects.map(r => r.bottom));
+                        const right = Math.max(...rects.map(r => r.right));
+                        console.log({
+                            top,
+                            left,
+                            bottom,
+                            right,
+                            width: right - left,
+                            height: bottom - top,
+                            x: left,
+                            y: top,
+                        });
+
+                        return {
+                            top,
+                            left,
+                            bottom,
+                            right,
+                            width: right - left,
+                            height: bottom - top,
+                            x: left,
+                            y: top,
+                        };
                     }
-                    if (rect) {
-                        return rect;
+
+                    const node = editor.view.nodeDOM(from) as HTMLElement;
+
+                    if (node) {
+                        return node.getBoundingClientRect();
                     }
                 }
 
                 // If the clicked position a mark, create a selection from the mark range
-                // When the selection is not empty, the bubble menu will be shown
+                // When the selection is not empy, the bubble menu will be shown
                 const range = getMarkRange(
                     view.state.doc.resolve(from),
                     view.state.schema.marks.link
