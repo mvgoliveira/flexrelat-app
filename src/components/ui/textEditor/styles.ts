@@ -77,11 +77,11 @@ export const Root = styled.div<IRootProps>`
 
         tr {
             &:first-of-type {
-                /* margin-top: 8px; */
+                margin-top: 8px;
             }
 
             &:last-of-type {
-                /* margin-bottom: 8px; */
+                margin-bottom: 8px;
             }
         }
 
@@ -164,13 +164,30 @@ export const Root = styled.div<IRootProps>`
     }
 
     .ProseMirror-selectednode {
-        outline: 2px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
+        outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
         outline-offset: 5px;
         background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
         box-shadow:
             0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)},
             0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
 
-        border-radius: 2px;
+        tr {
+            outline: 1px solid ${({ theme }) => theme.colors.purple50};
+            background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+        }
+    }
+
+    .multi-selected {
+        outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
+        outline-offset: 5px;
+        background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+        box-shadow:
+            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)},
+            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+
+        tr {
+            outline: 1px solid ${({ theme }) => theme.colors.purple50};
+            background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+        }
     }
 `;

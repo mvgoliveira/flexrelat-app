@@ -74,7 +74,6 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                 border-collapse: collapse;
                 width: 100%;
                 display: contents;
-                outline: 1px solid tomato;
             }
             .rm-with-pagination table tbody{
                 display: table;
