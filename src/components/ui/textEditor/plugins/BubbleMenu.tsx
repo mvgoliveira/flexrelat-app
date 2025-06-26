@@ -7,13 +7,16 @@ import { getMarkRange } from "@tiptap/react";
 import { motion } from "motion/react";
 import { ReactNode, useEffect, useLayoutEffect, useState } from "react";
 
+import { SelectedContent } from "../components/TextBubbleMenu";
+
 type Props = {
     editor: Editor;
     open: boolean;
     children: ReactNode;
+    onChangeContent: (content: SelectedContent[]) => void;
 };
 
-export const ControlledBubbleMenu = ({ editor, open, children }: Props) => {
+export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }: Props) => {
     const [prevSelection, setPrevSelection] = useState<Selection[]>([]);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -113,47 +116,75 @@ export const ControlledBubbleMenu = ({ editor, open, children }: Props) => {
 
     useLayoutEffect(() => {
         const handler = (e: MouseEvent) => {
-            if (!(e.metaKey && e.button === 0)) {
-                setPrevSelection([]);
-                setIsOpen(false);
-                return;
-            } else if (!e.shiftKey && e.button === 0 && e.metaKey) {
-                setPrevSelection([editor.state.selection]);
-            } else if (
-                (e.shiftKey && e.button === 0 && e.metaKey) ||
-                (e.button === 0 && e.metaKey && prevSelection.length === 0)
-            ) {
-                setPrevSelection(prevState => [...prevState, editor.state.selection]);
-            } else if (e.button === 0 && e.metaKey && prevSelection.length > 0) {
-                setPrevSelection([editor.state.selection]);
-            } else {
-                setPrevSelection([]);
-            }
-
             const posInfo = view.posAtCoords({ left: e.clientX, top: e.clientY });
             if (!posInfo) return;
             const { pos } = posInfo;
+            if (!pos) return;
             const $pos = view.state.doc.resolve(pos);
+            if (!$pos) return;
+            const before = $pos.before(1);
+            const node = view.state.doc.nodeAt(before);
+            if (!node) {
+                setIsOpen(false);
+                setPrevSelection([]);
+                return;
+            }
+            const sel = NodeSelection.create(view.state.doc, before);
+            if (!sel) return;
 
-            if ($pos.before) {
-                const sel = NodeSelection.create(view.state.doc, $pos.before(1));
-
-                if (sel.content().content.size > 2) {
-                    view.dispatch(view.state.tr.setSelection(sel));
-                    setIsOpen(true);
-                    return;
-                } else {
-                    view.dispatch(
-                        view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
-                    );
+            if (sel.content().content.size > 2) {
+                if (e.button !== 0 || !e.metaKey) {
+                    setPrevSelection([]);
                     setIsOpen(false);
+                    return;
                 }
+
+                if (e.shiftKey || prevSelection.length === 0) {
+                    // setPrevSelection(prev => [...prev, sel]);
+
+                    const exists = prevSelection.some(s => s.from === sel.from && s.to === sel.to);
+                    setPrevSelection(prev =>
+                        exists
+                            ? prev.filter(s => !(s.from === sel.from && s.to === sel.to))
+                            : [...prev, sel]
+                    );
+                } else {
+                    setPrevSelection([sel]);
+                }
+
+                const alreadySelected = prevSelection.some(
+                    s => s.from === sel.from && s.to === sel.to
+                );
+
+                if (alreadySelected) {
+                    setPrevSelection(prev =>
+                        prev.filter(s => !(s.from === sel.from && s.to === sel.to))
+                    );
+
+                    if (prevSelection.length === 1) {
+                        setIsOpen(false);
+                    }
+
+                    view.dispatch(
+                        view.state.tr.setSelection(TextSelection.create(view.state.doc, sel.from))
+                    );
+                    return;
+                }
+
+                view.dispatch(view.state.tr.setSelection(sel));
+                setIsOpen(true);
+            } else {
+                view.dispatch(
+                    view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
+                );
+                setIsOpen(false);
+                setPrevSelection([]);
             }
         };
 
         view.dom.addEventListener("click", handler);
         return () => view.dom.removeEventListener("click", handler);
-    }, [editor.state.selection, prevSelection, view]);
+    }, [editor.state.selection]);
 
     useEffect(() => {
         const key = new PluginKey("multi-selection");
@@ -165,7 +196,10 @@ export const ControlledBubbleMenu = ({ editor, open, children }: Props) => {
                     if (prevSelection.length === 0) return null;
 
                     const decorations = prevSelection.map(sel => {
-                        return Decoration.node(sel.from, sel.to, {
+                        const $posFrom = view.state.doc.resolve(sel.from);
+                        const $posTo = view.state.doc.resolve(sel.to);
+
+                        return Decoration.node($posFrom.before(1), $posTo.before(1), {
                             class: "multi-selected",
                         });
                     });
@@ -177,7 +211,7 @@ export const ControlledBubbleMenu = ({ editor, open, children }: Props) => {
 
         editor.registerPlugin(plugin);
 
-        const contents = prevSelection.map(sel => {
+        const content = prevSelection.map(sel => {
             const slice = editor.state.doc.slice(sel.from, sel.to);
             const fragment = slice.content;
 
@@ -191,10 +225,12 @@ export const ControlledBubbleMenu = ({ editor, open, children }: Props) => {
             return {
                 html: div.innerHTML,
                 json: fragment.toJSON(),
+                from: sel.from,
+                to: sel.to,
             };
         });
 
-        console.log(contents);
+        onChangeContent(content);
 
         return () => {
             editor.unregisterPlugin(key);
