@@ -66,16 +66,6 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
                         const left = Math.min(...rects.map(r => r.left));
                         const bottom = Math.max(...rects.map(r => r.bottom));
                         const right = Math.max(...rects.map(r => r.right));
-                        console.log({
-                            top,
-                            left,
-                            bottom,
-                            right,
-                            width: right - left,
-                            height: bottom - top,
-                            x: left,
-                            y: top,
-                        });
 
                         return {
                             top,
