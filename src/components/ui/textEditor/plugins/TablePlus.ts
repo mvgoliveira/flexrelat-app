@@ -8,8 +8,7 @@ export const TablePlus = Table.extend({
     addExtensions() {
         return [TableRowGroup];
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    renderHTML({ node, HTMLAttributes }) {
+    renderHTML({ HTMLAttributes }) {
         const table: DOMOutputSpec = [
             "table",
             mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {

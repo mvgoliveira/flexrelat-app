@@ -26,26 +26,7 @@ export const Root = styled.div<IRootProps>`
     }
 
     .tiptap {
-        [data-id] {
-            border: 2px solid ${({ theme }) => theme.colors.black};
-            border-radius: 0.5rem;
-            padding: 2.5rem 1rem 1rem;
-            position: relative;
-
-            &::before {
-                background-color: ${({ theme }) => theme.colors.black};
-                border-radius: 0 0 0.5rem 0;
-                color: ${({ theme }) => theme.colors.white};
-                content: attr(data-id);
-                font-size: 0.75rem;
-                font-weight: bold;
-                left: 0;
-                line-height: 1.5;
-                padding: 0.25rem 0.5rem;
-                position: absolute;
-                top: 0;
-            }
-        }
+        gap: 20px;
     }
 
     .rm-pagination-gap {
@@ -78,18 +59,19 @@ export const Root = styled.div<IRootProps>`
     h3,
     h4,
     h5,
-    h6 {
-        line-height: 1.5;
-        margin: 15px 0;
-        font-size: ${({ theme }) => theme.fontSize.fs100};
+    h6,
+    p {
+        margin-bottom: 12px;
     }
 
-    p,
-    ul,
-    ol,
-    li,
-    blockquote {
-        line-height: 1.5;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: ${({ theme }) => theme.fontSize.fs100};
+        line-height: ${({ theme }) => theme.lineHeight.fs100};
     }
 
     table {
@@ -99,12 +81,8 @@ export const Root = styled.div<IRootProps>`
         width: 100%;
 
         tr {
-            &:first-of-type {
-                margin-top: 8px;
-            }
-
             &:last-of-type {
-                margin-bottom: 8px;
+                margin-bottom: 12px;
             }
         }
 
@@ -112,7 +90,7 @@ export const Root = styled.div<IRootProps>`
         th {
             border: 1px solid ${({ theme }) => theme.colors.gray50};
             box-sizing: border-box;
-            padding: 6px 8px;
+            padding: 12px 8px;
             position: relative;
             vertical-align: top;
 
@@ -141,24 +119,30 @@ export const Root = styled.div<IRootProps>`
     }
 
     ul {
+        display: flex;
+        flex-direction: column;
         list-style-type: disc;
         padding-left: 20px;
-        li {
-            margin-bottom: 8px;
+        gap: 12px;
+        margin-bottom: 12px;
+
+        p {
+            margin-bottom: 0;
         }
+
         li ul {
             list-style-type: circle;
             padding-left: 20px;
-            li {
-                margin-bottom: 4px;
-            }
         }
         li ol {
             list-style-type: decimal;
             padding-left: 20px;
-            li {
-                margin-bottom: 4px;
-            }
+        }
+
+        ul,
+        ol {
+            margin-top: 12px;
+            margin-bottom: 0px;
         }
     }
 

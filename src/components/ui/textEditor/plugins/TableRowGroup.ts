@@ -1,7 +1,7 @@
 import { Node } from "@tiptap/core";
 import { DOMOutputSpec } from "@tiptap/pm/model";
 import { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import { Plugin } from "@tiptap/pm/state";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 
 export const TableRowGroup = Node.create({
     name: "tableRowGroup",
@@ -17,11 +17,9 @@ export const TableRowGroup = Node.create({
     },
     addNodeView() {
         return () => {
-            const dom = document.createElement("div");
-            dom.classList.add("table-row-group");
             const tbody = document.createElement("tbody");
-            dom.appendChild(tbody);
-            return { dom, contentDOM: tbody };
+            tbody.classList.add("table-row-group");
+            return { dom: tbody, contentDOM: tbody };
         };
     },
     renderHTML() {
@@ -33,6 +31,7 @@ export const TableRowGroup = Node.create({
         const { editor } = this;
         return [
             new Plugin({
+                key: new PluginKey("tableRowGroupKey"),
                 appendTransaction(_, oldState, newState) {
                     const { doc, tr } = newState;
 

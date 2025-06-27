@@ -1,11 +1,9 @@
 import { Theme } from "@/themes";
-import { isChangeOrigin } from "@tiptap/extension-collaboration";
+import { BulletList } from "@tiptap/extension-bullet-list";
 import Focus from "@tiptap/extension-focus";
-import GapCursor from "@tiptap/extension-gapcursor";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
+import { ListItem } from "@tiptap/extension-list-item";
+import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextStyle from "@tiptap/extension-text-style";
-import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ReactElement } from "react";
@@ -36,42 +34,31 @@ const TextEditor = ({
     zoom = 1,
 }: ITextEditorProps): ReactElement => {
     const extensions = [
-        StarterKit,
-        Paragraph,
-        Text,
+        StarterKit.configure({
+            dropcursor: false,
+        }),
         TextStyle.configure({ mergeNestedSpanStyles: true }),
         Focus.configure({
             className: "has-focus",
             mode: "shallowest",
         }),
-        GapCursor,
         TablePlus,
         TableRowPlus,
         TableHeaderPlus,
         TableCellPlus,
-        UniqueID.configure({
-            filterTransaction: transaction => !isChangeOrigin(transaction),
-            types: [
-                // "heading",
-                // "paragraph",
-                // "tableRow",
-                // "tableHeader",
-                // "tableCell",
-                // "bulletList",
-                // "orderedList",
-                // "listItem",
-            ],
-        }),
         PaginationPlus.configure({
             pageHeight: pageHeight,
             pageGap: 10,
             pageBreakBackground: Theme.colors.gray10,
-            headerHeight: marginTop,
+            pageHeaderHeight: marginTop,
             headerLeft: "",
             headerRight: "",
             footerLeft: "",
             footerRight: "",
         }),
+        BulletList,
+        OrderedList,
+        ListItem,
     ];
 
     const currentEditor = useEditor({
