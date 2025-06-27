@@ -16,6 +16,50 @@ interface IPaginationPlusOptions {
 const page_count_meta_key = "PAGE_COUNT_META_KEY";
 export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
     name: "PaginationPlus",
+    addKeyboardShortcuts() {
+        return {
+            Enter: () => {
+                const { state } = this.editor;
+                const { $from } = state.selection;
+                const isHeading = this.editor.isActive("heading");
+                const isAtEnd = $from.parentOffset === $from.parent.content.size;
+                const isAtStart = $from.parentOffset === 0;
+                const isEmpty = $from.parent.textContent.length === 0;
+                const last = $from.parent.lastChild;
+                const isNewLineEmpty = last?.type.name === "hardBreak";
+
+                if (isEmpty) {
+                    return this.editor.chain().newlineInCode().run();
+                }
+
+                if (isNewLineEmpty) {
+                    const beforePos = $from.pos - 1;
+                    const node = state.doc.nodeAt(beforePos);
+                    if (node?.type.name === "hardBreak") {
+                        return this.editor
+                            .chain()
+                            .deleteRange({ from: beforePos, to: $from.pos })
+                            .createParagraphNear()
+                            .run();
+                    }
+                }
+
+                if (isAtStart) {
+                    return this.editor.chain().createParagraphNear().run();
+                }
+
+                if (isAtEnd && isHeading) {
+                    return this.editor.chain().createParagraphNear().run();
+                }
+
+                if ($from.parent.type.name === "paragraph" || isHeading) {
+                    return this.editor.commands.setHardBreak();
+                }
+
+                return false;
+            },
+        };
+    },
     addOptions() {
         return {
             pageHeight: 800,
