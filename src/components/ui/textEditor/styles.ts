@@ -125,6 +125,8 @@ export const Root = styled.div<IRootProps>`
         padding-left: 20px;
         gap: 12px;
         margin-bottom: 12px;
+        font-size: ${({ theme }) => theme.fontSize.fs75};
+        line-height: ${({ theme }) => theme.lineHeight.fs75};
 
         p {
             margin-bottom: 0;

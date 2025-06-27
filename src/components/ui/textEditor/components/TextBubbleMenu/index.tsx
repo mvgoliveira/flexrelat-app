@@ -22,10 +22,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
     const [selectedContent, setSelectedContent] = useState<SelectedContent[]>([]);
 
     const onClick = () => {
-        // achar o menor from e maior to
-        selectedContent.sort((a, b) => a.from - b.from);
-        const minFrom = selectedContent.reduce((min, sel) => Math.min(min, sel.from), Infinity);
-        const maxTo = selectedContent.reduce((max, sel) => Math.max(max, sel.to), -Infinity);
+        selectedContent.sort((a, b) => b.from - a.from); // Ordena do maior para o menor
 
         const newContent = [
             {
@@ -114,8 +111,10 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
 
         editor.commands.command(({ tr, state, dispatch }) => {
             const nodes = newContent.map(n => state.schema.nodeFromJSON(n));
-            console.log(nodes);
-            tr.replaceWith(minFrom, maxTo, nodes);
+            // Substitui cada seleção de baixo pra cima
+            selectedContent.forEach(sel => {
+                tr.replaceWith(sel.from, sel.to, nodes);
+            });
             if (dispatch) dispatch(tr);
             return true;
         });
