@@ -37,10 +37,7 @@ const TextEditor = ({
     const extensions = [
         Indent,
         StarterKit.configure({
-            dropcursor: {
-                width: 2,
-                color: Theme.colors.purple50,
-            },
+            dropcursor: false,
         }),
         TextStyle.configure({ mergeNestedSpanStyles: true }),
         Focus.configure({
