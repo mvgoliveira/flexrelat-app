@@ -1,4 +1,5 @@
 "use client";
+import { AiChat } from "@/components/layouts/document/aiChat";
 import { DocumentContent } from "@/components/layouts/document/content";
 import { Header } from "@/components/layouts/document/header";
 import { Layout } from "@/components/layouts/document/layout";
@@ -85,7 +86,10 @@ export default function Dashboard(): ReactElement {
                     headerItens={rightTabs}
                     activeTab={activeRightTab}
                     setActiveLeftTab={activeTab => setActiveRightTab(activeTab as RightTabsValue)}
+                    hasCloseButton
                 />
+
+                <AiChat />
             </Layout.RightNavBar>
         </Layout>
     );

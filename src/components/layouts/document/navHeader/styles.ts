@@ -3,8 +3,10 @@ import styled from "@emotion/styled";
 export const Root = styled.div`
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 10px;
     height: 40px;
+    min-height: 40px;
     width: 100%;
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;

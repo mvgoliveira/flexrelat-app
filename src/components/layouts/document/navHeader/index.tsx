@@ -1,5 +1,8 @@
+import { Button } from "@/components/features/button";
 import { Typography } from "@/components/features/typography";
+import { Theme } from "@/themes";
 import { Dispatch, ReactElement, SetStateAction } from "react";
+import { GrFormClose } from "react-icons/gr";
 
 import { Container, Item, Root } from "./styles";
 
@@ -13,12 +16,16 @@ interface INavHeaderProps {
     headerItens: TabHeaderType<string>[];
     activeTab: string;
     setActiveLeftTab: Dispatch<SetStateAction<string>>;
+    hasCloseButton?: boolean;
+    onClose?: () => void;
 }
 
 export const NavHeader = ({
     activeTab,
     headerItens,
     setActiveLeftTab,
+    hasCloseButton = false,
+    onClose,
 }: INavHeaderProps): ReactElement => {
     return (
         <Root>
@@ -42,6 +49,22 @@ export const NavHeader = ({
                     </Item>
                 ))}
             </Container>
+
+            {hasCloseButton && (
+                <Button
+                    height="25px"
+                    width="25px"
+                    variant="secondary"
+                    padding="0 10px"
+                    onClick={onClose}
+                >
+                    <div
+                        style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                        <GrFormClose size={12} color={Theme.colors.black} />
+                    </div>
+                </Button>
+            )}
         </Root>
     );
 };

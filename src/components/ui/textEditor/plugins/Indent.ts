@@ -90,13 +90,8 @@ function updateIndentLevel(tr: Transaction, delta: number): Transaction {
 
     const { from, to } = selection;
 
-    doc.nodesBetween(from, to, (node, pos, parent) => {
+    doc.nodesBetween(from, to, (node, pos) => {
         const nodeType = node.type;
-
-        if (parent) {
-            alert(parent.type.name);
-            return false;
-        }
 
         if (nodeType.name === "paragraph" || nodeType.name === "heading") {
             tr = setNodeIndentMarkup(tr, pos, delta);
@@ -176,10 +171,15 @@ export const Indent = Extension.create<IndentOptions>({
     addKeyboardShortcuts() {
         return {
             Tab: () => {
-                const { state } = this.editor;
+                const { state, view } = this.editor;
                 const { selection } = state;
-                // Only indent if selection is empty and at the start of a word
-                if (selection.empty && selection.$from.parentOffset === 0) {
+                const node = view.state.doc.nodeAt(selection.$from.before(1));
+
+                if (
+                    selection.empty &&
+                    selection.$from.parentOffset === 0 &&
+                    (node?.type.name == "paragraph" || node?.type.name == "heading")
+                ) {
                     this.editor.commands.indent();
                     return true;
                 }

@@ -255,10 +255,7 @@ const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOption
             const lastBreakBottom = lastPageBreak.getBoundingClientRect().bottom;
             const lastPageGap = contentBottom - lastBreakBottom;
 
-            console.log(lastPageGap);
-
             if (lastPageGap > 0) {
-                console.log(currentPageCount + Math.ceil(lastPageGap / pageContentAreaHeight));
                 return currentPageCount + Math.ceil(lastPageGap / pageContentAreaHeight);
             } else {
                 const lpFrom = -pageOptions.pageHeaderHeight;
@@ -373,8 +370,6 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
             const fragment = document.createDocumentFragment();
 
             const pageCount = calculatePageCount(view, pageOptions);
-
-            console.log("Page Count:", pageCount);
 
             for (let i = 0; i < pageCount; i++) {
                 fragment.appendChild(page.cloneNode(true));

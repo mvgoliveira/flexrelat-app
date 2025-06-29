@@ -23,7 +23,7 @@ import {
 import { ColorContainer, Root } from "./styles";
 
 export const DocumentToolbar = (): ReactElement => {
-    const [fontType, setFontType] = useState<string>("times-new-roman");
+    const [fontType, setFontType] = useState<string>("arial");
 
     return (
         <Root>
@@ -47,7 +47,7 @@ export const DocumentToolbar = (): ReactElement => {
                     </Toolbar.Item>
                 </Toolbar.Group>
 
-                <Toolbar.Group className="ColorSelector">
+                <Toolbar.Group className="ColorSelector Item">
                     <Toolbar.ItemButton>
                         <FormatInkHighlighter size={18} color="black" />
                         <ColorContainer color="black" />
@@ -58,7 +58,7 @@ export const DocumentToolbar = (): ReactElement => {
                     </Toolbar.ItemButton>
                 </Toolbar.Group>
 
-                <Toolbar.Group className="TextFormat">
+                <Toolbar.Group className="TextFormat Item">
                     <Toolbar.ItemButton>
                         <MdFormatBold size={18} color="black" />
                     </Toolbar.ItemButton>
@@ -73,7 +73,7 @@ export const DocumentToolbar = (): ReactElement => {
                     </Toolbar.ItemButton>
                 </Toolbar.Group>
 
-                <Toolbar.Group className="TextAlignment">
+                <Toolbar.Group className="TextAlignment Item">
                     <Toolbar.ItemButton>
                         <MdFormatAlignLeft size={18} color="black" />
                     </Toolbar.ItemButton>
@@ -88,7 +88,7 @@ export const DocumentToolbar = (): ReactElement => {
                     </Toolbar.ItemButton>
                 </Toolbar.Group>
 
-                <Toolbar.Group className="ListFormat">
+                <Toolbar.Group className="ListFormat Item">
                     <Toolbar.ItemButton>
                         <MdFormatLineSpacing size={18} color="black" />
                     </Toolbar.ItemButton>
@@ -103,7 +103,7 @@ export const DocumentToolbar = (): ReactElement => {
                     </Toolbar.ItemButton>
                 </Toolbar.Group>
 
-                <Toolbar.Group className="MoreOptions">
+                <Toolbar.Group className="MoreOptions Item">
                     <Toolbar.ItemButton>
                         <MdMoreHoriz size={18} color="black" />
                     </Toolbar.ItemButton>

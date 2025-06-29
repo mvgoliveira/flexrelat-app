@@ -18,6 +18,8 @@ export const Root = styled.div<IRootProps>`
     min-width: ${({ pageWidth }) => `${pageWidth}px`};
     zoom: ${({ zoom }) => zoom};
     border: 1px solid ${({ theme }) => theme.colors.gray30};
+    font-size: ${({ theme }) => theme.fontSize.fs75};
+    font-family: ${({ theme }) => theme.fontFamily.arial};
 
     .ProseMirror {
         &:focus {
@@ -47,8 +49,6 @@ export const Root = styled.div<IRootProps>`
             `calc(100% + ${marginLeft}px + ${marginRight}px + 2px)`} !important;
         margin-left: ${({ marginLeft }) => `${-marginLeft}px`} !important;
     }
-
-    font-size: ${({ theme }) => theme.fontSize.fs75};
 
     h1,
     h2,
@@ -122,7 +122,7 @@ export const Root = styled.div<IRootProps>`
         gap: 12px;
         margin-bottom: 12px;
         font-size: ${({ theme }) => theme.fontSize.fs75};
-        line-height: ${({ theme }) => theme.lineHeight.fs75};
+        line-height: 150%;
 
         p {
             margin-bottom: 0;
