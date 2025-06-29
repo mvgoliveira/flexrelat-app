@@ -10,11 +10,13 @@ export const Root = styled.div`
     width: fit-content;
     height: 30px;
     overflow: hidden;
+    top: 10px;
 `;
 
 export const StyledButton = styled.button`
     display: flex;
     width: fit-content;
+    min-width: fit-content;
     height: 100%;
     align-items: center;
     justify-content: center;
@@ -41,4 +43,23 @@ export const StyledButton = styled.button`
         outline: none;
         background: ${({ theme }) => theme.colors.gray20};
     }
+`;
+
+export const RemovedButton = styled.button`
+    position: relative;
+    display: flex;
+    width: fit-content;
+    min-width: fit-content;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    border: none;
+
+    top: 20px;
+    right: -450px;
 `;

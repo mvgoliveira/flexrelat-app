@@ -1,11 +1,14 @@
 import { Typography } from "@/components/features/typography";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
+import { Selection } from "@tiptap/pm/state";
+import { motion } from "motion/react";
 import { ReactElement, useState } from "react";
 import { MdAutoAwesome, MdAutoFixHigh } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 import { ControlledBubbleMenu } from "../../plugins/BubbleMenu";
-import { Root, StyledButton } from "./styles";
+import { RemovedButton, Root, StyledButton } from "./styles";
 
 export type SelectedContent = {
     html: string;
@@ -16,13 +19,18 @@ export type SelectedContent = {
 
 interface ITextBubbleMenuProps {
     editor: Editor;
+    enableMultiSelection?: boolean;
 }
 
-export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement => {
-    const [selectedContent, setSelectedContent] = useState<SelectedContent[]>([]);
+export const TextBubbleMenu = ({
+    editor,
+    enableMultiSelection = false,
+}: ITextBubbleMenuProps): ReactElement => {
+    const [selectedContents, setSelectedContent] = useState<SelectedContent[]>([]);
+    const [prevSelection, setPrevSelection] = useState<Selection[]>([]);
 
-    const onClick = () => {
-        selectedContent.sort((a, b) => b.from - a.from); // Ordena do maior para o menor
+    const handleMakeLonger = () => {
+        selectedContents.sort((a, b) => b.from - a.from); // Ordena do maior para o menor
 
         const newContent = [
             {
@@ -112,7 +120,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
         editor.commands.command(({ tr, state, dispatch }) => {
             const nodes = newContent.map(n => state.schema.nodeFromJSON(n));
             // Substitui cada seleção de baixo pra cima
-            selectedContent.forEach(sel => {
+            selectedContents.forEach(sel => {
                 tr.replaceWith(sel.from, sel.to, nodes);
             });
             if (dispatch) dispatch(tr);
@@ -120,11 +128,40 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
         });
     };
 
+    const handleRemoveNode = () => {
+        selectedContents.sort((a, b) => b.from - a.from);
+
+        editor.commands.command(({ tr, dispatch }) => {
+            selectedContents.forEach(sel => {
+                tr.deleteRange(sel.from, sel.to);
+            });
+            if (dispatch) dispatch(tr);
+            return true;
+        });
+
+        setSelectedContent([]);
+        setPrevSelection([]);
+    };
+    //     if (selectedContents.length === 0) {
+    //         setTimeout(() => {
+    //             document.querySelectorAll(".multi-selected").forEach(el => {
+    //                 el.classList.remove("multi-selected");
+    //             });
+    //         }, 2000);
+    //     }
+    // }, [selectedContents]);
+
     return (
-        // <ControlledBubbleMenu open={!editor.view.state.selection.empty} editor={editor}>
-        <ControlledBubbleMenu open={true} editor={editor} onChangeContent={setSelectedContent}>
+        <ControlledBubbleMenu
+            editor={editor}
+            onChangeContent={setSelectedContent}
+            selectedContents={selectedContents}
+            enableMultiSelection={enableMultiSelection}
+            prevSelection={prevSelection}
+            setPrevSelection={setPrevSelection}
+        >
             <Root>
-                <StyledButton onClick={onClick}>
+                <StyledButton onClick={handleMakeLonger}>
                     <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                     <Typography
@@ -138,7 +175,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={onClick}>
+                <StyledButton onClick={() => {}}>
                     <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                     <Typography
@@ -152,7 +189,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={onClick}>
+                <StyledButton onClick={() => {}}>
                     <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                     <Typography
@@ -166,7 +203,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={onClick}>
+                <StyledButton onClick={() => {}}>
                     <MdAutoAwesome size={12} color={Theme.colors.purple50} />
 
                     <Typography
@@ -180,6 +217,17 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
                     </Typography>
                 </StyledButton>
             </Root>
+
+            <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2, delay: 0.2 }}
+            >
+                <RemovedButton onClick={handleRemoveNode}>
+                    <RiDeleteBin6Line size={14} color={Theme.colors.purple50} />
+                </RemovedButton>
+            </motion.div>
         </ControlledBubbleMenu>
     );
 };

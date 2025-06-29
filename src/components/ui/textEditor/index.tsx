@@ -10,6 +10,7 @@ import { ReactElement } from "react";
 
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
+import { Indent } from "./plugins/Indent";
 import { Root } from "./styles";
 
 interface ITextEditorProps {
@@ -34,6 +35,7 @@ const TextEditor = ({
     zoom = 1,
 }: ITextEditorProps): ReactElement => {
     const extensions = [
+        Indent,
         StarterKit.configure({
             dropcursor: false,
         }),

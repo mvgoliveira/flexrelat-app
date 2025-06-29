@@ -5,29 +5,50 @@ import { NodeSelection, Plugin, PluginKey, Selection, TextSelection } from "@tip
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import { getMarkRange } from "@tiptap/react";
 import { motion } from "motion/react";
-import { ReactNode, useEffect, useLayoutEffect, useState } from "react";
+import {
+    Dispatch,
+    ReactElement,
+    ReactNode,
+    SetStateAction,
+    useLayoutEffect,
+    useState,
+} from "react";
 
 import { SelectedContent } from "../components/TextBubbleMenu";
 
 type Props = {
     editor: Editor;
-    open: boolean;
+    open?: boolean;
     children: ReactNode;
+    selectedContents: SelectedContent[];
     onChangeContent: (content: SelectedContent[]) => void;
+    enableMultiSelection?: boolean;
+    prevSelection: Selection[];
+    setPrevSelection: Dispatch<SetStateAction<Selection[]>>;
 };
 
-export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }: Props) => {
-    const [prevSelection, setPrevSelection] = useState<Selection[]>([]);
+export const ControlledBubbleMenu = ({
+    editor,
+    open = true,
+    children,
+    onChangeContent,
+    enableMultiSelection = true,
+    selectedContents,
+    prevSelection,
+    setPrevSelection,
+}: Props): ReactElement => {
     const [isOpen, setIsOpen] = useState(false);
 
     const { view } = editor;
+
     const {
         x,
         y,
         strategy: position,
         refs,
     } = useFloating({
-        strategy: "fixed",
+        strategy: "absolute",
+        transform: false,
         whileElementsMounted: autoUpdate,
         placement: "top-end",
         middleware: [
@@ -35,13 +56,7 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
             flip({
                 padding: 8,
                 boundary: editor.options.element,
-                fallbackPlacements: [
-                    "bottom",
-                    "top-start",
-                    "bottom-start",
-                    "top-end",
-                    "bottom-end",
-                ],
+                fallbackPlacements: ["top-end"],
             }),
         ],
     });
@@ -55,30 +70,6 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
 
                 // If the selection is a node selection, return the node's bounding rect
                 if (isNodeSelection(editor.state.selection)) {
-                    const domInfo = editor.view.domAtPos(from + 1);
-                    const tableEl = (domInfo.node as HTMLElement).closest("table");
-                    if (tableEl) {
-                        const cells = Array.from(
-                            tableEl.querySelectorAll("th, td")
-                        ) as HTMLElement[];
-                        const rects = cells.map(c => c.getBoundingClientRect());
-                        const top = Math.min(...rects.map(r => r.top));
-                        const left = Math.min(...rects.map(r => r.left));
-                        const bottom = Math.max(...rects.map(r => r.bottom));
-                        const right = Math.max(...rects.map(r => r.right));
-
-                        return {
-                            top,
-                            left,
-                            bottom,
-                            right,
-                            width: right - left,
-                            height: bottom - top,
-                            x: left,
-                            y: top,
-                        };
-                    }
-
                     const node = editor.view.nodeDOM(from) as HTMLElement;
 
                     if (node) {
@@ -86,8 +77,6 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
                     }
                 }
 
-                // If the clicked position a mark, create a selection from the mark range
-                // When the selection is not empy, the bubble menu will be shown
                 const range = getMarkRange(
                     view.state.doc.resolve(from),
                     view.state.schema.marks.link
@@ -102,10 +91,11 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
                 }
 
                 // Otherwise,
-                return posToDOMRect(editor.view, from, to);
+                const rect = posToDOMRect(editor.view, from, to);
+                return new DOMRect(rect.x, rect.y - 5, rect.width, rect.height);
             },
         });
-    }, [refs.reference, editor.state.selection, view, refs, editor.view]);
+    }, [selectedContents, view, refs, editor.view]);
 
     useLayoutEffect(() => {
         const handler = (e: MouseEvent) => {
@@ -132,9 +122,7 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
                     return;
                 }
 
-                if (e.shiftKey || prevSelection.length === 0) {
-                    // setPrevSelection(prev => [...prev, sel]);
-
+                if (enableMultiSelection && (e.shiftKey || prevSelection.length === 0)) {
                     const exists = prevSelection.some(s => s.from === sel.from && s.to === sel.to);
                     setPrevSelection(prev =>
                         exists
@@ -179,7 +167,7 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
         return () => view.dom.removeEventListener("click", handler);
     }, [editor.state.selection]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const key = new PluginKey("multi-selection");
 
         const plugin = new Plugin({
@@ -188,14 +176,18 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
                 decorations(state) {
                     if (prevSelection.length === 0) return null;
 
-                    const decorations = prevSelection.map(sel => {
-                        const $posFrom = view.state.doc.resolve(sel.from);
-                        const $posTo = view.state.doc.resolve(sel.to);
+                    const docSize = view.state.doc.content.size;
 
-                        return Decoration.node($posFrom.before(1), $posTo.before(1), {
-                            class: "multi-selected",
+                    const decorations = prevSelection
+                        .filter(sel => sel.from <= docSize && sel.to <= docSize)
+                        .map(sel => {
+                            const $posFrom = view.state.doc.resolve(sel.from);
+                            const $posTo = view.state.doc.resolve(sel.to);
+
+                            return Decoration.node($posFrom.before(1), $posTo.before(1), {
+                                class: "multi-selected",
+                            });
                         });
-                    });
 
                     return DecorationSet.create(state.doc, decorations);
                 },
@@ -230,8 +222,7 @@ export const ControlledBubbleMenu = ({ editor, open, children, onChangeContent }
         };
     }, [prevSelection]);
 
-    if (!open) return null;
-    if (!isOpen) return null;
+    if (!selectedContents || selectedContents.length === 0 || !isOpen || !open) return <></>;
 
     const style = { position, top: y ?? 0, left: x ?? 0, zIndex: 9999 };
 

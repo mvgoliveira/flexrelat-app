@@ -25,10 +25,6 @@ export const Root = styled.div<IRootProps>`
         }
     }
 
-    .tiptap {
-        gap: 20px;
-    }
-
     .rm-pagination-gap {
         border-top: 1px solid ${({ theme }) => theme.colors.gray30};
         border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
@@ -84,6 +80,18 @@ export const Root = styled.div<IRootProps>`
             &:last-of-type {
                 margin-bottom: 12px;
             }
+
+            .selectedCell:after {
+                background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+                content: "";
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                pointer-events: none;
+                position: absolute;
+                z-index: 2;
+            }
         }
 
         td,
@@ -103,18 +111,6 @@ export const Root = styled.div<IRootProps>`
             background: ${({ theme }) => theme.colors.gray30};
             font-weight: ${({ theme }) => theme.fontWeight.bold};
             text-align: center;
-        }
-
-        .selectedCell:after {
-            background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
-            content: "";
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            pointer-events: none;
-            position: absolute;
-            z-index: 2;
         }
     }
 
@@ -168,6 +164,11 @@ export const Root = styled.div<IRootProps>`
         tr {
             outline: 1px solid ${({ theme }) => theme.colors.purple50};
             background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+        }
+
+        .selectedCell:after {
+            background: transparent;
+            content: "";
         }
     }
 `;
