@@ -89,7 +89,7 @@ export default function Dashboard(): ReactElement {
                     hasCloseButton
                 />
 
-                <AiChat />
+                <AiChat related_id={documentId as string} related_type="document" />
             </Layout.RightNavBar>
         </Layout>
     );

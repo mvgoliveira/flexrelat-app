@@ -1,5 +1,5 @@
 import { Typography } from "@/components/features/typography";
-import { ComponentChange } from "@/repositories/flexbotApi";
+import { Message } from "@/repositories/flexbotApi";
 import { Theme } from "@/themes";
 import { getElapsedTime } from "@/utils/date";
 import { ReactElement } from "react";
@@ -8,27 +8,22 @@ import { MdAutoAwesome, MdPerson } from "react-icons/md";
 import { ProfileContainer, ProfilePicture, Root } from "./styles";
 
 interface IChatMessageProps {
-    metadata: {
-        text: string;
-        timestamp: string;
-        sender: "user" | "bot";
-        changes?: ComponentChange[];
-    };
+    metadata: Message;
 }
 
 export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
     return (
         <Root>
             <ProfileContainer
-                style={{ flexDirection: metadata.sender === "user" ? "row-reverse" : "row" }}
+                style={{ flexDirection: metadata.sender_id !== "flexbot" ? "row-reverse" : "row" }}
             >
-                {metadata.sender === "user" && (
+                {metadata.sender_id !== "flexbot" && (
                     <ProfilePicture>
                         <MdPerson size={12} color={Theme.colors.white} />
                     </ProfilePicture>
                 )}
 
-                {metadata.sender === "bot" && (
+                {metadata.sender_id === "flexbot" && (
                     <MdAutoAwesome size={12} color={Theme.colors.black} />
                 )}
 
@@ -39,7 +34,7 @@ export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
                     fontWeight="bold"
                     textAlign="center"
                 >
-                    {metadata.sender === "user" ? "Você" : "FlexBot"}
+                    {metadata.sender_id !== "flexbot" ? "Você" : "FlexBot"}
                 </Typography>
 
                 <Typography
@@ -49,7 +44,7 @@ export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
                     fontWeight="regular"
                     textAlign="center"
                 >
-                    {getElapsedTime(metadata.timestamp)}
+                    {getElapsedTime(metadata.created_at)}
                 </Typography>
             </ProfileContainer>
 
@@ -58,7 +53,7 @@ export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
                 fontSize={{ xs: "fs50" }}
                 color="gray100"
                 fontWeight="medium"
-                textAlign={metadata.sender === "user" ? "right" : "left"}
+                textAlign={metadata.sender_id !== "flexbot" ? "right" : "left"}
             >
                 {metadata.text}
             </Typography>

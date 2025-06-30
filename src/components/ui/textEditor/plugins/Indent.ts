@@ -107,10 +107,12 @@ function updateIndentLevel(tr: Transaction, delta: number): Transaction {
 export const Indent = Extension.create<IndentOptions>({
     name: "indent",
 
-    defaultOptions: {
-        types: ["heading", "paragraph"],
-        indentLevels: [0, 30, 60, 90, 120, 150, 180, 210],
-        defaultIndentLevel: 0,
+    addOptions() {
+        return {
+            types: ["heading", "paragraph"],
+            indentLevels: [0, 30, 60, 90, 120, 150, 180, 210],
+            defaultIndentLevel: 0,
+        };
     },
 
     addGlobalAttributes() {

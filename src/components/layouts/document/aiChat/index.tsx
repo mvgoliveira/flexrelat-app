@@ -1,111 +1,160 @@
 import { Button } from "@/components/features/button";
+import { Spinner } from "@/components/features/loading/spinner";
 import { Typography } from "@/components/features/typography";
-import { Message, ComponentChange } from "@/repositories/flexbotApi";
+import { ScrollArea } from "@/components/ui/scrollArea";
+import { AiChange, Message, getMessagesByChatId } from "@/repositories/flexbotApi";
 import { Theme } from "@/themes";
+import { useQuery } from "@tanstack/react-query";
 import { ReactElement, useState } from "react";
-import { MdCheck, MdClose } from "react-icons/md";
+import { MdCheck, MdClose, MdSend } from "react-icons/md";
+import { TbRobotOff } from "react-icons/tb";
 
 import { ChatMessage } from "../chatMessage";
-import { ChangesHeader, ChangesNumberContainer, MessagesContent, Root } from "./styles";
+import {
+    ChangesHeader,
+    ChangesNumberContainer,
+    Fallback,
+    IconContainer,
+    InputContainer,
+    MessageInputContainer,
+    MessagesContent,
+    Root,
+} from "./styles";
 
-export const AiChat = (): ReactElement => {
-    const [changes, setChanges] = useState<ComponentChange[]>([
-        {
-            type: "add",
-            elementId: "element1",
-            text: "Adicionou um novo elemento",
-            properties: { color: "blue", size: "large" },
-            timestamp: new Date().toISOString(),
-        },
-        {
-            type: "update",
-            elementId: "element2",
-            text: "Atualizou o texto do elemento",
-            properties: { text: "Novo texto" },
-            timestamp: new Date().toISOString(),
-        },
-        {
-            type: "remove",
-            elementId: "element3",
-            text: "Removeu um elemento existente",
-            timestamp: new Date().toISOString(),
-        },
-    ]);
+interface IAiChatProps {
+    related_id: string;
+    related_type: "document" | "model";
+}
 
-    const [messages, setMessages] = useState<Message[]>([
-        {
-            text: "Gostaria de adicionar um novo elemento ao meu relatório.",
-            timestamp: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
-            sender: "user",
-        },
-        {
-            text: "Claro! Que tipo de elemento você gostaria de adicionar?",
-            timestamp: new Date(Date.now() - 19 * 60 * 1000).toISOString(),
-            sender: "bot",
-        },
-    ]);
+export const AiChat = ({ related_id, related_type }: IAiChatProps): ReactElement => {
+    const [changes, setChanges] = useState<AiChange[]>([]);
 
-    return (
-        <Root>
-            <ChangesHeader>
-                <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                    <ChangesNumberContainer>
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs50" }}
-                            color="black"
-                            fontWeight="regular"
-                        >
-                            {changes.length}
-                        </Typography>
-                    </ChangesNumberContainer>
+    const { status: messagesStatus, data: messages } = useQuery({
+        queryKey: ["get_ai_messages", related_id, related_type],
+        queryFn: async (): Promise<Message[]> => {
+            const response: Message[] = await getMessagesByChatId(related_id, related_type);
+
+            const allChanges = response.flatMap(message => message.changes ?? []);
+            setChanges(allChanges);
+
+            return response;
+        },
+        refetchInterval: 5 * 60 * 1000, // 5 minutes
+    });
+
+    if (messagesStatus === "pending") {
+        return (
+            <Fallback>
+                <Spinner />
+            </Fallback>
+        );
+    }
+
+    if (messagesStatus === "error") {
+        return (
+            <Fallback>
+                <TbRobotOff size={24} color={Theme.colors.gray50} />
+
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                    <Typography
+                        tag="span"
+                        fontSize={{ xs: "fs50" }}
+                        color="gray70"
+                        fontWeight="semibold"
+                    >
+                        Chat com IA não está disponível.
+                    </Typography>
 
                     <Typography
                         tag="p"
                         fontSize={{ xs: "fs50" }}
-                        color="gray70"
+                        color="gray60"
                         fontWeight="regular"
+                        textAlign="center"
                     >
-                        Mudanças sem aprovação
+                        Tente novamente mais tarde.
                     </Typography>
                 </div>
+            </Fallback>
+        );
+    }
 
-                <div style={{ display: "flex", gap: 5 }}>
-                    <Button height="30px" variant="secondary" padding="0 10px">
-                        <MdCheck size={12} color={Theme.colors.black} />
+    return (
+        <Root>
+            <div>
+                <ChangesHeader>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                        <ChangesNumberContainer>
+                            <Typography
+                                tag="p"
+                                fontSize={{ xs: "fs50" }}
+                                color="black"
+                                fontWeight="regular"
+                            >
+                                {changes.length}
+                            </Typography>
+                        </ChangesNumberContainer>
 
                         <Typography
                             tag="p"
                             fontSize={{ xs: "fs50" }}
-                            color="gray100"
+                            color="gray70"
                             fontWeight="regular"
-                            textAlign="center"
                         >
-                            Aprovar todos
+                            Mudanças sem aprovação
                         </Typography>
-                    </Button>
+                    </div>
 
-                    <Button height="30px" variant="secondary" padding="0 10px">
-                        <MdClose size={12} color={Theme.colors.black} />
+                    {changes.length > 0 && (
+                        <div style={{ display: "flex", gap: 5 }}>
+                            <Button height="30px" variant="secondary" padding="0 10px">
+                                <MdCheck size={12} color={Theme.colors.black} />
 
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs50" }}
-                            color="gray100"
-                            fontWeight="regular"
-                            textAlign="center"
-                        >
-                            Descartar todos
-                        </Typography>
-                    </Button>
-                </div>
-            </ChangesHeader>
+                                <Typography
+                                    tag="p"
+                                    fontSize={{ xs: "fs50" }}
+                                    color="gray100"
+                                    fontWeight="regular"
+                                    textAlign="center"
+                                >
+                                    Aprovar todos
+                                </Typography>
+                            </Button>
 
-            <MessagesContent>
-                {messages.map((message, index) => (
-                    <ChatMessage key={index} metadata={message} />
-                ))}
-            </MessagesContent>
+                            <Button height="30px" variant="secondary" padding="0 10px">
+                                <MdClose size={12} color={Theme.colors.black} />
+
+                                <Typography
+                                    tag="p"
+                                    fontSize={{ xs: "fs50" }}
+                                    color="gray100"
+                                    fontWeight="regular"
+                                    textAlign="center"
+                                >
+                                    Descartar todos
+                                </Typography>
+                            </Button>
+                        </div>
+                    )}
+                </ChangesHeader>
+            </div>
+
+            <ScrollArea>
+                <MessagesContent>
+                    {messages?.map((message, index) => (
+                        <ChatMessage key={index} metadata={message} />
+                    ))}
+                </MessagesContent>
+            </ScrollArea>
+
+            <MessageInputContainer>
+                <InputContainer>
+                    <div style={{ display: "flex", width: "100%", height: "100%" }}></div>
+                    <IconContainer>
+                        <MdSend size={12} color={Theme.colors.gray70} />
+                    </IconContainer>
+                </InputContainer>
+            </MessageInputContainer>
         </Root>
     );
 };

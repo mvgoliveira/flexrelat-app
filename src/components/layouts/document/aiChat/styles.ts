@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 
 export const Root = styled.div`
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 `;
 
 export const ChangesHeader = styled.header`
@@ -30,6 +31,43 @@ export const MessagesContent = styled.div`
     flex-direction: column;
     gap: 40px;
     padding: 20px;
-    overflow-y: auto;
+`;
+
+export const MessageInputContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-top: 1px solid ${({ theme }) => theme.colors.gray40};
+    background-color: ${({ theme }) => theme.colors.white};
+    min-height: 135px;
+`;
+
+export const InputContainer = styled.div`
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: ${({ theme }) => theme.colors.gray10};
+    border: 1px solid ${({ theme }) => theme.colors.gray40};
+    border-radius: 4px;
+    padding: 10px;
+    gap: 20px;
+`;
+
+export const IconContainer = styled.div`
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: fit-content;
+    height: 100%;
+`;
+
+export const Fallback = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     height: 100%;
 `;

@@ -112,7 +112,22 @@ export const Root = styled.div<IRootProps>`
             font-weight: ${({ theme }) => theme.fontWeight.bold};
             text-align: center;
         }
+
+        /* .column-resize-handle {
+            background-color: ${({ theme }) => theme.colors.purple50};
+            bottom: -2px;
+            pointer-events: none;
+            position: absolute;
+            right: -2px;
+            top: 0;
+            width: 4px;
+        } */
     }
+
+    /* .resize-cursor {
+        cursor: ew-resize;
+        cursor: col-resize;
+    } */
 
     ul {
         display: flex;

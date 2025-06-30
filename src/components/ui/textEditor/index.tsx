@@ -44,7 +44,11 @@ const TextEditor = ({
             className: "has-focus",
             mode: "shallowest",
         }),
-        TablePlus,
+        TablePlus.configure({
+            resizable: true,
+            lastColumnResizable: false,
+            cellMinWidth: 50,
+        }),
         TableRowPlus,
         TableHeaderPlus,
         TableCellPlus,

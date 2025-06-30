@@ -11,7 +11,6 @@ export const StyledScrollRoot = styled(ScrollRoot)`
     width: 100%;
     height: 100%;
     overflow: hidden;
-    box-shadow: 0 2px 10px ${({ theme }) => theme.colors.gray20};
     --scrollbar-size: 10px;
 `;
 

@@ -36,6 +36,7 @@ export const StyledLeftNavbar = styled.article`
     width: 100%;
     background-color: ${({ theme }) => theme.colors.white};
     border-right: 1px solid ${({ theme }) => theme.colors.gray30};
+    overflow: hidden;
 `;
 
 export const StyledRightNavbar = styled.article`
@@ -46,4 +47,5 @@ export const StyledRightNavbar = styled.article`
     width: 100%;
     background-color: ${({ theme }) => theme.colors.white};
     border-left: 1px solid ${({ theme }) => theme.colors.gray30};
+    overflow: hidden;
 `;

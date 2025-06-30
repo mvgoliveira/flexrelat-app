@@ -5,6 +5,7 @@ export const Root = styled.div`
     flex-direction: column;
     width: 100%;
     height: fit-content;
+    min-height: fit-content;
     gap: 5px;
 `;
 
