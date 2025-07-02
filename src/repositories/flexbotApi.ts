@@ -1,6 +1,6 @@
 type Content = {
     id: string;
-    type: "text" | "image" | "chart" | "table";
+    type: "text" | "heading" | "image" | "chart" | "table" | "bulletList" | "numberedList";
     html: string;
     position: number;
 };
