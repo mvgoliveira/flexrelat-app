@@ -83,18 +83,17 @@ export const Theme = {
         blue100: "#033FFF",
     },
     fontSize: {
-        fs25: "0.533rem", // 8px
-        fs50: "0.667rem", // 10px
-        fs75: "0.8rem", // 12px
-        fs100: "1rem", // 15px
-        fs200: "1.267rem", // 19px
-        fs300: "1.553rem", // 23px
-        fs400: "1.933rem", // 29px
-        fs500: "2.467rem", // 37px
-        fs600: "3.067rem", // 46px
-        fs700: "3.8rem", // 57px
-        fs800: "4.8rem", // 72px
-        fs900: "5.933rem", // 89
+        fs25: "0.563rem", // 9px
+        fs50: "0.625rem", // 10px
+        fs75: "0.75rem", // 12px
+        fs100: "0.938rem", // 15px
+        fs200: "1.188rem", // 19px
+        fs300: "1.438rem", // 23px
+        fs400: "1.813rem", // 29px
+        fs500: "2.313rem", // 37px
+        fs600: "2.875rem", // 46px
+        fs700: "3.563rem", // 57px
+        fs800: "4.5rem", // 72px
     },
     lineHeight: {
         fs50: "16px",

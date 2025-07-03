@@ -10,6 +10,7 @@ import { ReactElement } from "react";
 
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
+import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { Root } from "./styles";
 
@@ -65,6 +66,7 @@ const TextEditor = ({
         BulletList,
         OrderedList,
         ListItem,
+        GlobalClass,
     ];
 
     const currentEditor = useEditor({
@@ -80,7 +82,9 @@ const TextEditor = ({
                 <li>And even resizable columns (optional)</li>
             </ul>
             <p>
-                Here is an example:
+                <span data-decoration-id="id_1428080181" class="expression-active">
+                    Here is an example:
+                </span>
             </p>
             <table>
                 <tbody>

@@ -142,14 +142,32 @@ export const TextBubbleMenu = ({
         setSelectedContent([]);
         setPrevSelection([]);
     };
-    //     if (selectedContents.length === 0) {
-    //         setTimeout(() => {
-    //             document.querySelectorAll(".multi-selected").forEach(el => {
-    //                 el.classList.remove("multi-selected");
-    //             });
-    //         }, 2000);
-    //     }
-    // }, [selectedContents]);
+
+    const handleAddClass = () => {
+        const { $from } = editor.state.selection;
+        const pos = $from.pos;
+        const node = $from.node();
+        editor.view.dispatch(
+            editor.state.tr.setNodeMarkup(pos, null, { ...node.attrs, class: "prev-change" })
+        );
+    };
+
+    const handleRemoveClass = () => {
+        const { from } = selectedContents[0];
+        const node = editor.state.doc.nodeAt(from);
+        if (!node) return;
+
+        const typeName = node.type.name;
+
+        editor
+            .chain()
+            .focus()
+            .setNodeSelection(from)
+            .updateAttributes(typeName, {
+                class: "",
+            })
+            .run();
+    };
 
     return (
         <ControlledBubbleMenu
@@ -175,7 +193,7 @@ export const TextBubbleMenu = ({
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={() => {}}>
+                <StyledButton onClick={handleAddClass}>
                     <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                     <Typography
@@ -189,7 +207,7 @@ export const TextBubbleMenu = ({
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={() => {}}>
+                <StyledButton onClick={handleRemoveClass}>
                     <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                     <Typography

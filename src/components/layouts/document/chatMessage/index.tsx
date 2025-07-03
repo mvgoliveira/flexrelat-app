@@ -1,17 +1,24 @@
 import { Typography } from "@/components/features/typography";
-import { Message } from "@/repositories/flexbotApi";
+import { AiChange, Message } from "@/repositories/flexbotApi";
 import { Theme } from "@/themes";
 import { getElapsedTime } from "@/utils/date";
 import { ReactElement } from "react";
 import { MdAutoAwesome, MdPerson } from "react-icons/md";
 
-import { ProfileContainer, ProfilePicture, Root } from "./styles";
+import { ChatChanges } from "../chatChanges";
+import { ChangesContainer, ProfileContainer, ProfilePicture, Root } from "./styles";
 
 interface IChatMessageProps {
     metadata: Message;
+    activeChange: AiChange | null;
+    onUpdateActiveChange: (change: AiChange | null) => void;
 }
 
-export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
+export const ChatMessage = ({
+    metadata,
+    activeChange,
+    onUpdateActiveChange,
+}: IChatMessageProps): ReactElement => {
     return (
         <Root>
             <ProfileContainer
@@ -57,6 +64,17 @@ export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
             >
                 {metadata.text}
             </Typography>
+
+            <ChangesContainer>
+                {metadata.changes?.map(change => (
+                    <ChatChanges
+                        key={change.id}
+                        metadata={change}
+                        activeChange={activeChange}
+                        onUpdateActiveChange={onUpdateActiveChange}
+                    />
+                ))}
+            </ChangesContainer>
         </Root>
     );
 };

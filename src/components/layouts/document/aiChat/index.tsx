@@ -28,6 +28,7 @@ interface IAiChatProps {
 
 export const AiChat = ({ related_id, related_type }: IAiChatProps): ReactElement => {
     const [changes, setChanges] = useState<AiChange[]>([]);
+    const [activeChange, setActiveChange] = useState<AiChange | null>(null);
 
     const { status: messagesStatus, data: messages } = useQuery({
         queryKey: ["get_ai_messages", related_id, related_type],
@@ -41,6 +42,14 @@ export const AiChat = ({ related_id, related_type }: IAiChatProps): ReactElement
         },
         refetchInterval: 5 * 60 * 1000, // 5 minutes
     });
+
+    const handleUpdateActiveChange = (change: AiChange | null): void => {
+        if (change?.id === activeChange?.id) {
+            setActiveChange(null);
+        } else {
+            setActiveChange(change);
+        }
+    };
 
     if (messagesStatus === "pending") {
         return (
@@ -142,7 +151,12 @@ export const AiChat = ({ related_id, related_type }: IAiChatProps): ReactElement
             <ScrollArea>
                 <MessagesContent>
                     {messages?.map((message, index) => (
-                        <ChatMessage key={index} metadata={message} />
+                        <ChatMessage
+                            key={index}
+                            metadata={message}
+                            activeChange={activeChange}
+                            onUpdateActiveChange={handleUpdateActiveChange}
+                        />
                     ))}
                 </MessagesContent>
             </ScrollArea>

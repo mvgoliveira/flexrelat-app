@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 export const Root = styled.div`
     display: grid;
     grid-template-rows: 60px 1fr;
-    grid-template-columns: 300px 1fr 300px;
+    grid-template-columns: auto 1fr auto;
     height: 100vh;
     max-height: 100vh;
     overflow: hidden;
@@ -33,7 +33,7 @@ export const StyledLeftNavbar = styled.article`
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 100%;
+    width: 300px;
     background-color: ${({ theme }) => theme.colors.white};
     border-right: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;
@@ -44,7 +44,7 @@ export const StyledRightNavbar = styled.article`
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 100%;
+    width: 300px;
     background-color: ${({ theme }) => theme.colors.white};
     border-left: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;

@@ -24,3 +24,10 @@ export const ProfileContainer = styled.div`
     gap: 10px;
     align-items: center;
 `;
+
+export const ChangesContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+`;

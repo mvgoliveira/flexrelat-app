@@ -19,7 +19,7 @@ export const DocumentHeader = styled.div`
 
 export const DocumentRoot = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 10px;
     overflow: hidden;
 `;

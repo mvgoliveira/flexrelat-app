@@ -29,7 +29,21 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                 const isNewLineEmpty = last?.type.name === "hardBreak";
 
                 if (isEmpty) {
-                    return this.editor.chain().newlineInCode().run();
+                    return this.editor
+                        .chain()
+                        .newlineInCode()
+                        .command(({ tr, dispatch }) => {
+                            const pos = tr.selection.from - 1;
+                            const node = tr.doc.nodeAt(pos);
+                            if (!node) return false;
+                            if (dispatch) {
+                                dispatch(
+                                    tr.setNodeMarkup(pos, null, { ...node.attrs, class: null })
+                                );
+                            }
+                            return true;
+                        })
+                        .run();
                 }
 
                 if (isNewLineEmpty) {
@@ -39,7 +53,21 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                         return this.editor
                             .chain()
                             .deleteRange({ from: beforePos, to: $from.pos })
-                            .createParagraphNear()
+                            .splitBlock({ keepMarks: false })
+                            .command(({ tr, dispatch }) => {
+                                const pos = tr.selection.from - 1;
+                                const selNode = tr.doc.nodeAt(pos);
+                                if (!selNode) return false;
+                                if (dispatch) {
+                                    dispatch(
+                                        tr.setNodeMarkup(pos, null, {
+                                            ...selNode.attrs,
+                                            class: null,
+                                        })
+                                    );
+                                }
+                                return true;
+                            })
                             .run();
                     }
                 }
@@ -49,7 +77,21 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                 }
 
                 if (isAtEnd && isHeading) {
-                    return this.editor.chain().createParagraphNear().run();
+                    return this.editor
+                        .chain()
+                        .splitBlock({ keepMarks: false })
+                        .command(({ tr, dispatch }) => {
+                            const pos = tr.selection.from - 1;
+                            const node = tr.doc.nodeAt(pos);
+                            if (!node) return false;
+                            if (dispatch) {
+                                dispatch(
+                                    tr.setNodeMarkup(pos, null, { ...node.attrs, class: null })
+                                );
+                            }
+                            return true;
+                        })
+                        .run();
                 }
 
                 if ($from.parent.type.name === "paragraph" || isHeading) {

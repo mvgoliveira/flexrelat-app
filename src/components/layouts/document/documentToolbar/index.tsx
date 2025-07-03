@@ -22,11 +22,15 @@ import {
 
 import { ColorContainer, Root } from "./styles";
 
-export const DocumentToolbar = (): ReactElement => {
+interface IDocumentToolbarProps {
+    zoom: number;
+}
+
+export const DocumentToolbar = ({ zoom }: IDocumentToolbarProps): ReactElement => {
     const [fontType, setFontType] = useState<string>("arial");
 
     return (
-        <Root>
+        <Root zoom={zoom}>
             <Toolbar>
                 <Toolbar.Group padding="0 5px" className="FontSelector">
                     <Toolbar.Item>

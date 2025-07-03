@@ -5,9 +5,12 @@ type Content = {
     position: number;
 };
 
+export type ChangesType = "add" | "remove" | "update";
+
 export type AiChange = {
     id: string;
-    type: "add" | "remove" | "update";
+    type: ChangesType;
+    text: string;
     old_content: Content;
     new_content: Content;
     created_at: string;
@@ -68,6 +71,7 @@ export const getMessagesByChatId = async (
                 {
                     id: "dbd57046-c6b7-4d47-87fe-e08cae528894",
                     type: "add",
+                    text: "Adicionando gráfico de barras com dados de vendas do último trimestre.",
                     old_content: {
                         id: "oldContent1",
                         type: "text",

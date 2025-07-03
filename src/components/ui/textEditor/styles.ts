@@ -17,7 +17,7 @@ export const Root = styled.div<IRootProps>`
     background: ${({ theme }) => theme.colors.white};
     min-width: ${({ pageWidth }) => `${pageWidth}px`};
     zoom: ${({ zoom }) => zoom};
-    border: 1px solid ${({ theme }) => theme.colors.gray30};
+    border: 1px solid ${({ theme }) => theme.colors.gray40};
     font-size: ${({ theme }) => theme.fontSize.fs75};
     font-family: ${({ theme }) => theme.fontFamily.arial};
 
@@ -96,7 +96,8 @@ export const Root = styled.div<IRootProps>`
 
         td,
         th {
-            border: 1px solid ${({ theme }) => theme.colors.gray50};
+            border-right: 1px solid ${({ theme }) => theme.colors.gray50};
+            border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
             box-sizing: border-box;
             padding: 12px 8px;
             position: relative;
@@ -105,12 +106,17 @@ export const Root = styled.div<IRootProps>`
             > * {
                 margin-bottom: 0;
             }
+
+            &:first-of-type {
+                border-left: 1px solid ${({ theme }) => theme.colors.gray50};
+            }
         }
 
         th {
             background: ${({ theme }) => theme.colors.gray30};
             font-weight: ${({ theme }) => theme.fontWeight.bold};
             text-align: center;
+            border-top: 1px solid ${({ theme }) => theme.colors.gray50};
         }
 
         /* .column-resize-handle {
@@ -185,5 +191,14 @@ export const Root = styled.div<IRootProps>`
             background: transparent;
             content: "";
         }
+    }
+
+    .prev-change {
+        outline-offset: 5px;
+        background: ${({ theme }) => hexToRgba(theme.colors.red50, 10)};
+        box-shadow:
+            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.red50, 10)},
+            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.red50, 10)};
+        color: ${({ theme }) => theme.colors.red100};
     }
 `;
