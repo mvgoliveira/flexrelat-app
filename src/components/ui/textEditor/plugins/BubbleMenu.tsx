@@ -21,21 +21,21 @@ type Props = {
     open?: boolean;
     children: ReactNode;
     selectedContents: SelectedContent[];
-    onChangeContent: (content: SelectedContent[]) => void;
+    onChangeSelectedContent: (content: SelectedContent[]) => void;
     enableMultiSelection?: boolean;
     prevSelection: Selection[];
-    setPrevSelection: Dispatch<SetStateAction<Selection[]>>;
+    onChangePrevSelection: Dispatch<SetStateAction<Selection[]>>;
 };
 
 export const ControlledBubbleMenu = ({
     editor,
     open = true,
     children,
-    onChangeContent,
+    onChangeSelectedContent,
     enableMultiSelection = true,
     selectedContents,
     prevSelection,
-    setPrevSelection,
+    onChangePrevSelection,
 }: Props): ReactElement => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -109,7 +109,7 @@ export const ControlledBubbleMenu = ({
             const node = view.state.doc.nodeAt(before);
             if (!node) {
                 setIsOpen(false);
-                setPrevSelection([]);
+                onChangePrevSelection([]);
                 return;
             }
             const sel = NodeSelection.create(view.state.doc, before);
@@ -117,20 +117,20 @@ export const ControlledBubbleMenu = ({
 
             if (sel.content().content.size > 2) {
                 if (e.button !== 0 || !e.metaKey) {
-                    setPrevSelection([]);
+                    onChangePrevSelection([]);
                     setIsOpen(false);
                     return;
                 }
 
                 if (enableMultiSelection && (e.shiftKey || prevSelection.length === 0)) {
                     const exists = prevSelection.some(s => s.from === sel.from && s.to === sel.to);
-                    setPrevSelection(prev =>
+                    onChangePrevSelection(prev =>
                         exists
                             ? prev.filter(s => !(s.from === sel.from && s.to === sel.to))
                             : [...prev, sel]
                     );
                 } else {
-                    setPrevSelection([sel]);
+                    onChangePrevSelection([sel]);
                 }
 
                 const alreadySelected = prevSelection.some(
@@ -138,7 +138,7 @@ export const ControlledBubbleMenu = ({
                 );
 
                 if (alreadySelected) {
-                    setPrevSelection(prev =>
+                    onChangePrevSelection(prev =>
                         prev.filter(s => !(s.from === sel.from && s.to === sel.to))
                     );
 
@@ -159,7 +159,7 @@ export const ControlledBubbleMenu = ({
                     view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
                 );
                 setIsOpen(false);
-                setPrevSelection([]);
+                onChangePrevSelection([]);
             }
         };
 
@@ -215,7 +215,7 @@ export const ControlledBubbleMenu = ({
             };
         });
 
-        onChangeContent(content);
+        onChangeSelectedContent(content);
 
         return () => {
             editor.unregisterPlugin(key);

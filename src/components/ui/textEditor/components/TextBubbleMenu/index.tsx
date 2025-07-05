@@ -3,6 +3,7 @@ import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
 import { Selection } from "@tiptap/pm/state";
 import { motion } from "motion/react";
+import { DOMSerializer } from "prosemirror-model";
 import { ReactElement, useState } from "react";
 import { MdAutoAwesome, MdAutoFixHigh } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -143,40 +144,84 @@ export const TextBubbleMenu = ({
         setPrevSelection([]);
     };
 
-    const handleAddClass = () => {
-        const { $from } = editor.state.selection;
-        const pos = $from.pos;
-        const node = $from.node();
-        editor.view.dispatch(
-            editor.state.tr.setNodeMarkup(pos, null, { ...node.attrs, class: "prev-change" })
-        );
-    };
-
-    const handleRemoveClass = () => {
+    const handleChangeRemoveClass = () => {
         const { from } = selectedContents[0];
         const node = editor.state.doc.nodeAt(from);
         if (!node) return;
 
         const typeName = node.type.name;
 
-        editor
-            .chain()
-            .focus()
-            .setNodeSelection(from)
-            .updateAttributes(typeName, {
-                class: "",
-            })
-            .run();
+        if (node.attrs["class"] === "change-remove") {
+            editor
+                .chain()
+                .focus()
+                .setNodeSelection(from)
+                .updateAttributes(typeName, {
+                    class: "",
+                })
+                .run();
+        } else {
+            editor
+                .chain()
+                .focus()
+                .setNodeSelection(from)
+                .updateAttributes(typeName, {
+                    class: "change-remove",
+                })
+                .run();
+        }
+    };
+
+    const handleChangeAddClass = () => {
+        const { from } = selectedContents[0];
+        const node = editor.state.doc.nodeAt(from);
+        if (!node) return;
+
+        const typeName = node.type.name;
+
+        if (node.attrs["class"] === "change-add") {
+            editor
+                .chain()
+                .focus()
+                .setNodeSelection(from)
+                .updateAttributes(typeName, {
+                    class: "",
+                })
+                .run();
+        } else {
+            editor
+                .chain()
+                .focus()
+                .setNodeSelection(from)
+                .updateAttributes(typeName, {
+                    class: "change-add",
+                })
+                .run();
+        }
+    };
+
+    const getHtml = () => {
+        const { from, to } = selectedContents[0];
+        const { state } = editor;
+        const slice = state.doc.slice(from, to);
+        const fragment = DOMSerializer.fromSchema(editor.schema).serializeFragment(slice.content);
+
+        const container = document.createElement("div");
+        container.appendChild(fragment);
+
+        const html = container.innerHTML;
+
+        console.log(html);
     };
 
     return (
         <ControlledBubbleMenu
             editor={editor}
-            onChangeContent={setSelectedContent}
+            onChangeSelectedContent={setSelectedContent}
             selectedContents={selectedContents}
             enableMultiSelection={enableMultiSelection}
             prevSelection={prevSelection}
-            setPrevSelection={setPrevSelection}
+            onChangePrevSelection={setPrevSelection}
         >
             <Root>
                 <StyledButton onClick={handleMakeLonger}>
@@ -193,7 +238,7 @@ export const TextBubbleMenu = ({
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={handleAddClass}>
+                <StyledButton onClick={handleChangeRemoveClass}>
                     <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                     <Typography
@@ -207,7 +252,7 @@ export const TextBubbleMenu = ({
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={handleRemoveClass}>
+                <StyledButton onClick={handleChangeAddClass}>
                     <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                     <Typography
@@ -221,7 +266,7 @@ export const TextBubbleMenu = ({
                     </Typography>
                 </StyledButton>
 
-                <StyledButton onClick={() => {}}>
+                <StyledButton onClick={getHtml}>
                     <MdAutoAwesome size={12} color={Theme.colors.purple50} />
 
                     <Typography

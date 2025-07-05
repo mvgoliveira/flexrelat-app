@@ -4,6 +4,7 @@ import Focus from "@tiptap/extension-focus";
 import { ListItem } from "@tiptap/extension-list-item";
 import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextStyle from "@tiptap/extension-text-style";
+import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ReactElement } from "react";
@@ -67,15 +68,28 @@ const TextEditor = ({
         OrderedList,
         ListItem,
         GlobalClass,
+        UniqueID.configure({
+            types: [
+                "heading",
+                "paragraph",
+                "table",
+                "bulletList",
+                "orderedList",
+                "listItem",
+                "blockquote",
+                "codeBlock",
+                "image",
+            ],
+            attributeName: "id",
+        }),
     ];
 
     const currentEditor = useEditor({
         extensions,
         autofocus: false,
         content: `
-            <h3>
-                Have you seen our tables? They are amazing!
-            </h3>
+            <h3 data-id="62e714da-e94f-4009-8880-aec8b033765d">Have you seen our tables? They are amazing!</h3>
+
             <ul>
                 <li>Tables with rows, cells and headers (optional)</li>
                 <li>Support for <code>colgroup</code> and <code>rowspan</code></li>

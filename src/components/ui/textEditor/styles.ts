@@ -16,6 +16,7 @@ export const Root = styled.div<IRootProps>`
     flex-direction: column;
     background: ${({ theme }) => theme.colors.white};
     min-width: ${({ pageWidth }) => `${pageWidth}px`};
+    max-width: ${({ pageWidth }) => `${pageWidth}px`};
     zoom: ${({ zoom }) => zoom};
     border: 1px solid ${({ theme }) => theme.colors.gray40};
     font-size: ${({ theme }) => theme.fontSize.fs75};
@@ -193,12 +194,21 @@ export const Root = styled.div<IRootProps>`
         }
     }
 
-    .prev-change {
+    .change-remove {
         outline-offset: 5px;
         background: ${({ theme }) => hexToRgba(theme.colors.red50, 10)};
         box-shadow:
             0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.red50, 10)},
             0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.red50, 10)};
-        color: ${({ theme }) => theme.colors.red100};
+        color: ${({ theme }) => hexToRgba(theme.colors.red100, 50)};
+    }
+
+    .change-add {
+        outline-offset: 5px;
+        background: ${({ theme }) => hexToRgba(theme.colors.green50, 10)};
+        box-shadow:
+            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.green50, 10)},
+            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.green50, 10)};
+        color: ${({ theme }) => theme.colors.green100};
     }
 `;

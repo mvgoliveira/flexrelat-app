@@ -48,4 +48,6 @@ export const StyledRightNavbar = styled.article`
     background-color: ${({ theme }) => theme.colors.white};
     border-left: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;
+
+    display: none;
 `;
