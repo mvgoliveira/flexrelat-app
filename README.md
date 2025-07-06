@@ -7,7 +7,7 @@ FlexReports é meu projeto de TCC que usa modelos de IA Generativa para facilita
 
 FlexReports é um potente editor de documentos com componentes modulares, que utiliza modelos LLM para gerar e aprimorar os conteúdos de relatórios. com o uso de técnicas de RAG, a LLM é alimentada com conteúdos reais da plataforma e modelos pré-fabricados por usuários, que serão usados para gerar melhores e mais acertivos conteúdos de relatórios. 
 
-[Clique aqui](https://moveit-mvgoliveira.vercel.app) para abrir o site hospedado na Vercel.
+[Clique aqui](https://github.com/mvgoliveira/flexreports-app/edit/main/README.md) para abrir o site hospedado na ???.
 
 ---
 
