@@ -1,11 +1,25 @@
 import { mergeAttributes } from "@tiptap/core";
 import Table, { createColGroup } from "@tiptap/extension-table";
-import { DOMOutputSpec } from "@tiptap/pm/model";
 
 import { TableRowGroup } from "./TableRowGroup";
 
 export const TablePlus = Table.extend({
     content: "(tableRowGroup|tableRow)+",
+
+    addAttributes() {
+        return {
+            ...this.parent?.(),
+            class: {
+                default: null,
+                parseHTML: element => element.getAttribute("class"),
+                renderHTML: attributes => {
+                    return {
+                        class: attributes.class,
+                    };
+                },
+            },
+        };
+    },
 
     addOptions() {
         return {
@@ -19,20 +33,26 @@ export const TablePlus = Table.extend({
     },
 
     renderHTML({ HTMLAttributes }) {
-        const table: DOMOutputSpec = [
+        return [
             "table",
             mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { border: 1 }),
             0,
         ];
-        return table;
     },
 
     addNodeView() {
         return ({ node }) => {
-            const dom = document.createElement("table");
+            const wrapper = document.createElement("div");
+            const table = document.createElement("table");
+
+            if (node.attrs.class) {
+                wrapper.className = node.attrs.class;
+            }
+
             const { colgroup } = createColGroup(node, this.options.cellMinWidth);
+
             if (colgroup instanceof HTMLElement) {
-                dom.appendChild(colgroup);
+                table.appendChild(colgroup);
             }
 
             let maxCellCount = 0;
@@ -48,8 +68,14 @@ export const TablePlus = Table.extend({
                 }
             });
 
-            dom.style.setProperty("--cell-count", maxCellCount.toString());
-            return { dom, contentDOM: dom };
+            table.style.setProperty("--cell-count", maxCellCount.toString());
+
+            wrapper.appendChild(table);
+
+            return {
+                dom: wrapper,
+                contentDOM: table, // <tr> e <tbody> vão ser injetados aqui
+            };
         };
     },
 });

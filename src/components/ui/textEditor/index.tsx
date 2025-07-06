@@ -8,11 +8,14 @@ import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ReactElement } from "react";
+import ShortUniqueId from "short-unique-id";
 
+import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
+import { PreventEditExtension } from "./plugins/PreventEdit";
 import { Root } from "./styles";
 
 interface ITextEditorProps {
@@ -36,6 +39,8 @@ const TextEditor = ({
     pageHeight = 1123,
     zoom = 1,
 }: ITextEditorProps): ReactElement => {
+    const { randomUUID } = new ShortUniqueId({ length: 10 });
+
     const extensions = [
         Indent,
         StarterKit.configure({
@@ -80,48 +85,50 @@ const TextEditor = ({
                 "codeBlock",
                 "image",
             ],
-            attributeName: "id",
+            generateID: () => randomUUID(),
         }),
+        PreventEditExtension,
     ];
 
     const currentEditor = useEditor({
         extensions,
         autofocus: false,
         content: `
-            <h3 data-id="62e714da-e94f-4009-8880-aec8b033765d">Have you seen our tables? They are amazing!</h3>
+            <h3 data-id="62e714dae9" class="change-remove">Você já conferiu nossas tabelas? Elas são impressionantes!</h3>
+            <h3 data-id="62e714dae1" class="change-add">Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h3>
 
             <ul>
-                <li>Tables with rows, cells and headers (optional)</li>
-                <li>Support for <code>colgroup</code> and <code>rowspan</code></li>
-                <li>And even resizable columns (optional)</li>
+                <li>Tabelas com linhas, células e cabeçalhos (opcional)</li>
+                <li>Suporte para <code>colgroup</code> e <code>rowspan</code></li>
+                <li>E até mesmo colunas redimensionáveis (opcional)</li>
             </ul>
             <p>
                 <span data-decoration-id="id_1428080181" class="expression-active">
-                    Here is an example:
+                    Aqui está um exemplo:
                 </span>
             </p>
             <table>
                 <tbody>
                     <tr>
-                        <th colwidth="200">Name</th>
-                        <th colspan="3" colwidth="150,100">Description</th>
+                        <th colwidth="200">Nome</th>
+                        <th colspan="3" colwidth="150,100">Descrição</th>
                     </tr>
                     <tr>
                         <td>Cyndi Lauper</td>
-                        <td>Singer</td>
-                        <td>Songwriter</td>
-                        <td>Actress</td>
+                        <td>Cantora</td>
+                        <td>Compositora</td>
+                        <td>Atriz</td>
                     </tr>
                     <tr>
                         <td>Marie Curie</td>
-                        <td>Scientist</td>
-                        <td>Chemist</td>
-                        <td>Physicist</td>
+                        <td>Cientista</td>
+                        <td>Química</td>
+                        <td>Física</td>
                     </tr>
                     <tr>
                         <td>Indira Gandhi</td>
-                        <td>Prime minister</td>
-                        <td colspan="2">Politician</td>
+                        <td>Primeira-ministra</td>
+                        <td colspan="2">Política</td>
                     </tr>
                 </tbody>
             </table>
@@ -135,6 +142,7 @@ const TextEditor = ({
     return (
         <>
             {currentEditor && <TextBubbleMenu editor={currentEditor} />}
+            {currentEditor && <AiChangesBubbleMenu editor={currentEditor} />}
 
             <Root
                 zoom={zoom}

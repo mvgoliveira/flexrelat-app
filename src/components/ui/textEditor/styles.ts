@@ -183,11 +183,6 @@ export const Root = styled.div<IRootProps>`
             0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)},
             0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
 
-        tr {
-            outline: 1px solid ${({ theme }) => theme.colors.purple50};
-            background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
-        }
-
         .selectedCell:after {
             background: transparent;
             content: "";
@@ -196,19 +191,21 @@ export const Root = styled.div<IRootProps>`
 
     .change-remove {
         outline-offset: 5px;
-        background: ${({ theme }) => hexToRgba(theme.colors.red50, 10)};
+        background: ${({ theme }) => hexToRgba(theme.colors.red50, 15)};
         box-shadow:
-            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.red50, 10)},
-            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.red50, 10)};
+            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.red50, 15)},
+            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.red50, 15)};
         color: ${({ theme }) => hexToRgba(theme.colors.red100, 50)};
+        outline: none;
     }
 
     .change-add {
         outline-offset: 5px;
-        background: ${({ theme }) => hexToRgba(theme.colors.green50, 10)};
+        background: ${({ theme }) => hexToRgba(theme.colors.green50, 20)};
         box-shadow:
-            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.green50, 10)},
-            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.green50, 10)};
+            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.green50, 20)},
+            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.green50, 20)};
         color: ${({ theme }) => theme.colors.green100};
+        outline: none;
     }
 `;

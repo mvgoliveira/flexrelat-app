@@ -35,7 +35,7 @@ export const getMessagesByChatId = async (
     return [
         {
             id: "bdbf1f85-fd07-40b7-8427-42d53eff573f",
-            text: "Gostaria de adicionar um novo elemento ao meu relatório.",
+            text: "Gostaria de alterar um elemento do meu relatório.",
             sender_id: "7c51f6db-107e-46c5-a6e1-b8063dc0e57b",
             related_id: "475e8658-4866-4012-b990-cd577eb71dd1",
             related_type: "document",
@@ -44,7 +44,7 @@ export const getMessagesByChatId = async (
         },
         {
             id: "2e2ebdb1f-d2c2-4cb5-9c00-cb6df5b1290334",
-            text: "Claro! Que tipo de elemento você gostaria de adicionar?",
+            text: "Claro! qual elemento você gostaria de alterar e qual vai ser a alteração?",
             sender_id: "flexbot",
             related_id: "475e8658-4866-4012-b990-cd577eb71dd1",
             related_type: "document",
@@ -53,7 +53,7 @@ export const getMessagesByChatId = async (
         },
         {
             id: "3f3f3f3f-3f3f-4f4f-5f5f-6f6f6f6f6f6",
-            text: "Gostaria de adicionar um gráfico de barras com os dados de vendas do último trimestre.",
+            text: "Gostaria de alterar meu título para algo maior e com mais descrição.",
             sender_id: "7c51f6db-107e-46c5-a6e1-b8063dc0e57b",
             related_id: "475e8658-4866-4012-b990-cd577eb71dd1",
             related_type: "document",
@@ -62,7 +62,7 @@ export const getMessagesByChatId = async (
         },
         {
             id: "4f4f4f4f-4f4f-5f5f-6f6f-7f7f7f7f7f7",
-            text: "Entendi! Vou adicionar o gráfico de barras com os dados de vendas do último trimestre.",
+            text: "Entendi! Vou fazer a alteração do título.",
             sender_id: "flexbot",
             related_id: "475e8658-4866-4012-b990-cd577eb71dd1",
             related_type: "document",
@@ -70,8 +70,8 @@ export const getMessagesByChatId = async (
             changes: [
                 {
                     id: "dbd57046-c6b7-4d47-87fe-e08cae528894",
-                    type: "add",
-                    text: "Adicionando gráfico de barras com dados de vendas do último trimestre.",
+                    type: "update",
+                    text: "Alterando o título para um mais descritivo.",
                     old_content: {
                         id: "oldContent1",
                         type: "text",

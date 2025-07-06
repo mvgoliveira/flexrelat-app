@@ -1,7 +1,12 @@
 import styled from "@emotion/styled";
 
 export const Root = styled.div`
+    display: flex;
     position: relative;
+    right: -13px;
+`;
+
+export const BubbleActionsContainer = styled.div`
     background: ${({ theme }) => theme.colors.white};
     border: 1px solid ${({ theme }) => theme.colors.gray30};
     border-radius: 4px;
@@ -10,7 +15,6 @@ export const Root = styled.div`
     width: fit-content;
     height: 30px;
     overflow: hidden;
-    top: 10px;
 `;
 
 export const StyledButton = styled.button`
@@ -60,6 +64,6 @@ export const RemovedButton = styled.button`
     outline: none;
     border: none;
 
-    top: 20px;
-    right: -450px;
+    top: 40px;
+    right: -5px;
 `;

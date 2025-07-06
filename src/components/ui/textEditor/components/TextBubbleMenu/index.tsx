@@ -1,15 +1,15 @@
 import { Typography } from "@/components/features/typography";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
+import { DOMSerializer } from "@tiptap/pm/model";
 import { Selection } from "@tiptap/pm/state";
 import { motion } from "motion/react";
-import { DOMSerializer } from "prosemirror-model";
 import { ReactElement, useState } from "react";
 import { MdAutoAwesome, MdAutoFixHigh } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 import { ControlledBubbleMenu } from "../../plugins/BubbleMenu";
-import { RemovedButton, Root, StyledButton } from "./styles";
+import { RemovedButton, BubbleActionsContainer, StyledButton, Root } from "./styles";
 
 export type SelectedContent = {
     html: string;
@@ -20,18 +20,14 @@ export type SelectedContent = {
 
 interface ITextBubbleMenuProps {
     editor: Editor;
-    enableMultiSelection?: boolean;
 }
 
-export const TextBubbleMenu = ({
-    editor,
-    enableMultiSelection = false,
-}: ITextBubbleMenuProps): ReactElement => {
-    const [selectedContents, setSelectedContent] = useState<SelectedContent[]>([]);
-    const [prevSelection, setPrevSelection] = useState<Selection[]>([]);
+export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement => {
+    const [selectedContent, setSelectedContent] = useState<SelectedContent | null>(null);
+    const [prevSelection, setPrevSelection] = useState<Selection | null>(null);
 
     const handleMakeLonger = () => {
-        selectedContents.sort((a, b) => b.from - a.from); // Ordena do maior para o menor
+        if (!selectedContent) return;
 
         const newContent = [
             {
@@ -120,32 +116,29 @@ export const TextBubbleMenu = ({
 
         editor.commands.command(({ tr, state, dispatch }) => {
             const nodes = newContent.map(n => state.schema.nodeFromJSON(n));
-            // Substitui cada seleção de baixo pra cima
-            selectedContents.forEach(sel => {
-                tr.replaceWith(sel.from, sel.to, nodes);
-            });
+            tr.replaceWith(selectedContent.from, selectedContent.to, nodes);
             if (dispatch) dispatch(tr);
             return true;
         });
     };
 
     const handleRemoveNode = () => {
-        selectedContents.sort((a, b) => b.from - a.from);
+        if (!selectedContent) return;
 
         editor.commands.command(({ tr, dispatch }) => {
-            selectedContents.forEach(sel => {
-                tr.deleteRange(sel.from, sel.to);
-            });
+            tr.deleteRange(selectedContent.from, selectedContent.to);
             if (dispatch) dispatch(tr);
             return true;
         });
 
-        setSelectedContent([]);
-        setPrevSelection([]);
+        setSelectedContent(null);
+        setPrevSelection(null);
     };
 
     const handleChangeRemoveClass = () => {
-        const { from } = selectedContents[0];
+        if (!selectedContent) return;
+
+        const { from } = selectedContent;
         const node = editor.state.doc.nodeAt(from);
         if (!node) return;
 
@@ -154,26 +147,32 @@ export const TextBubbleMenu = ({
         if (node.attrs["class"] === "change-remove") {
             editor
                 .chain()
-                .focus()
                 .setNodeSelection(from)
                 .updateAttributes(typeName, {
                     class: "",
                 })
                 .run();
+
+            setSelectedContent(null);
+            setPrevSelection(null);
         } else {
             editor
                 .chain()
-                .focus()
                 .setNodeSelection(from)
                 .updateAttributes(typeName, {
                     class: "change-remove",
                 })
                 .run();
+
+            setSelectedContent(null);
+            setPrevSelection(null);
         }
     };
 
     const handleChangeAddClass = () => {
-        const { from } = selectedContents[0];
+        if (!selectedContent) return;
+
+        const { from } = selectedContent;
         const node = editor.state.doc.nodeAt(from);
         if (!node) return;
 
@@ -182,26 +181,30 @@ export const TextBubbleMenu = ({
         if (node.attrs["class"] === "change-add") {
             editor
                 .chain()
-                .focus()
                 .setNodeSelection(from)
                 .updateAttributes(typeName, {
                     class: "",
                 })
                 .run();
+
+            setSelectedContent(null);
+            setPrevSelection(null);
         } else {
             editor
                 .chain()
-                .focus()
                 .setNodeSelection(from)
-                .updateAttributes(typeName, {
-                    class: "change-add",
-                })
+                .updateAttributes(typeName, { class: "change-add" })
                 .run();
+
+            setSelectedContent(null);
+            setPrevSelection(null);
         }
     };
 
     const getHtml = () => {
-        const { from, to } = selectedContents[0];
+        if (!selectedContent) return;
+
+        const { from, to } = selectedContent;
         const { state } = editor;
         const slice = state.doc.slice(from, to);
         const fragment = DOMSerializer.fromSchema(editor.schema).serializeFragment(slice.content);
@@ -214,83 +217,97 @@ export const TextBubbleMenu = ({
         console.log(html);
     };
 
+    const getIsOpen = (): boolean => {
+        if (!selectedContent) return false;
+        const { from } = selectedContent;
+        const node = editor.state.doc.nodeAt(from);
+
+        if (node?.attrs["class"] === "change-remove" || node?.attrs["class"] === "change-add") {
+            return false;
+        }
+
+        return true;
+    };
+
     return (
         <ControlledBubbleMenu
             editor={editor}
             onChangeSelectedContent={setSelectedContent}
-            selectedContents={selectedContents}
-            enableMultiSelection={enableMultiSelection}
+            selectedContent={selectedContent}
             prevSelection={prevSelection}
             onChangePrevSelection={setPrevSelection}
+            open={getIsOpen()}
         >
             <Root>
-                <StyledButton onClick={handleMakeLonger}>
-                    <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
+                <BubbleActionsContainer>
+                    <StyledButton onClick={handleMakeLonger}>
+                        <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="black"
-                        fontWeight="regular"
-                        textAlign="left"
-                    >
-                        Aumentar texto
-                    </Typography>
-                </StyledButton>
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs50" }}
+                            color="black"
+                            fontWeight="regular"
+                            textAlign="left"
+                        >
+                            Aumentar texto
+                        </Typography>
+                    </StyledButton>
 
-                <StyledButton onClick={handleChangeRemoveClass}>
-                    <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
+                    <StyledButton onClick={handleChangeRemoveClass}>
+                        <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="black"
-                        fontWeight="regular"
-                        textAlign="left"
-                    >
-                        Encurtar texto
-                    </Typography>
-                </StyledButton>
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs50" }}
+                            color="black"
+                            fontWeight="regular"
+                            textAlign="left"
+                        >
+                            Encurtar texto
+                        </Typography>
+                    </StyledButton>
 
-                <StyledButton onClick={handleChangeAddClass}>
-                    <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
+                    <StyledButton onClick={handleChangeAddClass}>
+                        <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="black"
-                        fontWeight="regular"
-                        textAlign="left"
-                    >
-                        Corrigir erros
-                    </Typography>
-                </StyledButton>
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs50" }}
+                            color="black"
+                            fontWeight="regular"
+                            textAlign="left"
+                        >
+                            Corrigir erros
+                        </Typography>
+                    </StyledButton>
 
-                <StyledButton onClick={getHtml}>
-                    <MdAutoAwesome size={12} color={Theme.colors.purple50} />
+                    <StyledButton onClick={getHtml}>
+                        <MdAutoAwesome size={12} color={Theme.colors.purple50} />
 
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="purple50"
-                        fontWeight="regular"
-                        textAlign="left"
-                    >
-                        Aprimore com IA
-                    </Typography>
-                </StyledButton>
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs50" }}
+                            color="purple50"
+                            fontWeight="regular"
+                            textAlign="left"
+                        >
+                            Aprimore com IA
+                        </Typography>
+                    </StyledButton>
+                </BubbleActionsContainer>
+
+                <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.2, delay: 0.2 }}
+                >
+                    <RemovedButton onClick={handleRemoveNode}>
+                        <RiDeleteBin6Line size={14} color={Theme.colors.purple50} />
+                    </RemovedButton>
+                </motion.div>
             </Root>
-
-            <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2, delay: 0.2 }}
-            >
-                <RemovedButton onClick={handleRemoveNode}>
-                    <RiDeleteBin6Line size={14} color={Theme.colors.purple50} />
-                </RemovedButton>
-            </motion.div>
         </ControlledBubbleMenu>
     );
 };
