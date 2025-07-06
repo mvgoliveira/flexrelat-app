@@ -34,7 +34,7 @@ export const StyledItem = styled.div`
     background: ${({ theme }) => theme.colors.white};
 `;
 
-export const StyledButton = styled.div`
+export const StyledButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;

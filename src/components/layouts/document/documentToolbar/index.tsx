@@ -24,9 +24,10 @@ import { ColorContainer, Root } from "./styles";
 
 interface IDocumentToolbarProps {
     zoom: number;
+    onBoldClick: () => void;
 }
 
-export const DocumentToolbar = ({ zoom }: IDocumentToolbarProps): ReactElement => {
+export const DocumentToolbar = ({ zoom, onBoldClick }: IDocumentToolbarProps): ReactElement => {
     const [fontType, setFontType] = useState<string>("arial");
 
     return (
@@ -63,7 +64,7 @@ export const DocumentToolbar = ({ zoom }: IDocumentToolbarProps): ReactElement =
                 </Toolbar.Group>
 
                 <Toolbar.Group className="TextFormat Item">
-                    <Toolbar.ItemButton>
+                    <Toolbar.ItemButton onClick={onBoldClick}>
                         <MdFormatBold size={18} color="black" />
                     </Toolbar.ItemButton>
                     <Toolbar.ItemButton>

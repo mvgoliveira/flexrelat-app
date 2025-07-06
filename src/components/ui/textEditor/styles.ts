@@ -83,7 +83,7 @@ export const Root = styled.div<IRootProps>`
             }
 
             .selectedCell:after {
-                background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+                background: ${({ theme }) => hexToRgba(theme.colors.blue50, 10)};
                 content: "";
                 left: 0;
                 right: 0;

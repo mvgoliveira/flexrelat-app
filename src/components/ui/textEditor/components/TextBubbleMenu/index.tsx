@@ -135,72 +135,6 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
         setPrevSelection(null);
     };
 
-    const handleChangeRemoveClass = () => {
-        if (!selectedContent) return;
-
-        const { from } = selectedContent;
-        const node = editor.state.doc.nodeAt(from);
-        if (!node) return;
-
-        const typeName = node.type.name;
-
-        if (node.attrs["class"] === "change-remove") {
-            editor
-                .chain()
-                .setNodeSelection(from)
-                .updateAttributes(typeName, {
-                    class: "",
-                })
-                .run();
-
-            setSelectedContent(null);
-            setPrevSelection(null);
-        } else {
-            editor
-                .chain()
-                .setNodeSelection(from)
-                .updateAttributes(typeName, {
-                    class: "change-remove",
-                })
-                .run();
-
-            setSelectedContent(null);
-            setPrevSelection(null);
-        }
-    };
-
-    const handleChangeAddClass = () => {
-        if (!selectedContent) return;
-
-        const { from } = selectedContent;
-        const node = editor.state.doc.nodeAt(from);
-        if (!node) return;
-
-        const typeName = node.type.name;
-
-        if (node.attrs["class"] === "change-add") {
-            editor
-                .chain()
-                .setNodeSelection(from)
-                .updateAttributes(typeName, {
-                    class: "",
-                })
-                .run();
-
-            setSelectedContent(null);
-            setPrevSelection(null);
-        } else {
-            editor
-                .chain()
-                .setNodeSelection(from)
-                .updateAttributes(typeName, { class: "change-add" })
-                .run();
-
-            setSelectedContent(null);
-            setPrevSelection(null);
-        }
-    };
-
     const getHtml = () => {
         if (!selectedContent) return;
 
@@ -254,7 +188,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
                         </Typography>
                     </StyledButton>
 
-                    <StyledButton onClick={handleChangeRemoveClass}>
+                    <StyledButton onClick={() => {}}>
                         <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                         <Typography
@@ -268,7 +202,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
                         </Typography>
                     </StyledButton>
 
-                    <StyledButton onClick={handleChangeAddClass}>
+                    <StyledButton onClick={() => {}}>
                         <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
 
                         <Typography

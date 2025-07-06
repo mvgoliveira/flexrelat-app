@@ -5,13 +5,16 @@ import { getMarkRange } from "@tiptap/react";
 import { motion } from "motion/react";
 import { ReactElement, ReactNode, useEffect } from "react";
 
-import { SelectedContent } from "../components/TextBubbleMenu";
+export type SelectedChange = {
+    from: number;
+    to: number;
+};
 
 type Props = {
     editor: Editor;
     open?: boolean;
     children: ReactNode;
-    selectedContent: SelectedContent | null;
+    selectedContent: SelectedChange | null;
 };
 
 export const AiChangesControlledBubbleMenu = ({

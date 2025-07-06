@@ -5,6 +5,7 @@ import { Header } from "@/components/layouts/document/header";
 import { Layout } from "@/components/layouts/document/layout";
 import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeader";
 import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
+import { AiChange } from "@/repositories/flexbotApi";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { ReactElement, useState } from "react";
@@ -43,6 +44,8 @@ export default function Dashboard(): ReactElement {
     const [activeRightTab, setActiveRightTab] = useState<RightTabsValue>("ai");
     const [saveStatus, setSaveStatus] = useState<"pending" | "success" | "error">("success");
 
+    const [aiChanges, setAiChanges] = useState<AiChange[]>([]);
+
     const { status, data } = useQuery({
         queryKey: ["get_document_data", documentId],
         queryFn: async (): Promise<DocumentData> => {
@@ -51,6 +54,21 @@ export default function Dashboard(): ReactElement {
         },
         refetchInterval: 5 * 60 * 1000, // 5 minutes
     });
+
+    const handleUpdateActiveChange = (change: AiChange | null): void => {
+        if (!change) {
+            setAiChanges([]);
+            return;
+        } else {
+            const existingChange = aiChanges.find(aiChange => aiChange.id === change.id);
+
+            if (existingChange) {
+                setAiChanges(aiChanges.filter(aiChange => aiChange.id !== change.id));
+            } else {
+                setAiChanges(prevState => [...prevState, change]);
+            }
+        }
+    };
 
     if (status === "pending") return <></>;
     if (status === "error") return <></>;
@@ -78,7 +96,7 @@ export default function Dashboard(): ReactElement {
             </Layout.LeftNavBar>
 
             <Layout.Content>
-                <DocumentContent />
+                <DocumentContent aiChanges={aiChanges} />
             </Layout.Content>
 
             <Layout.RightNavBar>
@@ -89,7 +107,11 @@ export default function Dashboard(): ReactElement {
                     hasCloseButton
                 />
 
-                <AiChat related_id={documentId as string} related_type="document" />
+                <AiChat
+                    related_id={documentId as string}
+                    onUpdateActiveChange={handleUpdateActiveChange}
+                    related_type="document"
+                />
             </Layout.RightNavBar>
         </Layout>
     );

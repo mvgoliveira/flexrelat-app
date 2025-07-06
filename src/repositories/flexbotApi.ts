@@ -73,20 +73,48 @@ export const getMessagesByChatId = async (
                     type: "update",
                     text: "Alterando o título para um mais descritivo.",
                     old_content: {
-                        id: "oldContent1",
+                        id: "62e714dae9",
                         type: "text",
-                        html: "<p>Texto antigo</p>",
+                        html: "<h3 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h3>",
                         position: 1,
                     },
                     new_content: {
-                        id: "newContent1",
+                        id: "62e714dae1",
                         type: "chart",
-                        html: "<div>Gráfico de barras</div>",
+                        html: "<h3>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h3>",
                         position: 1,
                     },
                     created_at: new Date(Date.now() - 16 * 60 * 1000).toISOString(),
                 },
             ],
+        },
+    ];
+};
+
+export const getChangesByChatId = async (
+    related_id: string,
+    related_type: "document" | "model"
+): Promise<AiChange[]> => {
+    console.log(`Fetching changes for related ID: ${related_id} ${related_type}`);
+
+    return [
+        {
+            id: "dbd57046-c6b7-4d47-87fe-e08cae528894",
+            type: "update",
+            text: "Alterando o título para um mais descritivo.",
+            old_content: {
+                id: "62e714dae9",
+                type: "text",
+                html: "<h3 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h3>",
+                position: 1,
+            },
+            new_content: {
+                id: "62e714dae1",
+                type: "chart",
+                html: "<h3>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h3>",
+                position: 1,
+            },
+            created_at: new Date(Date.now() - 16 * 60 * 1000).toISOString(),
         },
     ];
 };

@@ -24,9 +24,14 @@ import {
 interface IAiChatProps {
     related_id: string;
     related_type: "document" | "model";
+    onUpdateActiveChange: (change: AiChange | null) => void;
 }
 
-export const AiChat = ({ related_id, related_type }: IAiChatProps): ReactElement => {
+export const AiChat = ({
+    related_id,
+    related_type,
+    onUpdateActiveChange,
+}: IAiChatProps): ReactElement => {
     const [changes, setChanges] = useState<AiChange[]>([]);
     const [activeChange, setActiveChange] = useState<AiChange | null>(null);
 
@@ -46,8 +51,10 @@ export const AiChat = ({ related_id, related_type }: IAiChatProps): ReactElement
     const handleUpdateActiveChange = (change: AiChange | null): void => {
         if (change?.id === activeChange?.id) {
             setActiveChange(null);
+            onUpdateActiveChange(null);
         } else {
             setActiveChange(change);
+            onUpdateActiveChange(change);
         }
     };
 

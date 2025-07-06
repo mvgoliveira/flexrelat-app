@@ -1,20 +1,42 @@
 import { Extension } from "@tiptap/core";
-import { Plugin } from "@tiptap/pm/state";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 
-export const PreventEditExtension = Extension.create({
+interface IPreventEditOptions {
+    classes: string[];
+}
+
+export const PreventEditExtension = Extension.create<IPreventEditOptions>({
     name: "preventEditOnCertainNodes",
+
+    addOptions() {
+        return {
+            classes: [],
+        };
+    },
 
     addProseMirrorPlugins() {
         return [
             new Plugin({
+                key: new PluginKey("preventEditOnCertainNodes"),
+
                 filterTransaction: (tr, state) => {
+                    const { classes } = this.options;
+
                     let blocked = false;
 
                     const { from, to } = tr.selection;
 
-                    state.doc.nodesBetween(from, to, node => {
-                        const cls = node.attrs?.class;
-                        if (cls === "change-add" || cls === "change-remove") {
+                    let limitedTo = to;
+
+                    const maxPos = state.doc.content.size;
+                    if (to > maxPos) limitedTo = maxPos;
+
+                    state.doc.nodesBetween(from, limitedTo, node => {
+                        if (!node) return false;
+
+                        const nodeClass = node.attrs?.class;
+
+                        if (classes.includes(nodeClass)) {
                             blocked = true;
                             return false;
                         }

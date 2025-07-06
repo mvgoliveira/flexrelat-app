@@ -1,3 +1,4 @@
+import { AiChange } from "@/repositories/flexbotApi";
 import { Theme } from "@/themes";
 import { BulletList } from "@tiptap/extension-bullet-list";
 import Focus from "@tiptap/extension-focus";
@@ -7,7 +8,7 @@ import TextStyle from "@tiptap/extension-text-style";
 import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import ShortUniqueId from "short-unique-id";
 
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
@@ -15,7 +16,6 @@ import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
-import { PreventEditExtension } from "./plugins/PreventEdit";
 import { Root } from "./styles";
 
 interface ITextEditorProps {
@@ -27,6 +27,7 @@ interface ITextEditorProps {
     marginBottom?: number;
     pageWidth?: number;
     pageHeight?: number;
+    aiChanges: AiChange[];
 }
 
 const TextEditor = ({
@@ -38,6 +39,7 @@ const TextEditor = ({
     pageWidth = 794,
     pageHeight = 1123,
     zoom = 1,
+    aiChanges = [],
 }: ITextEditorProps): ReactElement => {
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
@@ -87,20 +89,21 @@ const TextEditor = ({
             ],
             generateID: () => randomUUID(),
         }),
-        PreventEditExtension,
+        // PreventEditExtension.configure({
+        //     classes: ["change-remove", "change-add", "change-update"],
+        // }),
     ];
 
     const currentEditor = useEditor({
         extensions,
         autofocus: false,
         content: `
-            <h3 data-id="62e714dae9" class="change-remove">Você já conferiu nossas tabelas? Elas são impressionantes!</h3>
-            <h3 data-id="62e714dae1" class="change-add">Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h3>
+            <h3 data-id="62e714dae9">Você já conferiu nossas tabelas? Elas são impressionantes!</h3>
 
             <ul>
-                <li>Tabelas com linhas, células e cabeçalhos (opcional)</li>
-                <li>Suporte para <code>colgroup</code> e <code>rowspan</code></li>
-                <li>E até mesmo colunas redimensionáveis (opcional)</li>
+                <li>Tabelas com linhas, células e cabeçalhos (opcional).</li>
+                <li>Suporte para <code>colgroup</code> e <code>rowspan</code>.</li>
+                <li>E até mesmo colunas redimensionáveis (opcional).</li>
             </ul>
             <p>
                 <span data-decoration-id="id_1428080181" class="expression-active">
@@ -139,10 +142,44 @@ const TextEditor = ({
         },
     });
 
+    useEffect(() => {
+        if (!currentEditor) return;
+
+        // Clear all AI changes from the editor
+        if (aiChanges.length === 0) {
+            currentEditor.state.doc.descendants((node, pos) => {
+                const nodeClass = node.attrs?.class;
+
+                if (nodeClass === "change-remove") {
+                    currentEditor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .updateAttributes(node.type.name, {
+                            class: "",
+                        })
+                        .run();
+                }
+
+                if (nodeClass === "change-add") {
+                    currentEditor
+                        .chain()
+                        .deleteRange({
+                            from: pos,
+                            to: pos + node.nodeSize,
+                        })
+                        .run();
+                }
+            });
+        }
+    }, [aiChanges, currentEditor]);
+
     return (
         <>
             {currentEditor && <TextBubbleMenu editor={currentEditor} />}
-            {currentEditor && <AiChangesBubbleMenu editor={currentEditor} />}
+            {currentEditor &&
+                aiChanges.map((aiChange, idx) => (
+                    <AiChangesBubbleMenu key={idx} editor={currentEditor} aiChange={aiChange} />
+                ))}
 
             <Root
                 zoom={zoom}

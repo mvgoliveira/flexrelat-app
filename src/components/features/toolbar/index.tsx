@@ -1,5 +1,5 @@
 import { IReactChildren } from "@/types/core";
-import { ReactElement } from "react";
+import { ButtonHTMLAttributes, ReactElement } from "react";
 
 import { Root, StyledButton, StyledGroup, StyledItem } from "./styles";
 
@@ -31,8 +31,15 @@ const Item = ({ children }: IReactChildren): ReactElement => {
 };
 Toolbar.Item = Item;
 
-const ItemButton = ({ children }: IReactChildren): ReactElement => {
-    return <StyledButton as="button">{children}</StyledButton>;
+const ItemButton = ({
+    children,
+    ...props
+}: IReactChildren & ButtonHTMLAttributes<HTMLButtonElement>): ReactElement => {
+    return (
+        <StyledButton as="button" {...props}>
+            {children}
+        </StyledButton>
+    );
 };
 Toolbar.ItemButton = ItemButton;
 
