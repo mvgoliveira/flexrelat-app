@@ -12,6 +12,7 @@ import { ReactElement, useEffect } from "react";
 import ShortUniqueId from "short-unique-id";
 
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
+import { LoadingFloating } from "./components/LoadingFloating";
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
 import { GlobalClass } from "./plugins/GlobalClass";
@@ -100,7 +101,7 @@ const TextEditor = ({
         content: `
             <h3 data-id="62e714dae9">Você já conferiu nossas tabelas? Elas são impressionantes!</h3>
 
-            <ul>
+            <ul data-id="62e714dae1">
                 <li>Tabelas com linhas, células e cabeçalhos (opcional).</li>
                 <li>Suporte para <code>colgroup</code> e <code>rowspan</code>.</li>
                 <li>E até mesmo colunas redimensionáveis (opcional).</li>
@@ -176,10 +177,15 @@ const TextEditor = ({
     return (
         <>
             {currentEditor && <TextBubbleMenu editor={currentEditor} />}
+
             {currentEditor &&
                 aiChanges.map((aiChange, idx) => (
                     <AiChangesBubbleMenu key={idx} editor={currentEditor} aiChange={aiChange} />
                 ))}
+
+            {currentEditor && (
+                <LoadingFloating editor={currentEditor} componentLoading={{ id: "62e714dae1" }} />
+            )}
 
             <Root
                 zoom={zoom}

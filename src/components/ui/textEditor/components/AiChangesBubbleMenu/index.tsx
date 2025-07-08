@@ -58,38 +58,36 @@ export const AiChangesBubbleMenu = ({
                 return;
             }
 
-            if (node.attrs.id === aiChange.old_content.id) {
-                if (aiChange.type === "update") {
-                    const removeTypeName = node.type.name;
+            if (node.attrs.id === aiChange.old_content.id && aiChange.type === "update") {
+                const removeTypeName = node.type.name;
 
-                    editor
-                        .chain()
-                        .setNodeSelection(pos)
-                        .updateAttributes(removeTypeName, {
-                            class: "change-remove",
-                        })
-                        .run();
+                editor
+                    .chain()
+                    .setNodeSelection(pos)
+                    .updateAttributes(removeTypeName, {
+                        class: "change-remove",
+                    })
+                    .run();
 
-                    editor
-                        .chain()
-                        .setNodeSelection(pos)
-                        .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
-                        .updateAttributes(removeTypeName, {
-                            class: "change-add",
-                        })
-                        .run();
+                editor
+                    .chain()
+                    .setNodeSelection(pos)
+                    .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
+                    .updateAttributes(removeTypeName, {
+                        class: "change-add",
+                    })
+                    .run();
 
-                    setSelectedChanges([
-                        {
-                            from: pos,
-                            to: pos + node.nodeSize,
-                        },
-                        {
-                            from: pos + node.nodeSize + 1,
-                            to: pos + node.nodeSize + aiChange.new_content.html.length,
-                        },
-                    ]);
-                }
+                setSelectedChanges([
+                    {
+                        from: pos,
+                        to: pos + node.nodeSize,
+                    },
+                    {
+                        from: pos + node.nodeSize + 1,
+                        to: pos + node.nodeSize + aiChange.new_content.html.length,
+                    },
+                ]);
             }
         });
     }, [aiChange, editor]);

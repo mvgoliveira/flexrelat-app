@@ -16,6 +16,10 @@ export type AiChange = {
     created_at: string;
 };
 
+export type ComponentLoading = {
+    id: string;
+};
+
 export type Message = {
     id: string;
     sender_id: string;

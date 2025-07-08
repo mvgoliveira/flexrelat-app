@@ -1,4 +1,5 @@
 import { hexToRgba } from "@/utils/hexToRgba";
+import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 
 interface IRootProps {
@@ -10,6 +11,15 @@ interface IRootProps {
     pageWidth: number;
     pageHeight: number;
 }
+
+const loadingSkeleton = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
 
 export const Root = styled.div<IRootProps>`
     display: flex;
@@ -207,5 +217,35 @@ export const Root = styled.div<IRootProps>`
             0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.green50, 20)};
         color: ${({ theme }) => theme.colors.green100};
         outline: none;
+    }
+
+    /* .change-loading {
+        outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
+        outline-offset: 5px;
+        background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+        box-shadow:
+            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)},
+            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
+    } */
+
+    .change-loading {
+        position: relative;
+        outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
+        outline-offset: 5px;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            background: linear-gradient(
+                90deg,
+                ${({ theme }) => hexToRgba(theme.colors.purple50, 10)} 0%,
+                ${({ theme }) => hexToRgba(theme.colors.purple50, 30)} 50%,
+                ${({ theme }) => hexToRgba(theme.colors.purple50, 10)} 100%
+            );
+            background-size: 200% 100%;
+            animation: ${loadingSkeleton} 1.5s infinite linear;
+            z-index: 1;
+        }
     }
 `;
