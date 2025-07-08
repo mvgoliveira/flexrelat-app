@@ -1,4 +1,4 @@
-# :memo: FlexReports - Relatórios com IA
+# :memo: FlexRelat - Relatórios com IA
 FlexReports é meu projeto de TCC que usa modelos de IA Generativa para facilitar a criação e edição de relatórios personalizados.
  
  ---
