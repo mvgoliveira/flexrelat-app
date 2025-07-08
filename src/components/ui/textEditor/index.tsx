@@ -99,7 +99,7 @@ const TextEditor = ({
         extensions,
         autofocus: false,
         content: `
-            <h3 data-id="62e714dae9">Você já conferiu nossas tabelas? Elas são impressionantes!</h3>
+            <h1 data-id="62e714dae9">Você já conferiu nossas tabelas? Elas são impressionantes!</h1>
 
             <ul data-id="62e714dae1">
                 <li>Tabelas com linhas, células e cabeçalhos (opcional).</li>

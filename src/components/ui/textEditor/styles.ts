@@ -81,6 +81,27 @@ export const Root = styled.div<IRootProps>`
         line-height: ${({ theme }) => theme.lineHeight.fs100};
     }
 
+    h1 {
+        counter-increment: h1;
+        counter-reset: h2;
+    }
+    h2 {
+        counter-increment: h2;
+        counter-reset: h3;
+    }
+    h3 {
+        counter-increment: h3;
+    }
+    h1::before {
+        content: counter(h1) ". ";
+    }
+    h2::before {
+        content: counter(h1) "." counter(h2) ". ";
+    }
+    h3::before {
+        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
+    }
+
     table {
         border-collapse: collapse;
         overflow: hidden;

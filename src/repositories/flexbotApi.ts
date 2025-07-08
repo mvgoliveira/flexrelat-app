@@ -79,13 +79,13 @@ export const getMessagesByChatId = async (
                     old_content: {
                         id: "62e714dae9",
                         type: "text",
-                        html: "<h3 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h3>",
+                        html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
                         position: 1,
                     },
                     new_content: {
                         id: "62e714dae1",
                         type: "chart",
-                        html: "<h3>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h3>",
+                        html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
                         position: 1,
                     },
                     created_at: new Date(Date.now() - 16 * 60 * 1000).toISOString(),
@@ -109,13 +109,13 @@ export const getChangesByChatId = async (
             old_content: {
                 id: "62e714dae9",
                 type: "text",
-                html: "<h3 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h3>",
+                html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
                 position: 1,
             },
             new_content: {
                 id: "62e714dae1",
                 type: "chart",
-                html: "<h3>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h3>",
+                html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
                 position: 1,
             },
             created_at: new Date(Date.now() - 16 * 60 * 1000).toISOString(),
