@@ -71,11 +71,11 @@ export const AiChangesBubbleMenu = ({
 
                 editor
                     .chain()
-                    .setNodeSelection(pos)
                     .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
                     .updateAttributes(removeTypeName, {
                         class: "change-add",
                     })
+                    .setNodeSelection(pos + node.nodeSize)
                     .run();
 
                 setSelectedChanges([
@@ -85,7 +85,7 @@ export const AiChangesBubbleMenu = ({
                     },
                     {
                         from: pos + node.nodeSize + 1,
-                        to: pos + node.nodeSize + aiChange.new_content.html.length,
+                        to: pos + node.nodeSize + 1,
                     },
                 ]);
             }
@@ -125,10 +125,7 @@ export const AiChangesBubbleMenu = ({
     }, [editor]);
 
     return (
-        <AiChangesControlledBubbleMenu
-            editor={editor}
-            selectedContent={selectedChanges[selectedChanges.length - 1]}
-        >
+        <AiChangesControlledBubbleMenu editor={editor} selectedContent={selectedChanges[0]}>
             <Root>
                 <StyledButton onClick={() => {}} color="green30">
                     <MdDone size={12} color={Theme.colors.green80} onClick={handleApproveChange} />

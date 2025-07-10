@@ -1033,6 +1033,13 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-table-header/-/extension-table-header-2.14.0.tgz#10cce2a4b3ace59ffb1734549a09fd13ecd5440d"
   integrity sha512-wX6/+t0iCo3KrqK2OjK0vbFeL76Pq+VpobGt+oM8lcxsENnsa6a0s3wdd1QEVLVPlj+WMFQggAG80Rf17+iDxA==
 
+"@tiptap/extension-table-of-contents@^2.25.0":
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table-of-contents/-/extension-table-of-contents-2.25.0.tgz#6cf68a0eca7725999761c4a36dca7c3a2933a001"
+  integrity sha512-Hkd5kAVmlSD+WEFi35gSqfUVr0Y6gmcgGImPc2C7wIldhQirzNsZVC+reTm5IY9GA+esAdAZcyJuGSx/k8NdUA==
+  dependencies:
+    uuid "^10.0.0"
+
 "@tiptap/extension-table-row@^2.14.0":
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-table-row/-/extension-table-row-2.14.0.tgz#5154a05d199c0728470a99079ca56aae74753a75"

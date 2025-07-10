@@ -91,8 +91,8 @@ export const AiChangesControlledBubbleMenu = ({
 
     const style = {
         position,
-        top: y ?? 0,
-        left: x ?? 0,
+        top: y,
+        left: x,
         zIndex: 25,
     };
 

@@ -28,6 +28,7 @@
     "@tiptap/extension-table": "^2.14.0",
     "@tiptap/extension-table-cell": "^2.14.0",
     "@tiptap/extension-table-header": "^2.14.0",
+    "@tiptap/extension-table-of-contents": "^2.25.0",
     "@tiptap/extension-table-row": "^2.14.0",
     "@tiptap/extension-text-style": "^2.22.3",
     "@tiptap/extension-unique-id": "^2.22.3",

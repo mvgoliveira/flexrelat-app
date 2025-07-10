@@ -17,6 +17,8 @@ import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
+import { NumberedHeading } from "./plugins/NumberedHeading";
+import { PreventEditExtension } from "./plugins/PreventEdit";
 import { Root } from "./styles";
 
 interface ITextEditorProps {
@@ -48,6 +50,7 @@ const TextEditor = ({
         Indent,
         StarterKit.configure({
             dropcursor: false,
+            heading: false,
         }),
         TextStyle.configure({ mergeNestedSpanStyles: true }),
         Focus.configure({
@@ -76,6 +79,7 @@ const TextEditor = ({
         OrderedList,
         ListItem,
         GlobalClass,
+        NumberedHeading,
         UniqueID.configure({
             types: [
                 "heading",
@@ -87,12 +91,13 @@ const TextEditor = ({
                 "blockquote",
                 "codeBlock",
                 "image",
+                "numberedHeading",
             ],
             generateID: () => randomUUID(),
         }),
-        // PreventEditExtension.configure({
-        //     classes: ["change-remove", "change-add", "change-update"],
-        // }),
+        PreventEditExtension.configure({
+            classes: ["change-remove", "change-add", "change-update", "change-loading"],
+        }),
     ];
 
     const currentEditor = useEditor({

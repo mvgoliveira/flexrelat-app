@@ -83,7 +83,7 @@ export const getMessagesByChatId = async (
                         position: 1,
                     },
                     new_content: {
-                        id: "62e714dae1",
+                        id: "52e714dae1",
                         type: "chart",
                         html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
                         position: 1,
@@ -113,7 +113,7 @@ export const getChangesByChatId = async (
                 position: 1,
             },
             new_content: {
-                id: "62e714dae1",
+                id: "52e714dae1",
                 type: "chart",
                 html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
                 position: 1,

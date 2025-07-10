@@ -81,27 +81,6 @@ export const Root = styled.div<IRootProps>`
         line-height: ${({ theme }) => theme.lineHeight.fs100};
     }
 
-    h1 {
-        counter-increment: h1;
-        counter-reset: h2;
-    }
-    h2 {
-        counter-increment: h2;
-        counter-reset: h3;
-    }
-    h3 {
-        counter-increment: h3;
-    }
-    h1::before {
-        content: counter(h1) ". ";
-    }
-    h2::before {
-        content: counter(h1) "." counter(h2) ". ";
-    }
-    h3::before {
-        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
-    }
-
     table {
         border-collapse: collapse;
         overflow: hidden;
@@ -239,15 +218,6 @@ export const Root = styled.div<IRootProps>`
         color: ${({ theme }) => theme.colors.green100};
         outline: none;
     }
-
-    /* .change-loading {
-        outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
-        outline-offset: 5px;
-        background: ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
-        box-shadow:
-            0 0 0 0px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)},
-            0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.purple50, 10)};
-    } */
 
     .change-loading {
         position: relative;
