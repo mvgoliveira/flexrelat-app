@@ -29,7 +29,7 @@ export const ChangesNumberContainer = styled.div`
 export const MessagesContent = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
     padding: 20px;
 `;
 

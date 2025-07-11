@@ -184,7 +184,37 @@ export const Root = styled.div<IRootProps>`
         display: flex;
         flex-direction: column;
         list-style-type: disc;
-        padding-left: 20px;
+        padding-left: 30px;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: ${({ theme }) => theme.fontSize.fs75};
+        line-height: 150%;
+
+        p {
+            margin-bottom: 0;
+        }
+
+        li ul {
+            list-style-type: circle;
+            padding-left: 20px;
+        }
+        li ol {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+
+        ul,
+        ol {
+            margin-top: 12px;
+            margin-bottom: 0px;
+        }
+    }
+
+    ol {
+        display: flex;
+        flex-direction: column;
+        list-style-type: decimal;
+        padding-left: 30px;
         gap: 12px;
         margin-bottom: 12px;
         font-size: ${({ theme }) => theme.fontSize.fs75};
@@ -264,9 +294,9 @@ export const Root = styled.div<IRootProps>`
             inset: -5px;
             background: linear-gradient(
                 90deg,
-                ${({ theme }) => hexToRgba(theme.colors.purple50, 10)} 0%,
-                ${({ theme }) => hexToRgba(theme.colors.purple50, 30)} 50%,
-                ${({ theme }) => hexToRgba(theme.colors.purple50, 10)} 100%
+                ${({ theme }) => hexToRgba(theme.colors.purple50, 5)} 0%,
+                ${({ theme }) => hexToRgba(theme.colors.purple50, 20)} 50%,
+                ${({ theme }) => hexToRgba(theme.colors.purple50, 5)} 100%
             );
             background-size: 200% 100%;
             animation: ${loadingSkeleton} 1.5s infinite linear;

@@ -214,7 +214,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="gray100"
                             fontWeight="regular"
                             textAlign="left"
@@ -228,7 +228,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="gray100"
                             fontWeight="regular"
                             textAlign="left"
@@ -242,7 +242,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="gray100"
                             fontWeight="regular"
                             textAlign="left"
@@ -258,7 +258,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="white"
                             fontWeight="regular"
                             textAlign="left"

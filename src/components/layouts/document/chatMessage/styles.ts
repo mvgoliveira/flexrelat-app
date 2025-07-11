@@ -13,8 +13,8 @@ export const ProfilePicture = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: ${({ theme }) => theme.colors.gray90};
 `;

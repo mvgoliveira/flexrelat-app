@@ -36,7 +36,7 @@ export const ChatMessage = ({
 
                 <Typography
                     tag="p"
-                    fontSize={{ xs: "fs50" }}
+                    fontSize={{ xs: "fs75" }}
                     color="gray100"
                     fontWeight="bold"
                     textAlign="center"
@@ -57,9 +57,9 @@ export const ChatMessage = ({
 
             <Typography
                 tag="p"
-                fontSize={{ xs: "fs50" }}
-                color="gray100"
-                fontWeight="medium"
+                fontSize={{ xs: "fs75" }}
+                color="black"
+                fontWeight="regular"
                 textAlign={metadata.sender_id !== "flexbot" ? "right" : "left"}
             >
                 {metadata.text}

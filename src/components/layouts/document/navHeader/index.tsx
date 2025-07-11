@@ -40,7 +40,7 @@ export const NavHeader = ({
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color={activeTab === item.value ? "black" : "gray70"}
                             fontWeight="regular"
                         >

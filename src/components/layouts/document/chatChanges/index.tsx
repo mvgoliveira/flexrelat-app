@@ -46,7 +46,7 @@ export const ChatChanges = ({
                     <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="black"
                             fontWeight="medium"
                             textAlign="center"
@@ -86,7 +86,7 @@ export const ChatChanges = ({
 
                     <Typography
                         tag="p"
-                        fontSize={{ xs: "fs50" }}
+                        fontSize={{ xs: "fs75" }}
                         color="black"
                         fontWeight="medium"
                         textAlign="left"
