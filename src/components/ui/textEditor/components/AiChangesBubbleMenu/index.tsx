@@ -69,7 +69,7 @@ export const AiChangesBubbleMenu = ({
                     return;
                 }
 
-                if (node.attrs.id === aiChange.old_content.id && aiChange.type === "update") {
+                if (aiChange.type === "update") {
                     editor
                         .chain()
                         .setNodeSelection(pos)
@@ -106,39 +106,42 @@ export const AiChangesBubbleMenu = ({
         }
     }, [aiChange, editor]);
 
-    // useEffect(() => {
-    //     const handler = () => {
-    //         setSelectedChanges([]);
+    useEffect(() => {
+        const handler = () => {
+            const element = editor.view.dom.querySelector(`[data-id="${aiChange.old_content.id}"]`);
 
-    //         editor.state.doc.descendants((node, pos) => {
-    //             const nodeClass = node.attrs?.class;
-    //             if (nodeClass === "change-remove" || nodeClass === "change-add") {
-    //                 setSelectedChanges(prev => {
-    //                     const exists = prev.some(
-    //                         item => item.from === pos && item.to === pos + node.nodeSize
-    //                     );
-    //                     if (exists) return prev;
+            if (element) {
+                const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
+                const node = editor.state.doc.nodeAt(pos);
+                if (node) {
+                    const elementTypeName = node.type.name;
 
-    //                     return [
-    //                         ...prev,
-    //                         {
-    //                             from: pos,
-    //                             to: pos + node.nodeSize,
-    //                             type: nodeClass === "change-remove" ? "remove" : "add",
-    //                             nodeTypeName: node.type.name,
-    //                         },
-    //                     ];
-    //                 });
-    //             }
-    //         });
-    //     };
+                    if (aiChange.type === "update") {
+                        setSelectedChanges([
+                            {
+                                from: pos,
+                                to: pos + node.nodeSize,
+                                type: "remove",
+                                nodeTypeName: elementTypeName,
+                            },
+                            {
+                                from: pos + node.nodeSize + 1,
+                                to: pos + node.nodeSize + 1,
+                                type: "add",
+                                nodeTypeName: elementTypeName,
+                            },
+                        ]);
+                    }
+                }
+            }
+        };
 
-    //     editor.on("transaction", handler);
+        editor.on("transaction", handler);
 
-    //     return () => {
-    //         editor.off("transaction", handler);
-    //     };
-    // }, [editor]);
+        return () => {
+            editor.off("transaction", handler);
+        };
+    }, [editor]);
 
     return (
         <AiChangesControlledBubbleMenu editor={editor} selectedContent={selectedChanges[0]}>
