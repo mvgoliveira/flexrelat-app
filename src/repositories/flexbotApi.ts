@@ -2,7 +2,6 @@ type Content = {
     id: string;
     type: "text" | "heading" | "image" | "chart" | "table" | "bulletList" | "numberedList";
     html: string;
-    position: number;
 };
 
 export type ChangesType = "add" | "remove" | "update";
@@ -83,13 +82,11 @@ export const getMessagesByChatId = async (
                         id: "62e714dae9",
                         type: "text",
                         html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
-                        position: 1,
                     },
                     new_content: {
                         id: "52e714dae1",
                         type: "chart",
                         html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
-                        position: 1,
                     },
                 },
             ],
@@ -114,13 +111,11 @@ export const updateAiChangeStatus = async (
             id: "62e714dae9",
             type: "text",
             html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
-            position: 1,
         },
         new_content: {
             id: "52e714dae1",
             type: "chart",
             html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
-            position: 1,
         },
     };
 };

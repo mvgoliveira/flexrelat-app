@@ -54,49 +54,100 @@ export const AiChangesBubbleMenu = ({
     useEffect(() => {
         if (!aiChange) return;
 
-        editor.state.doc.descendants((node, pos) => {
-            if (editor.isDestroyed) return false;
+        const element = editor.view.dom.querySelector(`[data-id="${aiChange.old_content.id}"]`);
 
-            if (node?.attrs["class"] === "change-remove" || node?.attrs["class"] === "change-add") {
-                return;
+        if (element) {
+            const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
+            const node = editor.state.doc.nodeAt(pos);
+            if (node) {
+                const elementTypeName = node.type.name;
+
+                if (
+                    node.attrs["class"] === "change-remove" ||
+                    node.attrs["class"] === "change-add"
+                ) {
+                    return;
+                }
+
+                if (node.attrs.id === aiChange.old_content.id && aiChange.type === "update") {
+                    editor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .updateAttributes(elementTypeName, {
+                            class: "change-remove",
+                        })
+                        .run();
+
+                    editor
+                        .chain()
+                        .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
+                        .updateAttributes(elementTypeName, {
+                            class: "change-add",
+                        })
+                        .setNodeSelection(pos + node.nodeSize)
+                        .run();
+
+                    setSelectedChanges([
+                        {
+                            from: pos,
+                            to: pos + node.nodeSize,
+                            type: "remove",
+                            nodeTypeName: elementTypeName,
+                        },
+                        {
+                            from: pos + node.nodeSize + 1,
+                            to: pos + node.nodeSize + 1,
+                            type: "add",
+                            nodeTypeName: elementTypeName,
+                        },
+                    ]);
+                }
             }
+        }
 
-            if (node.attrs.id === aiChange.old_content.id && aiChange.type === "update") {
-                const removeTypeName = node.type.name;
+        // editor.state.doc.descendants((node, pos) => {
+        //     if (editor.isDestroyed) return false;
 
-                editor
-                    .chain()
-                    .setNodeSelection(pos)
-                    .updateAttributes(removeTypeName, {
-                        class: "change-remove",
-                    })
-                    .run();
+        //     if (node.attrs["class"] === "change-remove" || node.attrs["class"] === "change-add") {
+        //         return;
+        //     }
 
-                editor
-                    .chain()
-                    .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
-                    .updateAttributes(removeTypeName, {
-                        class: "change-add",
-                    })
-                    .setNodeSelection(pos + node.nodeSize)
-                    .run();
+        //     if (node.attrs.id === aiChange.old_content.id && aiChange.type === "update") {
+        //         const removeTypeName = node.type.name;
 
-                setSelectedChanges([
-                    {
-                        from: pos,
-                        to: pos + node.nodeSize,
-                        type: "remove",
-                        nodeTypeName: removeTypeName,
-                    },
-                    {
-                        from: pos + node.nodeSize + 1,
-                        to: pos + node.nodeSize + 1,
-                        type: "add",
-                        nodeTypeName: removeTypeName,
-                    },
-                ]);
-            }
-        });
+        //         editor
+        //             .chain()
+        //             .setNodeSelection(pos)
+        //             .updateAttributes(removeTypeName, {
+        //                 class: "change-remove",
+        //             })
+        //             .run();
+
+        //         editor
+        //             .chain()
+        //             .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
+        //             .updateAttributes(removeTypeName, {
+        //                 class: "change-add",
+        //             })
+        //             .setNodeSelection(pos + node.nodeSize)
+        //             .run();
+
+        //         setSelectedChanges([
+        //             {
+        //                 from: pos,
+        //                 to: pos + node.nodeSize,
+        //                 type: "remove",
+        //                 nodeTypeName: removeTypeName,
+        //             },
+        //             {
+        //                 from: pos + node.nodeSize + 1,
+        //                 to: pos + node.nodeSize + 1,
+        //                 type: "add",
+        //                 nodeTypeName: removeTypeName,
+        //             },
+        //         ]);
+        //     }
+        // });
     }, [aiChange, editor]);
 
     // useEffect(() => {
