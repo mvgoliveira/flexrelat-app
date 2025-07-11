@@ -188,6 +188,8 @@ export const ControlledBubbleMenu = ({
         editor.registerPlugin(plugin);
 
         const slice = editor.state.doc.slice(prevSelection.from, prevSelection.to);
+        const node = editor.state.doc.nodeAt(prevSelection.from);
+        if (!node) return;
         const fragment = slice.content;
 
         const serializer = DOMSerializer.fromSchema(editor.schema);
@@ -195,9 +197,10 @@ export const ControlledBubbleMenu = ({
         const div = document.createElement("div");
         div.appendChild(frag);
 
-        fragment.forEach(node => div.appendChild(serializer.serializeNode(node)));
+        fragment.forEach(nodeFrag => div.appendChild(serializer.serializeNode(nodeFrag)));
 
         const content = {
+            id: node.attrs.id || node.attrs["data-id"],
             html: div.innerHTML,
             json: fragment.toJSON(),
             from: prevSelection.from,

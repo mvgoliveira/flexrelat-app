@@ -22,6 +22,8 @@ type DocumentContextType = {
     documentStatus: Status;
     approveChange: (change: AiChange) => void;
     removeChange: (change: AiChange) => void;
+    loadingComponentId: string;
+    updateLoadingComponentId: (componentId: string) => void;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -31,6 +33,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     const [changes, setChanges] = useState<AiChange[]>([]);
     const [selectedChanges, setSelectedChanges] = useState<AiChange[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
+    const [loadingComponentId, setLoadingComponentId] = useState<string>("");
 
     const { status: messagesStatus } = useQuery({
         queryKey: ["get_ai_messages", documentId],
@@ -103,6 +106,11 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
         removeAiChange(change.id);
     };
 
+    const updateLoadingComponentId = (componentId: string): void => {
+        console.log("Updating loading component ID:", componentId);
+        setLoadingComponentId(componentId);
+    };
+
     useEffect(() => {
         if (messages) {
             const allChanges = messages.flatMap(message => message.changes);
@@ -125,6 +133,8 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 updateSelectedChange,
                 approveChange,
                 removeChange,
+                loadingComponentId,
+                updateLoadingComponentId,
             }}
         >
             {children}

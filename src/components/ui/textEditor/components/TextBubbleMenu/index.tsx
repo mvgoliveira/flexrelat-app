@@ -1,7 +1,9 @@
 import { Typography } from "@/components/features/typography";
+import { useDocumentContext } from "@/context/documentContext";
+import { getMakeLonger } from "@/repositories/flexbotApi";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
-import { DOMSerializer } from "@tiptap/pm/model";
+import { DOMParser, DOMSerializer } from "@tiptap/pm/model";
 import { Selection } from "@tiptap/pm/state";
 import { motion } from "motion/react";
 import { ReactElement, useState } from "react";
@@ -12,6 +14,7 @@ import { ControlledBubbleMenu } from "../../plugins/BubbleMenu";
 import { RemovedButton, BubbleActionsContainer, StyledButton, Root } from "./styles";
 
 export type SelectedContent = {
+    id: string;
     html: string;
     json: any;
     from: number;
@@ -23,103 +26,41 @@ interface ITextBubbleMenuProps {
 }
 
 export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement => {
+    const { updateLoadingComponentId } = useDocumentContext();
+
     const [selectedContent, setSelectedContent] = useState<SelectedContent | null>(null);
     const [prevSelection, setPrevSelection] = useState<Selection | null>(null);
 
-    const handleMakeLonger = () => {
+    const handleMakeLonger = async () => {
         if (!selectedContent) return;
+        updateLoadingComponentId(selectedContent.id);
+        setSelectedContent(null);
+        setPrevSelection(null);
 
-        const newContent = [
-            {
-                type: "bulletList",
-                content: [
-                    {
-                        type: "listItem",
-                        content: [
-                            {
-                                type: "paragraph",
-                                attrs: {
-                                    id: "2ba3b961-303e-46f7-a5fe-54fa3c44199a",
-                                },
-                                content: [
-                                    {
-                                        type: "text",
-                                        text: "Fully customizable tables with structured layouts, supporting multiple rows, individual cells, and optional headers for better data organization and readability.",
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        type: "listItem",
-                        content: [
-                            {
-                                type: "paragraph",
-                                attrs: {
-                                    id: "52bced01-0c20-48fa-b995-5fc692cc49a0",
-                                },
-                                content: [
-                                    {
-                                        type: "text",
-                                        text: "Includes advanced table features like ",
-                                    },
-                                    {
-                                        type: "text",
-                                        marks: [
-                                            {
-                                                type: "code",
-                                            },
-                                        ],
-                                        text: "colgroup",
-                                    },
-                                    {
-                                        type: "text",
-                                        text: " for grouping columns and ",
-                                    },
-                                    {
-                                        type: "text",
-                                        marks: [
-                                            {
-                                                type: "code",
-                                            },
-                                        ],
-                                        text: "rowspan",
-                                    },
-                                    {
-                                        type: "text",
-                                        text: " to allow cells to span across multiple rows, enhancing table flexibility.",
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        type: "listItem",
-                        content: [
-                            {
-                                type: "paragraph",
-                                attrs: {
-                                    id: "0a39cd51-b353-42f1-9fa9-cf235a06d8c3",
-                                },
-                                content: [
-                                    {
-                                        type: "text",
-                                        text: "Support for resizable columns, giving users the ability to dynamically adjust widths for a better viewing experience and improved content control.",
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            },
-        ];
+        const { from, to } = selectedContent;
+        const { state } = editor;
+        const slice = state.doc.slice(from, to);
+        const fragment = DOMSerializer.fromSchema(editor.schema).serializeFragment(slice.content);
 
-        editor.commands.command(({ tr, state, dispatch }) => {
-            const nodes = newContent.map(n => state.schema.nodeFromJSON(n));
-            tr.replaceWith(selectedContent.from, selectedContent.to, nodes);
+        const container = document.createElement("div");
+        container.appendChild(fragment);
+
+        const selectedHTML = container.innerHTML;
+
+        const html = await getMakeLonger(selectedHTML);
+
+        const element = document.createElement("div");
+        element.innerHTML = html;
+
+        const docFragment = DOMParser.fromSchema(editor.schema).parse(element);
+
+        editor.commands.command(({ tr, dispatch }) => {
+            tr.replaceWith(selectedContent.from, selectedContent.to, docFragment);
             if (dispatch) dispatch(tr);
             return true;
         });
+
+        updateLoadingComponentId("");
     };
 
     const handleRemoveNode = () => {

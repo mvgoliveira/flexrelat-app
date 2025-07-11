@@ -43,7 +43,8 @@ const TextEditor = ({
 }: ITextEditorProps): ReactElement => {
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
-    const { documentData, selectedChanges, changes, removeChange } = useDocumentContext();
+    const { documentData, selectedChanges, changes, removeChange, loadingComponentId } =
+        useDocumentContext();
 
     const alreadyLoaded = useRef(false);
 
@@ -162,6 +163,37 @@ const TextEditor = ({
         }
     }, [documentData, currentEditor]);
 
+    useEffect(() => {
+        if (!currentEditor) return;
+
+        const handleUpdate = () => {
+            if (!loadingComponentId) {
+                currentEditor.view.dom.querySelectorAll(".change-loading").forEach(element => {
+                    const pos = currentEditor.state.doc
+                        .resolve(currentEditor.view.posAtDOM(element, 0))
+                        .before(1);
+                    const node = currentEditor.state.doc.nodeAt(pos);
+                    if (node) {
+                        const elementTypeName = node.type.name;
+
+                        currentEditor
+                            .chain()
+                            .focus()
+                            .setNodeSelection(pos)
+                            .updateAttributes(elementTypeName, { class: undefined })
+                            .run();
+                    }
+                });
+            }
+        };
+
+        currentEditor.on("update", handleUpdate);
+
+        return () => {
+            currentEditor.off("update", handleUpdate);
+        };
+    }, [currentEditor, loadingComponentId]);
+
     return (
         <>
             {currentEditor && <TextBubbleMenu editor={currentEditor} />}
@@ -172,7 +204,10 @@ const TextEditor = ({
                 ))}
 
             {currentEditor && (
-                <LoadingFloating editor={currentEditor} componentLoading={{ id: "" }} />
+                <LoadingFloating
+                    editor={currentEditor}
+                    componentLoading={{ id: loadingComponentId }}
+                />
             )}
 
             <Root

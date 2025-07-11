@@ -127,3 +127,33 @@ export const removeAiChange = async (changeId: string): Promise<void> => {
     // In a real application, you would make an API call here
     return Promise.resolve();
 };
+
+export const getMakeLonger = async (content: string): Promise<string> => {
+    console.log(`Generating longer content for: ${content}`);
+
+    const html = `
+            <ul>
+                <li>
+                    <p>
+                        Fully customizable tables with structured layouts, supporting multiple rows, individual cells, and optional headers for better data organization and readability.
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        Includes advanced table features like <code>colgroup</code> for grouping columns and <code>rowspan</code> to allow cells to span across multiple rows, enhancing table flexibility.
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        Support for resizable columns, giving users the ability to dynamically adjust widths for a better viewing experience and improved content control.
+                    </p>
+                </li>
+            </ul>
+        `;
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(html);
+        }, 5000);
+    });
+};
