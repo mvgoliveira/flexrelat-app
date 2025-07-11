@@ -124,3 +124,11 @@ export const updateAiChangeStatus = async (
         },
     };
 };
+
+export const removeAiChange = async (changeId: string): Promise<void> => {
+    console.log(`Removing AI change with ID: ${changeId}`);
+
+    // Simulate an API call to remove the change
+    // In a real application, you would make an API call here
+    return Promise.resolve();
+};

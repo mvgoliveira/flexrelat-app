@@ -43,7 +43,7 @@ const TextEditor = ({
 }: ITextEditorProps): ReactElement => {
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
-    const { documentData, selectedChanges } = useDocumentContext();
+    const { documentData, selectedChanges, changes, removeChange } = useDocumentContext();
 
     const alreadyLoaded = useRef(false);
 
@@ -109,6 +109,20 @@ const TextEditor = ({
             if (onChange) onChange(value.replace(/\n\n/g, "\n"));
         },
     });
+
+    useEffect(() => {
+        if (!currentEditor) return;
+
+        changes.forEach(change => {
+            const element = currentEditor.view.dom.querySelector(
+                `[data-id="${change.old_content.id}"]`
+            );
+            if (!element && change.status === "pending") {
+                removeChange(change);
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [changes, currentEditor]);
 
     useEffect(() => {
         if (!currentEditor) return;

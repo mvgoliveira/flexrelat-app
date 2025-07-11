@@ -3,6 +3,7 @@ import {
     AiChange,
     getMessagesByChatId,
     Message,
+    removeAiChange,
     updateAiChangeStatus,
 } from "@/repositories/flexbotApi";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +21,7 @@ type DocumentContextType = {
     documentData: DocumentData | undefined;
     documentStatus: Status;
     approveChange: (change: AiChange) => void;
+    removeChange: (change: AiChange) => void;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -83,11 +85,28 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
         );
     };
 
+    const removeChange = (change: AiChange): void => {
+        setSelectedChanges(selectedChanges.filter(prevChange => prevChange.id !== change.id));
+
+        setMessages(prevMessages =>
+            prevMessages.map(message => {
+                if (message.id === change.message_id) {
+                    return {
+                        ...message,
+                        changes: message.changes.filter(c => c.id !== change.id),
+                    };
+                }
+                return message;
+            })
+        );
+
+        removeAiChange(change.id);
+    };
+
     useEffect(() => {
         if (messages) {
             const allChanges = messages.flatMap(message => message.changes);
             if (allChanges !== changes) {
-                console.log("Setting changes", allChanges);
                 setChanges(allChanges);
             }
         }
@@ -105,6 +124,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 documentStatus,
                 updateSelectedChange,
                 approveChange,
+                removeChange,
             }}
         >
             {children}
