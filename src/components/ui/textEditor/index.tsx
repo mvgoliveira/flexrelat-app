@@ -185,6 +185,42 @@ const TextEditor = ({
                     }
                 });
             }
+
+            // if (!selectedChanges || selectedChanges.length === 0) {
+            //     currentEditor.view.dom.querySelectorAll(".change-add").forEach(element => {
+            //         const pos = currentEditor.state.doc
+            //             .resolve(currentEditor.view.posAtDOM(element, 0))
+            //             .before(1);
+            //         const node = currentEditor.state.doc.nodeAt(pos);
+            //         if (node) {
+            //             const elementTypeName = node.type.name;
+
+            //             currentEditor
+            //                 .chain()
+            //                 .focus()
+            //                 .setNodeSelection(pos)
+            //                 .updateAttributes(elementTypeName, { class: undefined })
+            //                 .run();
+            //         }
+            //     });
+
+            //     currentEditor.view.dom.querySelectorAll(".change-remove").forEach(element => {
+            //         const pos = currentEditor.state.doc
+            //             .resolve(currentEditor.view.posAtDOM(element, 0))
+            //             .before(1);
+            //         const node = currentEditor.state.doc.nodeAt(pos);
+            //         if (node) {
+            //             const elementTypeName = node.type.name;
+
+            //             currentEditor
+            //                 .chain()
+            //                 .focus()
+            //                 .setNodeSelection(pos)
+            //                 .updateAttributes(elementTypeName, { class: undefined })
+            //                 .run();
+            //         }
+            //     });
+            // }
         };
 
         currentEditor.on("update", handleUpdate);
@@ -192,7 +228,7 @@ const TextEditor = ({
         return () => {
             currentEditor.off("update", handleUpdate);
         };
-    }, [currentEditor, loadingComponentId]);
+    }, [currentEditor, loadingComponentId, selectedChanges]);
 
     return (
         <>

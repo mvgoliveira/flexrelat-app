@@ -288,7 +288,7 @@ export const Root = styled.div<IRootProps>`
         outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
         outline-offset: 5px;
 
-        &::before {
+        &::after {
             content: "";
             position: absolute;
             inset: -5px;
