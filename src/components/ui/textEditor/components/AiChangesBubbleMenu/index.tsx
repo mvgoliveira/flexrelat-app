@@ -104,50 +104,6 @@ export const AiChangesBubbleMenu = ({
                 }
             }
         }
-
-        // editor.state.doc.descendants((node, pos) => {
-        //     if (editor.isDestroyed) return false;
-
-        //     if (node.attrs["class"] === "change-remove" || node.attrs["class"] === "change-add") {
-        //         return;
-        //     }
-
-        //     if (node.attrs.id === aiChange.old_content.id && aiChange.type === "update") {
-        //         const removeTypeName = node.type.name;
-
-        //         editor
-        //             .chain()
-        //             .setNodeSelection(pos)
-        //             .updateAttributes(removeTypeName, {
-        //                 class: "change-remove",
-        //             })
-        //             .run();
-
-        //         editor
-        //             .chain()
-        //             .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
-        //             .updateAttributes(removeTypeName, {
-        //                 class: "change-add",
-        //             })
-        //             .setNodeSelection(pos + node.nodeSize)
-        //             .run();
-
-        //         setSelectedChanges([
-        //             {
-        //                 from: pos,
-        //                 to: pos + node.nodeSize,
-        //                 type: "remove",
-        //                 nodeTypeName: removeTypeName,
-        //             },
-        //             {
-        //                 from: pos + node.nodeSize + 1,
-        //                 to: pos + node.nodeSize + 1,
-        //                 type: "add",
-        //                 nodeTypeName: removeTypeName,
-        //             },
-        //         ]);
-        //     }
-        // });
     }, [aiChange, editor]);
 
     // useEffect(() => {
