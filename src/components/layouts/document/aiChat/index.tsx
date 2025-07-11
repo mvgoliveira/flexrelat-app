@@ -113,7 +113,7 @@ export const AiChat = ({
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="gray70"
                             fontWeight="regular"
                         >
