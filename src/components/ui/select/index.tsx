@@ -74,7 +74,7 @@ const Item = ({ value, text, icon, color }: ItemPropTypes) => (
                     color={color}
                     fontWeight="regular"
                     fontFamily="inter"
-                    fontSize={{ xs: "fs50" }}
+                    fontSize={{ xs: "fs75" }}
                 >
                     {text}
                 </Typography>

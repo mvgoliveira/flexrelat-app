@@ -24,31 +24,31 @@ export const AiChangesBubbleMenu = ({
     const [selectedChanges, setSelectedChanges] = useState<SelectedChange[]>([]);
 
     const handleApproveChange = (): void => {
-        setSelectedChanges([]);
-        approveChange(aiChange);
-
-        editor.state.doc.descendants((node, pos) => {
-            const nodeClass = node.attrs?.class;
-
-            if (nodeClass === "change-add") {
+        selectedChanges.forEach(change => {
+            if (change.type === "remove") {
                 editor
                     .chain()
-                    .setNodeSelection(pos)
-                    .updateAttributes(node.type.name, {
-                        class: "",
+                    .setNodeSelection(change.from)
+                    .deleteRange({
+                        from: change.from,
+                        to: change.to,
                     })
                     .run();
-            } else if (nodeClass === "change-remove") {
+            }
+
+            if (change.type === "add") {
                 editor
                     .chain()
-                    .setNodeSelection(pos)
-                    .deleteRange({
-                        from: pos,
-                        to: pos + node.nodeSize,
+                    .setNodeSelection(change.from)
+                    .updateAttributes(change.nodeTypeName, {
+                        class: "",
                     })
                     .run();
             }
         });
+
+        setSelectedChanges([]);
+        approveChange(aiChange);
     };
 
     useEffect(() => {
@@ -85,47 +85,53 @@ export const AiChangesBubbleMenu = ({
                     {
                         from: pos,
                         to: pos + node.nodeSize,
+                        type: "remove",
+                        nodeTypeName: removeTypeName,
                     },
                     {
                         from: pos + node.nodeSize + 1,
                         to: pos + node.nodeSize + 1,
+                        type: "add",
+                        nodeTypeName: removeTypeName,
                     },
                 ]);
             }
         });
     }, [aiChange, editor]);
 
-    useEffect(() => {
-        const handler = () => {
-            setSelectedChanges([]);
+    // useEffect(() => {
+    //     const handler = () => {
+    //         setSelectedChanges([]);
 
-            editor.state.doc.descendants((node, pos) => {
-                const nodeClass = node.attrs?.class;
-                if (nodeClass === "change-remove" || nodeClass === "change-add") {
-                    setSelectedChanges(prev => {
-                        const exists = prev.some(
-                            item => item.from === pos && item.to === pos + node.nodeSize
-                        );
-                        if (exists) return prev;
+    //         editor.state.doc.descendants((node, pos) => {
+    //             const nodeClass = node.attrs?.class;
+    //             if (nodeClass === "change-remove" || nodeClass === "change-add") {
+    //                 setSelectedChanges(prev => {
+    //                     const exists = prev.some(
+    //                         item => item.from === pos && item.to === pos + node.nodeSize
+    //                     );
+    //                     if (exists) return prev;
 
-                        return [
-                            ...prev,
-                            {
-                                from: pos,
-                                to: pos + node.nodeSize,
-                            },
-                        ];
-                    });
-                }
-            });
-        };
+    //                     return [
+    //                         ...prev,
+    //                         {
+    //                             from: pos,
+    //                             to: pos + node.nodeSize,
+    //                             type: nodeClass === "change-remove" ? "remove" : "add",
+    //                             nodeTypeName: node.type.name,
+    //                         },
+    //                     ];
+    //                 });
+    //             }
+    //         });
+    //     };
 
-        editor.on("transaction", handler);
+    //     editor.on("transaction", handler);
 
-        return () => {
-            editor.off("transaction", handler);
-        };
-    }, [editor]);
+    //     return () => {
+    //         editor.off("transaction", handler);
+    //     };
+    // }, [editor]);
 
     return (
         <AiChangesControlledBubbleMenu editor={editor} selectedContent={selectedChanges[0]}>

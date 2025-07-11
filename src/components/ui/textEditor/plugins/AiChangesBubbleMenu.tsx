@@ -8,6 +8,8 @@ import { ReactElement, ReactNode, useEffect } from "react";
 export type SelectedChange = {
     from: number;
     to: number;
+    type: "add" | "remove";
+    nodeTypeName: string;
 };
 
 type Props = {

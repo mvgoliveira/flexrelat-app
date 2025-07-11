@@ -46,7 +46,7 @@ export const StyledButton = styled.div<IStyledButtonProps>`
                 overflow: hidden;
                 text-overflow: ellipsis;
                 color: ${({ theme, variant }) => theme.colors[VARIANTS_STYLES[variant].color]};
-                font-size: ${({ theme }) => theme.fontSize.fs50};
+                font-size: ${({ theme }) => theme.fontSize.fs75};
                 white-space: nowrap;
             }
         }
