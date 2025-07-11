@@ -2,10 +2,9 @@ import { Button } from "@/components/features/button";
 import { Spinner } from "@/components/features/loading/spinner";
 import { Typography } from "@/components/features/typography";
 import { ScrollArea } from "@/components/ui/scrollArea";
-import { AiChange, Message, getMessagesByChatId } from "@/repositories/flexbotApi";
+import { useDocumentContext } from "@/context/documentContext";
 import { Theme } from "@/themes";
-import { useQuery } from "@tanstack/react-query";
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { MdCheck, MdClose, MdSend } from "react-icons/md";
 import { TbRobotOff } from "react-icons/tb";
 
@@ -21,42 +20,8 @@ import {
     Root,
 } from "./styles";
 
-interface IAiChatProps {
-    related_id: string;
-    related_type: "document" | "model";
-    onUpdateActiveChange: (change: AiChange | null) => void;
-}
-
-export const AiChat = ({
-    related_id,
-    related_type,
-    onUpdateActiveChange,
-}: IAiChatProps): ReactElement => {
-    const [changes, setChanges] = useState<AiChange[]>([]);
-    const [activeChange, setActiveChange] = useState<AiChange | null>(null);
-
-    const { status: messagesStatus, data: messages } = useQuery({
-        queryKey: ["get_ai_messages", related_id, related_type],
-        queryFn: async (): Promise<Message[]> => {
-            const response: Message[] = await getMessagesByChatId(related_id, related_type);
-
-            const allChanges = response.flatMap(message => message.changes ?? []);
-            setChanges(allChanges);
-
-            return response;
-        },
-        refetchInterval: 5 * 60 * 1000, // 5 minutes
-    });
-
-    const handleUpdateActiveChange = (change: AiChange | null): void => {
-        if (change?.id === activeChange?.id) {
-            setActiveChange(null);
-            onUpdateActiveChange(null);
-        } else {
-            setActiveChange(change);
-            onUpdateActiveChange(change);
-        }
-    };
+export const AiChat = (): ReactElement => {
+    const { messagesStatus, messages, changes } = useDocumentContext();
 
     if (messagesStatus === "pending") {
         return (
@@ -99,7 +64,7 @@ export const AiChat = ({
         <Root>
             <div>
                 <ChangesHeader>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <ChangesNumberContainer>
                             <Typography
                                 tag="p"
@@ -113,7 +78,7 @@ export const AiChat = ({
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs75" }}
+                            fontSize={{ xs: "fs50" }}
                             color="gray70"
                             fontWeight="regular"
                         >
@@ -128,7 +93,7 @@ export const AiChat = ({
 
                                 <Typography
                                     tag="p"
-                                    fontSize={{ xs: "fs75" }}
+                                    fontSize={{ xs: "fs50" }}
                                     color="gray100"
                                     fontWeight="regular"
                                     textAlign="center"
@@ -142,7 +107,7 @@ export const AiChat = ({
 
                                 <Typography
                                     tag="p"
-                                    fontSize={{ xs: "fs75" }}
+                                    fontSize={{ xs: "fs50" }}
                                     color="gray100"
                                     fontWeight="regular"
                                     textAlign="center"
@@ -158,12 +123,7 @@ export const AiChat = ({
             <ScrollArea>
                 <MessagesContent>
                     {messages?.map((message, index) => (
-                        <ChatMessage
-                            key={index}
-                            metadata={message}
-                            activeChange={activeChange}
-                            onUpdateActiveChange={handleUpdateActiveChange}
-                        />
+                        <ChatMessage key={index} metadata={message} />
                     ))}
                 </MessagesContent>
             </ScrollArea>

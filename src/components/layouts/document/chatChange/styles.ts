@@ -9,6 +9,7 @@ interface IActiveProps {
 
 interface IVariantsProps {
     variant: ChangesType;
+    status: "pending" | "approved" | "rejected";
 }
 
 export const Root = styled.button<IVariantsProps & IActiveProps>`
@@ -17,7 +18,7 @@ export const Root = styled.button<IVariantsProps & IActiveProps>`
     border: 1px solid
         ${({ theme, variant, active }) =>
             active ? theme.colors[CHANGES_COLOR_VARIANTS[variant]] : theme.colors.gray40};
-    cursor: pointer;
+    cursor: ${({ status }) => (status === "pending" ? "pointer" : "default")};
     background: ${({ theme, active }) => (active ? theme.colors.gray10 : theme.colors.gray10)};
     border-radius: 4px;
     margin: 0;
@@ -41,7 +42,7 @@ export const Content = styled.div`
 `;
 
 export const StyledCheckBox = styled.div<IVariantsProps & IActiveProps>`
-    display: flex;
+    display: ${({ status }) => (status === "pending" ? "flex" : "none")};
     align-items: center;
     justify-content: center;
     width: 10px;

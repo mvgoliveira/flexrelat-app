@@ -1,4 +1,4 @@
-import { AiChange } from "@/repositories/flexbotApi";
+import { useDocumentContext } from "@/context/documentContext";
 import { Theme } from "@/themes";
 import { BulletList } from "@tiptap/extension-bullet-list";
 import Focus from "@tiptap/extension-focus";
@@ -8,7 +8,7 @@ import TextStyle from "@tiptap/extension-text-style";
 import UniqueID from "@tiptap/extension-unique-id";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
 import ShortUniqueId from "short-unique-id";
 
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
@@ -29,7 +29,6 @@ interface ITextEditorProps {
     marginBottom?: number;
     pageWidth?: number;
     pageHeight?: number;
-    aiChanges: AiChange[];
 }
 
 const TextEditor = ({
@@ -41,9 +40,12 @@ const TextEditor = ({
     pageWidth = 794,
     pageHeight = 1123,
     zoom = 1,
-    aiChanges = [],
 }: ITextEditorProps): ReactElement => {
     const { randomUUID } = new ShortUniqueId({ length: 10 });
+
+    const { documentData, selectedChanges } = useDocumentContext();
+
+    const alreadyLoaded = useRef(false);
 
     const extensions = [
         Indent,
@@ -101,45 +103,7 @@ const TextEditor = ({
     const currentEditor = useEditor({
         extensions,
         autofocus: false,
-        content: `
-            <h1 data-id="62e714dae9">Você já conferiu nossas tabelas? Elas são impressionantes!</h1>
-
-            <ul data-id="62e714dae1">
-                <li>Tabelas com linhas, células e cabeçalhos (opcional).</li>
-                <li>Suporte para <code>colgroup</code> e <code>rowspan</code>.</li>
-                <li>E até mesmo colunas redimensionáveis (opcional).</li>
-            </ul>
-            <p>
-                <span data-decoration-id="id_1428080181" class="expression-active">
-                    Aqui está um exemplo:
-                </span>
-            </p>
-            <table>
-                <tbody>
-                    <tr>
-                        <th colwidth="200">Nome</th>
-                        <th colspan="3" colwidth="150,100">Descrição</th>
-                    </tr>
-                    <tr>
-                        <td>Cyndi Lauper</td>
-                        <td>Cantora</td>
-                        <td>Compositora</td>
-                        <td>Atriz</td>
-                    </tr>
-                    <tr>
-                        <td>Marie Curie</td>
-                        <td>Cientista</td>
-                        <td>Química</td>
-                        <td>Física</td>
-                    </tr>
-                    <tr>
-                        <td>Indira Gandhi</td>
-                        <td>Primeira-ministra</td>
-                        <td colspan="2">Política</td>
-                    </tr>
-                </tbody>
-            </table>
-        `,
+        content: ``,
         onUpdate: ({ editor }) => {
             const value = editor.getText();
             if (onChange) onChange(value.replace(/\n\n/g, "\n"));
@@ -150,7 +114,7 @@ const TextEditor = ({
         if (!currentEditor) return;
 
         // Clear all AI changes from the editor
-        if (aiChanges.length === 0) {
+        if (selectedChanges && selectedChanges.length === 0) {
             currentEditor.state.doc.descendants((node, pos) => {
                 const nodeClass = node.attrs?.class;
 
@@ -175,19 +139,26 @@ const TextEditor = ({
                 }
             });
         }
-    }, [aiChanges, currentEditor]);
+    }, [selectedChanges, currentEditor]);
+
+    useLayoutEffect(() => {
+        if (!alreadyLoaded.current && documentData && currentEditor) {
+            currentEditor.commands.setContent(documentData.content);
+            alreadyLoaded.current = true;
+        }
+    }, [documentData, currentEditor]);
 
     return (
         <>
             {currentEditor && <TextBubbleMenu editor={currentEditor} />}
 
             {currentEditor &&
-                aiChanges.map((aiChange, idx) => (
+                selectedChanges.map((aiChange, idx) => (
                     <AiChangesBubbleMenu key={idx} editor={currentEditor} aiChange={aiChange} />
                 ))}
 
             {currentEditor && (
-                <LoadingFloating editor={currentEditor} componentLoading={{ id: "62e714dae1" }} />
+                <LoadingFloating editor={currentEditor} componentLoading={{ id: "" }} />
             )}
 
             <Root

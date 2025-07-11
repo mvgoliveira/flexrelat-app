@@ -9,11 +9,12 @@ export type ChangesType = "add" | "remove" | "update";
 
 export type AiChange = {
     id: string;
+    message_id: string;
+    status: "pending" | "approved" | "rejected";
     type: ChangesType;
     text: string;
     old_content: Content;
     new_content: Content;
-    created_at: string;
 };
 
 export type ComponentLoading = {
@@ -74,6 +75,8 @@ export const getMessagesByChatId = async (
             changes: [
                 {
                     id: "dbd57046-c6b7-4d47-87fe-e08cae528894",
+                    message_id: "4f4f4f4f-4f4f-5f5f-6f6f-7f7f7f7f7f7",
+                    status: "pending",
                     type: "update",
                     text: "Alterando o título para um mais descritivo.",
                     old_content: {
@@ -88,37 +91,36 @@ export const getMessagesByChatId = async (
                         html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
                         position: 1,
                     },
-                    created_at: new Date(Date.now() - 16 * 60 * 1000).toISOString(),
                 },
             ],
         },
     ];
 };
 
-export const getChangesByChatId = async (
-    related_id: string,
-    related_type: "document" | "model"
-): Promise<AiChange[]> => {
-    console.log(`Fetching changes for related ID: ${related_id} ${related_type}`);
+export const updateAiChangeStatus = async (
+    changeId: string,
+    status: "pending" | "approved" | "rejected"
+): Promise<AiChange> => {
+    console.log(`Updating change status for ID: ${changeId} to ${status}`);
 
-    return [
-        {
-            id: "dbd57046-c6b7-4d47-87fe-e08cae528894",
-            type: "update",
-            text: "Alterando o título para um mais descritivo.",
-            old_content: {
-                id: "62e714dae9",
-                type: "text",
-                html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
-                position: 1,
-            },
-            new_content: {
-                id: "52e714dae1",
-                type: "chart",
-                html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
-                position: 1,
-            },
-            created_at: new Date(Date.now() - 16 * 60 * 1000).toISOString(),
+    // Simulate an API call to update the change status
+    return {
+        id: changeId,
+        message_id: "4f4f4f4f-4f4f-5f5f-6f6f-7f7f7f7f7f7",
+        status: status,
+        type: "update",
+        text: "Alteração de título aprovada.",
+        old_content: {
+            id: "62e714dae9",
+            type: "text",
+            html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
+            position: 1,
         },
-    ];
+        new_content: {
+            id: "52e714dae1",
+            type: "chart",
+            html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
+            position: 1,
+        },
+    };
 };

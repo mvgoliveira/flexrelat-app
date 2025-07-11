@@ -2,6 +2,7 @@ import {
     AiChangesControlledBubbleMenu,
     SelectedChange,
 } from "@/components/ui/textEditor/plugins/AiChangesBubbleMenu";
+import { useDocumentContext } from "@/context/documentContext";
 import { AiChange } from "@/repositories/flexbotApi";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
@@ -19,10 +20,12 @@ export const AiChangesBubbleMenu = ({
     editor,
     aiChange,
 }: IAiChangesBubbleMenuProps): ReactElement => {
+    const { approveChange } = useDocumentContext();
     const [selectedChanges, setSelectedChanges] = useState<SelectedChange[]>([]);
 
     const handleApproveChange = (): void => {
         setSelectedChanges([]);
+        approveChange(aiChange);
 
         editor.state.doc.descendants((node, pos) => {
             const nodeClass = node.attrs?.class;
