@@ -232,7 +232,12 @@ const TextEditor = ({
 
     return (
         <>
-            {currentEditor && <TextBubbleMenu editor={currentEditor} />}
+            {currentEditor && (
+                <TextBubbleMenu
+                    editor={currentEditor}
+                    blockClasses={["change-loading", "change-remove", "change-add"]}
+                />
+            )}
 
             {currentEditor &&
                 selectedChanges.map((aiChange, idx) => (

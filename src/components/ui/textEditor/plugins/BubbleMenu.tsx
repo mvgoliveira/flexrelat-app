@@ -24,6 +24,7 @@ type Props = {
     onChangeSelectedContent: (content: SelectedContent | null) => void;
     prevSelection: Selection | null;
     onChangePrevSelection: Dispatch<SetStateAction<Selection | null>>;
+    blockClasses: string[];
 };
 
 export const ControlledBubbleMenu = ({
@@ -34,6 +35,7 @@ export const ControlledBubbleMenu = ({
     selectedContent,
     prevSelection,
     onChangePrevSelection,
+    blockClasses,
 }: Props): ReactElement => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -94,6 +96,7 @@ export const ControlledBubbleMenu = ({
                 return new DOMRect(rect.x, rect.y - 5, rect.width, rect.height);
             },
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedContent, view, refs, editor.view]);
 
     useLayoutEffect(() => {
@@ -113,6 +116,12 @@ export const ControlledBubbleMenu = ({
             if (!node) {
                 setIsOpen(false);
                 onChangePrevSelection(null);
+                return;
+            }
+
+            if (blockClasses.includes(node.attrs["class"])) {
+                setIsOpen(false);
+                onChangeSelectedContent(null);
                 return;
             }
 

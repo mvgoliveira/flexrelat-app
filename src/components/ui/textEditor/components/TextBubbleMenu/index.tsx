@@ -7,8 +7,10 @@ import { DOMParser, DOMSerializer, Node } from "@tiptap/pm/model";
 import { Selection } from "@tiptap/pm/state";
 import { motion } from "motion/react";
 import { ReactElement, useEffect, useState } from "react";
-import { MdAutoAwesome, MdAutoFixHigh } from "react-icons/md";
+import { BiListCheck } from "react-icons/bi";
+import { MdAutoAwesome } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { TbPencilMinus, TbPencilPlus } from "react-icons/tb";
 
 import { ControlledBubbleMenu } from "../../plugins/BubbleMenu";
 import { RemovedButton, BubbleActionsContainer, StyledButton, Root } from "./styles";
@@ -22,9 +24,10 @@ export type SelectedContent = {
 
 interface ITextBubbleMenuProps {
     editor: Editor;
+    blockClasses: string[];
 }
 
-export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement => {
+export const TextBubbleMenu = ({ editor, blockClasses }: ITextBubbleMenuProps): ReactElement => {
     const { updateLoadingComponentId } = useDocumentContext();
 
     const [changeId, setChangeId] = useState<string>("");
@@ -121,6 +124,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
         return () => {
             editor.off("transaction", handler);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor, changeId, newNode]);
 
     return (
@@ -131,29 +135,30 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
             prevSelection={prevSelection}
             onChangePrevSelection={setPrevSelection}
             open={getIsOpen()}
+            blockClasses={blockClasses}
         >
             <Root>
                 <BubbleActionsContainer>
                     <StyledButton onClick={handleMakeLonger}>
-                        <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
+                        <TbPencilPlus size={14} color={Theme.colors.purple50} />
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="black"
                             fontWeight="regular"
                             textAlign="left"
                         >
-                            Aumentar texto
+                            Desenvolver texto
                         </Typography>
                     </StyledButton>
 
                     <StyledButton onClick={() => {}}>
-                        <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
+                        <TbPencilMinus size={14} color={Theme.colors.purple50} />
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="black"
                             fontWeight="regular"
                             textAlign="left"
@@ -163,16 +168,16 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
                     </StyledButton>
 
                     <StyledButton onClick={() => {}}>
-                        <MdAutoFixHigh size={12} color={Theme.colors.purple50} />
+                        <BiListCheck size={16} color={Theme.colors.purple50} />
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="black"
                             fontWeight="regular"
                             textAlign="left"
                         >
-                            Corrigir erros
+                            Corrigir ortografia
                         </Typography>
                     </StyledButton>
 
@@ -181,7 +186,7 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="purple50"
                             fontWeight="regular"
                             textAlign="left"
