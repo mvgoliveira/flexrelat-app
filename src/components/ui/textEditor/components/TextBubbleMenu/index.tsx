@@ -3,10 +3,10 @@ import { useDocumentContext } from "@/context/documentContext";
 import { getMakeLonger } from "@/repositories/flexbotApi";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
-import { DOMParser, DOMSerializer } from "@tiptap/pm/model";
+import { DOMParser, DOMSerializer, Node } from "@tiptap/pm/model";
 import { Selection } from "@tiptap/pm/state";
 import { motion } from "motion/react";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { MdAutoAwesome, MdAutoFixHigh } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
@@ -16,7 +16,6 @@ import { RemovedButton, BubbleActionsContainer, StyledButton, Root } from "./sty
 export type SelectedContent = {
     id: string;
     html: string;
-    json: any;
     from: number;
     to: number;
 };
@@ -28,6 +27,8 @@ interface ITextBubbleMenuProps {
 export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement => {
     const { updateLoadingComponentId } = useDocumentContext();
 
+    const [changeId, setChangeId] = useState<string>("");
+    const [newNode, setNewNode] = useState<Node | null>(null);
     const [selectedContent, setSelectedContent] = useState<SelectedContent | null>(null);
     const [prevSelection, setPrevSelection] = useState<Selection | null>(null);
 
@@ -36,31 +37,18 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
         updateLoadingComponentId(selectedContent.id);
         setSelectedContent(null);
         setPrevSelection(null);
+        setNewNode(null);
+        setChangeId("");
 
-        const { from, to } = selectedContent;
-        const { state } = editor;
-        const slice = state.doc.slice(from, to);
-        const fragment = DOMSerializer.fromSchema(editor.schema).serializeFragment(slice.content);
-
-        const container = document.createElement("div");
-        container.appendChild(fragment);
-
-        const selectedHTML = container.innerHTML;
-
-        const html = await getMakeLonger(selectedHTML);
+        const html = await getMakeLonger(selectedContent.html);
 
         const element = document.createElement("div");
         element.innerHTML = html;
 
         const docFragment = DOMParser.fromSchema(editor.schema).parse(element);
 
-        editor.commands.command(({ tr, dispatch }) => {
-            tr.replaceWith(selectedContent.from, selectedContent.to, docFragment);
-            if (dispatch) dispatch(tr);
-            return true;
-        });
-
-        updateLoadingComponentId("");
+        setNewNode(docFragment);
+        setChangeId(selectedContent.id);
     };
 
     const handleRemoveNode = () => {
@@ -103,6 +91,37 @@ export const TextBubbleMenu = ({ editor }: ITextBubbleMenuProps): ReactElement =
 
         return true;
     };
+
+    useEffect(() => {
+        if (!editor || !changeId || !newNode) return;
+
+        const handler = () => {
+            const element = editor.view.dom.querySelector(`[data-id="${changeId}"]`);
+
+            if (element) {
+                const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
+                const node = editor.state.doc.nodeAt(pos);
+
+                if (node) {
+                    editor.commands.command(({ tr, dispatch }) => {
+                        tr.replaceWith(pos, pos + node.nodeSize, newNode);
+                        if (dispatch) dispatch(tr);
+                        return true;
+                    });
+
+                    updateLoadingComponentId("");
+                    setChangeId("");
+                    setNewNode(null);
+                }
+            }
+        };
+
+        editor.on("transaction", handler);
+        handler();
+        return () => {
+            editor.off("transaction", handler);
+        };
+    }, [editor, changeId, newNode]);
 
     return (
         <ControlledBubbleMenu

@@ -190,19 +190,15 @@ export const ControlledBubbleMenu = ({
         const slice = editor.state.doc.slice(prevSelection.from, prevSelection.to);
         const node = editor.state.doc.nodeAt(prevSelection.from);
         if (!node) return;
-        const fragment = slice.content;
 
         const serializer = DOMSerializer.fromSchema(editor.schema);
         const frag = serializer.serializeFragment(slice.content);
         const div = document.createElement("div");
         div.appendChild(frag);
 
-        fragment.forEach(nodeFrag => div.appendChild(serializer.serializeNode(nodeFrag)));
-
         const content = {
             id: node.attrs.id || node.attrs["data-id"],
             html: div.innerHTML,
-            json: fragment.toJSON(),
             from: prevSelection.from,
             to: prevSelection.to,
         };
