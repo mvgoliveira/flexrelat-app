@@ -236,6 +236,14 @@ const TextEditor = ({
                 <TextBubbleMenu
                     editor={currentEditor}
                     blockClasses={["change-loading", "change-remove", "change-add"]}
+                    types={[
+                        "paragraph",
+                        "heading",
+                        "bulletList",
+                        "orderedList",
+                        "listItem",
+                        "blockquote",
+                    ]}
                 />
             )}
 

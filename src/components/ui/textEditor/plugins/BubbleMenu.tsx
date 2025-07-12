@@ -25,6 +25,7 @@ type Props = {
     prevSelection: Selection | null;
     onChangePrevSelection: Dispatch<SetStateAction<Selection | null>>;
     blockClasses: string[];
+    types: string[];
 };
 
 export const ControlledBubbleMenu = ({
@@ -36,6 +37,7 @@ export const ControlledBubbleMenu = ({
     prevSelection,
     onChangePrevSelection,
     blockClasses,
+    types,
 }: Props): ReactElement => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -121,6 +123,14 @@ export const ControlledBubbleMenu = ({
 
             if (blockClasses.includes(node.attrs["class"])) {
                 setIsOpen(false);
+                onChangeSelectedContent(null);
+                onChangePrevSelection(null);
+                return;
+            }
+
+            if (!types.includes(node.type.name)) {
+                setIsOpen(false);
+                onChangePrevSelection(null);
                 onChangeSelectedContent(null);
                 return;
             }

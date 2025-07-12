@@ -134,19 +134,13 @@ export const getMakeLonger = async (content: string): Promise<string> => {
     const html = `
             <ul>
                 <li>
-                    <p>
-                        Fully customizable tables with structured layouts, supporting multiple rows, individual cells, and optional headers for better data organization and readability.
-                    </p>
+                    <p style="margin-left: 0px!important;">Criação de tabelas completas, com suporte a múltiplas linhas, células individuais e cabeçalhos configuráveis, conforme a necessidade do conteúdo apresentado.</p>
                 </li>
                 <li>
-                    <p>
-                        Includes advanced table features like <code>colgroup</code> for grouping columns and <code>rowspan</code> to allow cells to span across multiple rows, enhancing table flexibility.
-                    </p>
+                    <p style="margin-left: 0px!important;">Compatibilidade com estruturas mais avançadas, como o uso de <code>colgroup</code> para organização de colunas e <code>rowspan</code> para mesclagem de células em diferentes linhas.</p>
                 </li>
                 <li>
-                    <p>
-                        Support for resizable columns, giving users the ability to dynamically adjust widths for a better viewing experience and improved content control.
-                    </p>
+                    <p style="margin-left: 0px!important;">Possibilidade de tornar as colunas redimensionáveis, oferecendo ao usuário mais controle sobre a visualização e o ajuste do conteúdo exibido na tabela.</p>
                 </li>
             </ul>
         `;

@@ -25,34 +25,20 @@ export type SelectedContent = {
 interface ITextBubbleMenuProps {
     editor: Editor;
     blockClasses: string[];
+    types: string[];
 }
 
-export const TextBubbleMenu = ({ editor, blockClasses }: ITextBubbleMenuProps): ReactElement => {
+export const TextBubbleMenu = ({
+    editor,
+    blockClasses,
+    types,
+}: ITextBubbleMenuProps): ReactElement => {
     const { updateLoadingComponentId } = useDocumentContext();
 
     const [changeId, setChangeId] = useState<string>("");
     const [newNode, setNewNode] = useState<Node | null>(null);
     const [selectedContent, setSelectedContent] = useState<SelectedContent | null>(null);
     const [prevSelection, setPrevSelection] = useState<Selection | null>(null);
-
-    const handleMakeLonger = async () => {
-        if (!selectedContent) return;
-        updateLoadingComponentId(selectedContent.id);
-        setSelectedContent(null);
-        setPrevSelection(null);
-        setNewNode(null);
-        setChangeId("");
-
-        const html = await getMakeLonger(selectedContent.html);
-
-        const element = document.createElement("div");
-        element.innerHTML = html;
-
-        const docFragment = DOMParser.fromSchema(editor.schema).parse(element);
-
-        setNewNode(docFragment);
-        setChangeId(selectedContent.id);
-    };
 
     const handleRemoveNode = () => {
         if (!selectedContent) return;
@@ -83,16 +69,23 @@ export const TextBubbleMenu = ({ editor, blockClasses }: ITextBubbleMenuProps): 
         console.log(html);
     };
 
-    const getIsOpen = (): boolean => {
-        if (!selectedContent) return false;
-        const { from } = selectedContent;
-        const node = editor.state.doc.nodeAt(from);
+    const handleMakeLonger = async () => {
+        if (!selectedContent) return;
+        updateLoadingComponentId(selectedContent.id);
+        setSelectedContent(null);
+        setPrevSelection(null);
+        setNewNode(null);
+        setChangeId("");
 
-        if (node?.attrs["class"] === "change-remove" || node?.attrs["class"] === "change-add") {
-            return false;
-        }
+        const html = await getMakeLonger(selectedContent.html);
 
-        return true;
+        const element = document.createElement("div");
+        element.innerHTML = html;
+
+        const docFragment = DOMParser.fromSchema(editor.schema).parse(element);
+
+        setNewNode(docFragment);
+        setChangeId(selectedContent.id);
     };
 
     useEffect(() => {
@@ -134,13 +127,13 @@ export const TextBubbleMenu = ({ editor, blockClasses }: ITextBubbleMenuProps): 
             selectedContent={selectedContent}
             prevSelection={prevSelection}
             onChangePrevSelection={setPrevSelection}
-            open={getIsOpen()}
             blockClasses={blockClasses}
+            types={types}
         >
             <Root>
                 <BubbleActionsContainer>
                     <StyledButton onClick={handleMakeLonger}>
-                        <TbPencilPlus size={14} color={Theme.colors.purple50} />
+                        <TbPencilPlus size={12} color={Theme.colors.purple50} />
 
                         <Typography
                             tag="p"
@@ -148,13 +141,14 @@ export const TextBubbleMenu = ({ editor, blockClasses }: ITextBubbleMenuProps): 
                             color="black"
                             fontWeight="regular"
                             textAlign="left"
+                            fontFamily="inter"
                         >
                             Desenvolver texto
                         </Typography>
                     </StyledButton>
 
                     <StyledButton onClick={() => {}}>
-                        <TbPencilMinus size={14} color={Theme.colors.purple50} />
+                        <TbPencilMinus size={12} color={Theme.colors.purple50} />
 
                         <Typography
                             tag="p"
@@ -168,7 +162,7 @@ export const TextBubbleMenu = ({ editor, blockClasses }: ITextBubbleMenuProps): 
                     </StyledButton>
 
                     <StyledButton onClick={() => {}}>
-                        <BiListCheck size={16} color={Theme.colors.purple50} />
+                        <BiListCheck size={14} color={Theme.colors.purple50} />
 
                         <Typography
                             tag="p"
@@ -203,7 +197,7 @@ export const TextBubbleMenu = ({ editor, blockClasses }: ITextBubbleMenuProps): 
                     transition={{ duration: 0.2, delay: 0.2 }}
                 >
                     <RemovedButton onClick={handleRemoveNode}>
-                        <RiDeleteBin6Line size={14} color={Theme.colors.purple50} />
+                        <RiDeleteBin6Line size={16} color={Theme.colors.purple50} />
                     </RemovedButton>
                 </motion.div>
             </Root>
