@@ -31,12 +31,17 @@ const Item = ({ children }: IReactChildren): ReactElement => {
 };
 Toolbar.Item = Item;
 
+interface IItemButtonProps {
+    active?: boolean;
+}
+
 const ItemButton = ({
     children,
+    active = false,
     ...props
-}: IReactChildren & ButtonHTMLAttributes<HTMLButtonElement>): ReactElement => {
+}: IReactChildren & ButtonHTMLAttributes<HTMLButtonElement> & IItemButtonProps): ReactElement => {
     return (
-        <StyledButton as="button" {...props}>
+        <StyledButton active={active} as="button" {...props}>
             {children}
         </StyledButton>
     );

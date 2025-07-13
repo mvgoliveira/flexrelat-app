@@ -5,8 +5,9 @@ import Focus from "@tiptap/extension-focus";
 import { ListItem } from "@tiptap/extension-list-item";
 import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextStyle from "@tiptap/extension-text-style";
+import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
 import ShortUniqueId from "short-unique-id";
@@ -29,6 +30,7 @@ interface ITextEditorProps {
     marginBottom?: number;
     pageWidth?: number;
     pageHeight?: number;
+    setEditor: (editor: Editor | null) => void;
 }
 
 const TextEditor = ({
@@ -40,6 +42,7 @@ const TextEditor = ({
     pageWidth = 794,
     pageHeight = 1123,
     zoom = 1,
+    setEditor,
 }: ITextEditorProps): ReactElement => {
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
@@ -98,6 +101,7 @@ const TextEditor = ({
         PreventEditExtension.configure({
             classes: ["change-remove", "change-add", "change-update", "change-loading"],
         }),
+        Underline,
     ];
 
     const currentEditor = useEditor({
@@ -109,6 +113,10 @@ const TextEditor = ({
             if (onChange) onChange(value.replace(/\n\n/g, "\n"));
         },
     });
+
+    useEffect(() => {
+        setEditor(currentEditor);
+    }, [currentEditor, setEditor]);
 
     useEffect(() => {
         if (!currentEditor) return;
@@ -184,42 +192,6 @@ const TextEditor = ({
                     }
                 });
             }
-
-            // if (!selectedChanges || selectedChanges.length === 0) {
-            //     currentEditor.view.dom.querySelectorAll(".change-add").forEach(element => {
-            //         const pos = currentEditor.state.doc
-            //             .resolve(currentEditor.view.posAtDOM(element, 0))
-            //             .before(1);
-            //         const node = currentEditor.state.doc.nodeAt(pos);
-            //         if (node) {
-            //             const elementTypeName = node.type.name;
-
-            //             currentEditor
-            //                 .chain()
-            //                 .focus()
-            //                 .setNodeSelection(pos)
-            //                 .updateAttributes(elementTypeName, { class: undefined })
-            //                 .run();
-            //         }
-            //     });
-
-            //     currentEditor.view.dom.querySelectorAll(".change-remove").forEach(element => {
-            //         const pos = currentEditor.state.doc
-            //             .resolve(currentEditor.view.posAtDOM(element, 0))
-            //             .before(1);
-            //         const node = currentEditor.state.doc.nodeAt(pos);
-            //         if (node) {
-            //             const elementTypeName = node.type.name;
-
-            //             currentEditor
-            //                 .chain()
-            //                 .focus()
-            //                 .setNodeSelection(pos)
-            //                 .updateAttributes(elementTypeName, { class: undefined })
-            //                 .run();
-            //         }
-            //     });
-            // }
         };
 
         currentEditor.on("update", handleUpdate);

@@ -69,6 +69,19 @@ export const Root = styled.div<IRootProps>`
     h6,
     p {
         margin-bottom: 12px;
+        text-align: justify;
+        font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
+        font-size: 12pt;
+        line-height: 1.5;
+        word-break: break-word;
+        hyphens: auto;
+
+        /* word-spacing: 20; */
+        /* letter-spacing: 5px; */
+    }
+
+    .error {
+        border-bottom: 1px solid ${({ theme }) => theme.colors.red50};
     }
 
     h1,
@@ -77,8 +90,12 @@ export const Root = styled.div<IRootProps>`
     h4,
     h5,
     h6 {
-        font-size: ${({ theme }) => theme.fontSize.fs100};
-        line-height: ${({ theme }) => theme.lineHeight.fs100};
+        font-size: 14pt;
+        line-height: 150%;
+    }
+
+    h4 {
+        font-size: 18pt;
     }
 
     h1 {
@@ -141,10 +158,10 @@ export const Root = styled.div<IRootProps>`
 
         td,
         th {
-            border-right: 1px solid ${({ theme }) => theme.colors.gray50};
-            border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
+            border-right: 1px solid ${({ theme }) => theme.colors.black};
+            border-bottom: 1px solid ${({ theme }) => theme.colors.black};
             box-sizing: border-box;
-            padding: 12px 8px;
+            padding: 6px;
             position: relative;
             vertical-align: top;
 
@@ -153,91 +170,33 @@ export const Root = styled.div<IRootProps>`
             }
 
             &:first-of-type {
-                border-left: 1px solid ${({ theme }) => theme.colors.gray50};
+                border-left: 1px solid ${({ theme }) => theme.colors.black};
             }
         }
 
         th {
-            background: ${({ theme }) => theme.colors.gray30};
             font-weight: ${({ theme }) => theme.fontWeight.bold};
             text-align: center;
-            border-top: 1px solid ${({ theme }) => theme.colors.gray50};
-        }
+            border-top: 1px solid ${({ theme }) => theme.colors.black};
 
-        /* .column-resize-handle {
-            background-color: ${({ theme }) => theme.colors.purple50};
-            bottom: -2px;
-            pointer-events: none;
-            position: absolute;
-            right: -2px;
-            top: 0;
-            width: 4px;
-        } */
+            p {
+                text-align: start;
+            }
+        }
     }
 
-    /* .resize-cursor {
-        cursor: ew-resize;
-        cursor: col-resize;
-    } */
-
     ul {
-        display: flex;
-        flex-direction: column;
         list-style-type: disc;
-        padding-left: 30px;
+        padding-left: 40px;
         gap: 12px;
-        margin-bottom: 12px;
-        font-size: ${({ theme }) => theme.fontSize.fs75};
-        line-height: 150%;
-
-        p {
-            margin-bottom: 0;
-        }
-
-        li ul {
-            list-style-type: circle;
-            padding-left: 20px;
-        }
-        li ol {
-            list-style-type: decimal;
-            padding-left: 20px;
-        }
-
-        ul,
-        ol {
-            margin-top: 12px;
-            margin-bottom: 0px;
-        }
+        margin-bottom: 12pt;
     }
 
     ol {
-        display: flex;
-        flex-direction: column;
         list-style-type: decimal;
-        padding-left: 30px;
+        padding-left: 40px;
         gap: 12px;
-        margin-bottom: 12px;
-        font-size: ${({ theme }) => theme.fontSize.fs75};
-        line-height: 150%;
-
-        p {
-            margin-bottom: 0;
-        }
-
-        li ul {
-            list-style-type: circle;
-            padding-left: 20px;
-        }
-        li ol {
-            list-style-type: decimal;
-            padding-left: 20px;
-        }
-
-        ul,
-        ol {
-            margin-top: 12px;
-            margin-bottom: 0px;
-        }
+        margin-bottom: 12pt;
     }
 
     code {

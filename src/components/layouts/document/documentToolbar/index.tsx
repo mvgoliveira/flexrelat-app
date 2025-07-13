@@ -24,10 +24,27 @@ import { ColorContainer, Root } from "./styles";
 
 interface IDocumentToolbarProps {
     zoom: number;
+    isBoldActive: boolean;
     onBoldClick: () => void;
+    isItalicActive: boolean;
+    onItalicClick: () => void;
+    isUnderlineActive: boolean;
+    onUnderlineClick: () => void;
+    isStrikethroughActive: boolean;
+    onStrikethroughClick: () => void;
 }
 
-export const DocumentToolbar = ({ zoom, onBoldClick }: IDocumentToolbarProps): ReactElement => {
+export const DocumentToolbar = ({
+    zoom,
+    isBoldActive,
+    onBoldClick,
+    isItalicActive,
+    onItalicClick,
+    isUnderlineActive,
+    onUnderlineClick,
+    isStrikethroughActive,
+    onStrikethroughClick,
+}: IDocumentToolbarProps): ReactElement => {
     const [fontType, setFontType] = useState<string>("arial");
 
     return (
@@ -64,16 +81,22 @@ export const DocumentToolbar = ({ zoom, onBoldClick }: IDocumentToolbarProps): R
                 </Toolbar.Group>
 
                 <Toolbar.Group className="TextFormat Item">
-                    <Toolbar.ItemButton onClick={onBoldClick}>
+                    <Toolbar.ItemButton active={isBoldActive} onClick={onBoldClick}>
                         <MdFormatBold size={18} color="black" />
                     </Toolbar.ItemButton>
-                    <Toolbar.ItemButton>
+
+                    <Toolbar.ItemButton active={isItalicActive} onClick={onItalicClick}>
                         <MdFormatItalic size={18} color={Theme.colors.black} />
                     </Toolbar.ItemButton>
-                    <Toolbar.ItemButton>
+
+                    <Toolbar.ItemButton active={isUnderlineActive} onClick={onUnderlineClick}>
                         <MdFormatUnderlined size={18} color={Theme.colors.black} />
                     </Toolbar.ItemButton>
-                    <Toolbar.ItemButton>
+
+                    <Toolbar.ItemButton
+                        active={isStrikethroughActive}
+                        onClick={onStrikethroughClick}
+                    >
                         <MdFormatStrikethrough size={18} color={Theme.colors.black} />
                     </Toolbar.ItemButton>
                 </Toolbar.Group>

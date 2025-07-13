@@ -34,14 +34,18 @@ export const StyledItem = styled.div`
     background: ${({ theme }) => theme.colors.white};
 `;
 
-export const StyledButton = styled.button`
+interface IStyledButtonProps {
+    active: boolean;
+}
+
+export const StyledButton = styled.button<IStyledButtonProps>`
     display: flex;
     align-items: center;
     justify-content: center;
     width: 30px;
     height: 30px;
     border-radius: 4px;
-    background: ${({ theme }) => theme.colors.white};
+    background: ${({ theme, active }) => (active ? theme.colors.gray30 : theme.colors.white)};
     cursor: pointer;
     position: relative;
 
