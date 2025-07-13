@@ -58,7 +58,12 @@ export function isListNode(node: Node): boolean {
     return isBulletListNode(node) || isOrderedListNode(node) || isTodoListNode(node);
 }
 
-function setNodeIndentMarkup(tr: Transaction, pos: number, delta: number): Transaction {
+function setNodeIndentMarkup(
+    tr: Transaction,
+    pos: number,
+    delta: number,
+    isFirstLine: boolean = true
+): Transaction {
     if (!tr.doc) return tr;
 
     const node = tr.doc.nodeAt(pos);
@@ -67,16 +72,35 @@ function setNodeIndentMarkup(tr: Transaction, pos: number, delta: number): Trans
     const minIndent = IndentProps.min;
     const maxIndent = IndentProps.max;
 
-    const indent = clamp((node.attrs.indent || 0) + delta, minIndent, maxIndent);
+    if (isFirstLine) {
+        // Indentação de primeira linha
+        const firstLineIndent = clamp(
+            (node.attrs.firstLineIndent || 0) + delta,
+            minIndent,
+            maxIndent
+        );
 
-    if (indent === node.attrs.indent) return tr;
+        if (firstLineIndent === node.attrs.firstLineIndent) return tr;
 
-    const nodeAttrs = {
-        ...node.attrs,
-        indent,
-    };
+        const nodeAttrs = {
+            ...node.attrs,
+            firstLineIndent,
+        };
 
-    return tr.setNodeMarkup(pos, node.type, nodeAttrs, node.marks);
+        return tr.setNodeMarkup(pos, node.type, nodeAttrs, node.marks);
+    } else {
+        // Indentação de bloco (mantém a de primeira linha)
+        const blockIndent = clamp((node.attrs.blockIndent || 0) + delta, minIndent, maxIndent);
+
+        if (blockIndent === node.attrs.blockIndent) return tr;
+
+        const nodeAttrs = {
+            ...node.attrs,
+            blockIndent,
+        };
+
+        return tr.setNodeMarkup(pos, node.type, nodeAttrs, node.marks);
+    }
 }
 
 function updateIndentLevel(tr: Transaction, delta: number): Transaction {
@@ -94,7 +118,9 @@ function updateIndentLevel(tr: Transaction, delta: number): Transaction {
         const nodeType = node.type;
 
         if (nodeType.name === "paragraph" || nodeType.name === "heading") {
-            tr = setNodeIndentMarkup(tr, pos, delta);
+            // Verifica se o cursor está no início do parágrafo (primeira linha)
+            const isAtStart = selection.empty && selection.$from.parentOffset === 0;
+            tr = setNodeIndentMarkup(tr, pos, delta, isAtStart);
             return false;
         }
 
@@ -120,13 +146,35 @@ export const Indent = Extension.create<IndentOptions>({
             {
                 types: this.options.types,
                 attributes: {
-                    indent: {
+                    firstLineIndent: {
                         default: this.options.defaultIndentLevel,
-                        renderHTML: attributes => ({
-                            style: `margin-left: ${Number(attributes.indent)}px!important;`,
-                        }),
-                        parseHTML: element =>
-                            parseInt(element.style.marginLeft) || this.options.defaultIndentLevel,
+                        renderHTML: attributes => {
+                            const firstLineIndent = Number(attributes.firstLineIndent || 0);
+                            if (firstLineIndent === 0) return {};
+
+                            return {
+                                style: `text-indent: ${firstLineIndent}px;`,
+                            };
+                        },
+                        parseHTML: element => {
+                            const textIndent = parseInt(element.style.textIndent) || 0;
+                            return textIndent || this.options.defaultIndentLevel;
+                        },
+                    },
+                    blockIndent: {
+                        default: this.options.defaultIndentLevel,
+                        renderHTML: attributes => {
+                            const blockIndent = Number(attributes.blockIndent || 0);
+                            if (blockIndent === 0) return {};
+
+                            return {
+                                style: `margin-left: ${blockIndent}px;`,
+                            };
+                        },
+                        parseHTML: element => {
+                            const marginLeft = parseInt(element.style.marginLeft) || 0;
+                            return marginLeft || this.options.defaultIndentLevel;
+                        },
                     },
                 },
             },
@@ -179,7 +227,6 @@ export const Indent = Extension.create<IndentOptions>({
 
                 if (
                     selection.empty &&
-                    selection.$from.parentOffset === 0 &&
                     (node?.type.name == "paragraph" || node?.type.name == "heading")
                 ) {
                     this.editor.commands.indent();
@@ -190,8 +237,8 @@ export const Indent = Extension.create<IndentOptions>({
             "Shift-Tab": () => {
                 const { state } = this.editor;
                 const { selection } = state;
-                // Only outdent if selection is empty and at the start of a word
-                if (selection.empty && selection.$from.parentOffset === 0) {
+
+                if (selection.empty) {
                     this.editor.commands.outdent();
                     return true;
                 }

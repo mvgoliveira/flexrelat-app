@@ -80,7 +80,6 @@ const TextEditor = ({
         OrderedList,
         ListItem,
         GlobalClass,
-        // NumberedHeading,
         UniqueID.configure({
             types: [
                 "heading",
