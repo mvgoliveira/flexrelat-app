@@ -1,4 +1,4 @@
-import { ChangesType } from "@/repositories/flexbotApi";
+import { ChangesType } from "@/repositories/changesApi";
 import styled from "@emotion/styled";
 
 import { CHANGES_BADGE_VARIANTS, CHANGES_COLOR_VARIANTS } from "./variants";

@@ -3,7 +3,7 @@ import {
     SelectedChange,
 } from "@/components/ui/textEditor/plugins/AiChangesBubbleMenu";
 import { useDocumentContext } from "@/context/documentContext";
-import { AiChange } from "@/repositories/flexbotApi";
+import { AiChange } from "@/repositories/changesApi";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
 import { ReactElement, useEffect, useState } from "react";

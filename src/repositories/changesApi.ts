@@ -1,3 +1,7 @@
+import { client } from "@/services/client";
+
+const PREFIX = "/changes";
+
 type Content = {
     id: string;
     type: "text" | "heading" | "image" | "chart" | "table" | "bulletList" | "numberedList";
@@ -128,26 +132,22 @@ export const removeAiChange = async (changeId: string): Promise<void> => {
     return Promise.resolve();
 };
 
-export const getMakeLonger = async (content: string): Promise<string> => {
-    console.log(`Generating longer content for: ${content}`);
+export const getMoreText = async (content: string): Promise<string> => {
+    const { data } = await client.post(`${PREFIX}/more-text`, { content });
+    return data.data;
+};
 
-    const html = `
-            <ul>
-                <li>
-                    <p style="margin-left: 0px!important;">Criação de tabelas completas, com suporte a múltiplas linhas, células individuais e cabeçalhos configuráveis, conforme a necessidade do conteúdo apresentado.</p>
-                </li>
-                <li>
-                    <p style="margin-left: 0px!important;">Compatibilidade com estruturas mais avançadas, como o uso de <code>colgroup</code> para organização de colunas e <code>rowspan</code> para mesclagem de células em diferentes linhas.</p>
-                </li>
-                <li>
-                    <p style="margin-left: 0px!important;">Possibilidade de tornar as colunas redimensionáveis, oferecendo ao usuário mais controle sobre a visualização e o ajuste do conteúdo exibido na tabela.</p>
-                </li>
-            </ul>
-        `;
+export const getLessText = async (content: string): Promise<string> => {
+    const { data } = await client.post(`${PREFIX}/less-text`, { content });
+    return data.data;
+};
 
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(html);
-        }, 5000);
-    });
+export const getOrthographyFixed = async (content: string): Promise<string> => {
+    const { data } = await client.post(`${PREFIX}/fix-orthography`, { content });
+    return data.data;
+};
+
+export const getImproveText = async (content: string): Promise<string> => {
+    const { data } = await client.post(`${PREFIX}/improve-text`, { content });
+    return data.data;
 };

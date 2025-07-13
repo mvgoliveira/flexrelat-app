@@ -1,9 +1,14 @@
 import { Typography } from "@/components/features/typography";
 import { useDocumentContext } from "@/context/documentContext";
-import { getMakeLonger } from "@/repositories/flexbotApi";
+import {
+    getImproveText,
+    getLessText,
+    getMoreText,
+    getOrthographyFixed,
+} from "@/repositories/changesApi";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
-import { DOMParser, DOMSerializer, Node } from "@tiptap/pm/model";
+import { DOMParser, Node } from "@tiptap/pm/model";
 import { Selection } from "@tiptap/pm/state";
 import { motion } from "motion/react";
 import { ReactElement, useEffect, useState } from "react";
@@ -53,39 +58,49 @@ export const TextBubbleMenu = ({
         setPrevSelection(null);
     };
 
-    const getHtml = () => {
+    const handleCommand = async (type: "more" | "less" | "fix" | "improve") => {
         if (!selectedContent) return;
 
-        const { from, to } = selectedContent;
-        const { state } = editor;
-        const slice = state.doc.slice(from, to);
-        const fragment = DOMSerializer.fromSchema(editor.schema).serializeFragment(slice.content);
+        try {
+            updateLoadingComponentId(selectedContent.id);
+            setSelectedContent(null);
+            setPrevSelection(null);
+            setNewNode(null);
+            setChangeId("");
 
-        const container = document.createElement("div");
-        container.appendChild(fragment);
+            let html = "";
 
-        const html = container.innerHTML;
+            switch (type) {
+                case "more":
+                    html = await getMoreText(selectedContent.html);
+                    break;
+                case "less":
+                    html = await getLessText(selectedContent.html);
+                    break;
+                case "fix":
+                    html = await getOrthographyFixed(selectedContent.html);
+                    break;
+                case "improve":
+                    html = await getImproveText(selectedContent.html);
+                    break;
+                default:
+                    throw new Error("Invalid command type");
+            }
 
-        console.log(html);
-    };
+            const element = document.createElement("div");
+            element.innerHTML = html;
 
-    const handleMakeLonger = async () => {
-        if (!selectedContent) return;
-        updateLoadingComponentId(selectedContent.id);
-        setSelectedContent(null);
-        setPrevSelection(null);
-        setNewNode(null);
-        setChangeId("");
+            const docFragment = DOMParser.fromSchema(editor.schema).parse(element);
 
-        const html = await getMakeLonger(selectedContent.html);
-
-        const element = document.createElement("div");
-        element.innerHTML = html;
-
-        const docFragment = DOMParser.fromSchema(editor.schema).parse(element);
-
-        setNewNode(docFragment);
-        setChangeId(selectedContent.id);
+            setNewNode(docFragment);
+            setChangeId(selectedContent.id);
+        } catch (error) {
+            setSelectedContent(selectedContent);
+            setPrevSelection(prevSelection);
+            setNewNode(null);
+            setChangeId("");
+            updateLoadingComponentId("");
+        }
     };
 
     useEffect(() => {
@@ -132,7 +147,7 @@ export const TextBubbleMenu = ({
         >
             <Root>
                 <BubbleActionsContainer>
-                    <StyledButton onClick={handleMakeLonger}>
+                    <StyledButton onClick={() => handleCommand("more")}>
                         <TbPencilPlus size={12} color={Theme.colors.purple50} />
 
                         <Typography
@@ -147,7 +162,7 @@ export const TextBubbleMenu = ({
                         </Typography>
                     </StyledButton>
 
-                    <StyledButton onClick={() => {}}>
+                    <StyledButton onClick={() => handleCommand("less")}>
                         <TbPencilMinus size={12} color={Theme.colors.purple50} />
 
                         <Typography
@@ -161,7 +176,7 @@ export const TextBubbleMenu = ({
                         </Typography>
                     </StyledButton>
 
-                    <StyledButton onClick={() => {}}>
+                    <StyledButton onClick={() => handleCommand("fix")}>
                         <BiListCheck size={14} color={Theme.colors.purple50} />
 
                         <Typography
@@ -175,7 +190,7 @@ export const TextBubbleMenu = ({
                         </Typography>
                     </StyledButton>
 
-                    <StyledButton onClick={getHtml}>
+                    <StyledButton onClick={() => handleCommand("improve")}>
                         <MdAutoAwesome size={12} color={Theme.colors.purple50} />
 
                         <Typography

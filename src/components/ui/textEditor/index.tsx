@@ -224,7 +224,7 @@ const TextEditor = ({
         };
 
         currentEditor.on("update", handleUpdate);
-
+        handleUpdate();
         return () => {
             currentEditor.off("update", handleUpdate);
         };

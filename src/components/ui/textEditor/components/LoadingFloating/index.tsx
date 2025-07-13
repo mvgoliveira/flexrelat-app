@@ -1,4 +1,4 @@
-import { ComponentLoading } from "@/repositories/flexbotApi";
+import { ComponentLoading } from "@/repositories/changesApi";
 import { Editor } from "@tiptap/core";
 import { ReactElement, useEffect } from "react";
 

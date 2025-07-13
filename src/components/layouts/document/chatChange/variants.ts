@@ -1,4 +1,4 @@
-import { ChangesType } from "@/repositories/flexbotApi";
+import { ChangesType } from "@/repositories/changesApi";
 import { Theme } from "@/themes";
 
 type BadgeStyles = {

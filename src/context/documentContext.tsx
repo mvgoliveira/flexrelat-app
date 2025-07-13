@@ -1,11 +1,11 @@
-import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
 import {
     AiChange,
     getMessagesByChatId,
     Message,
     removeAiChange,
     updateAiChangeStatus,
-} from "@/repositories/flexbotApi";
+} from "@/repositories/changesApi";
+import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { createContext, useContext, ReactNode, useState, useEffect } from "react";
@@ -107,7 +107,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     };
 
     const updateLoadingComponentId = (componentId: string): void => {
-        console.log("Updating loading component ID:", componentId);
         setLoadingComponentId(componentId);
     };
 
