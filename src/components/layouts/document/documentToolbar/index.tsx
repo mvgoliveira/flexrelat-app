@@ -32,6 +32,14 @@ interface IDocumentToolbarProps {
     onUnderlineClick: () => void;
     isStrikethroughActive: boolean;
     onStrikethroughClick: () => void;
+    isLeftAlignActive: boolean;
+    isCenterAlignActive: boolean;
+    isRightAlignActive: boolean;
+    isJustifyAlignActive: boolean;
+    onLeftAlignClick: () => void;
+    onCenterAlignClick: () => void;
+    onRightAlignClick: () => void;
+    onJustifyAlignClick: () => void;
 }
 
 export const DocumentToolbar = ({
@@ -44,6 +52,14 @@ export const DocumentToolbar = ({
     onUnderlineClick,
     isStrikethroughActive,
     onStrikethroughClick,
+    isCenterAlignActive,
+    onCenterAlignClick,
+    isLeftAlignActive,
+    onLeftAlignClick,
+    isRightAlignActive,
+    onRightAlignClick,
+    isJustifyAlignActive,
+    onJustifyAlignClick,
 }: IDocumentToolbarProps): ReactElement => {
     const [fontType, setFontType] = useState<string>("arial");
 
@@ -102,16 +118,16 @@ export const DocumentToolbar = ({
                 </Toolbar.Group>
 
                 <Toolbar.Group className="TextAlignment Item">
-                    <Toolbar.ItemButton>
+                    <Toolbar.ItemButton active={isLeftAlignActive} onClick={onLeftAlignClick}>
                         <MdFormatAlignLeft size={18} color="black" />
                     </Toolbar.ItemButton>
-                    <Toolbar.ItemButton>
+                    <Toolbar.ItemButton active={isCenterAlignActive} onClick={onCenterAlignClick}>
                         <MdOutlineFormatAlignCenter size={18} color={Theme.colors.black} />
                     </Toolbar.ItemButton>
-                    <Toolbar.ItemButton>
+                    <Toolbar.ItemButton active={isRightAlignActive} onClick={onRightAlignClick}>
                         <MdFormatAlignRight size={18} color={Theme.colors.black} />
                     </Toolbar.ItemButton>
-                    <Toolbar.ItemButton>
+                    <Toolbar.ItemButton active={isJustifyAlignActive} onClick={onJustifyAlignClick}>
                         <MdFormatAlignJustify size={18} color={Theme.colors.black} />
                     </Toolbar.ItemButton>
                 </Toolbar.Group>

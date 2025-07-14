@@ -4,6 +4,7 @@ import { BulletList } from "@tiptap/extension-bullet-list";
 import Focus from "@tiptap/extension-focus";
 import { ListItem } from "@tiptap/extension-list-item";
 import { OrderedList } from "@tiptap/extension-ordered-list";
+import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
@@ -56,6 +57,19 @@ const TextEditor = ({
         StarterKit.configure({
             dropcursor: false,
         }),
+        TextAlign.configure({
+            types: [
+                "heading",
+                "paragraph",
+                "blockquote",
+                "codeBlock",
+                "table",
+                "bulletList",
+                "orderedList",
+                "listItem",
+            ],
+        }),
+
         TextStyle.configure({ mergeNestedSpanStyles: true }),
         Focus.configure({
             className: "has-focus",

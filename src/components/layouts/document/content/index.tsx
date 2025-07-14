@@ -16,6 +16,10 @@ export const DocumentContent = (): ReactElement => {
     const [italicActive, setItalicActive] = useState<boolean>(false);
     const [underlineActive, setUnderlineActive] = useState<boolean>(false);
     const [strikethroughActive, setStrikethroughActive] = useState<boolean>(false);
+    const [leftAlignActive, setLeftAlignActive] = useState<boolean>(false);
+    const [centerAlignActive, setCenterAlignActive] = useState<boolean>(false);
+    const [rightAlignActive, setRightAlignActive] = useState<boolean>(false);
+    const [justifyAlignActive, setJustifyAlignActive] = useState<boolean>(false);
 
     useEffect(() => {
         if (!editor) return;
@@ -25,6 +29,10 @@ export const DocumentContent = (): ReactElement => {
             setItalicActive(editor.isActive("italic"));
             setUnderlineActive(editor.isActive("underline"));
             setStrikethroughActive(editor.isActive("strike"));
+            setLeftAlignActive(editor.isActive({ textAlign: "left" }));
+            setCenterAlignActive(editor.isActive({ textAlign: "center" }));
+            setRightAlignActive(editor.isActive({ textAlign: "right" }));
+            setJustifyAlignActive(editor.isActive({ textAlign: "justify" }));
         };
 
         editor?.on("transaction", handleUpdate);
@@ -47,6 +55,16 @@ export const DocumentContent = (): ReactElement => {
                     onUnderlineClick={() => editor?.chain().focus().toggleUnderline().run()}
                     isStrikethroughActive={strikethroughActive}
                     onStrikethroughClick={() => editor?.chain().focus().toggleStrike().run()}
+                    isLeftAlignActive={leftAlignActive}
+                    onLeftAlignClick={() => editor?.chain().focus().setTextAlign("left").run()}
+                    isCenterAlignActive={centerAlignActive}
+                    onCenterAlignClick={() => editor?.chain().focus().setTextAlign("center").run()}
+                    isRightAlignActive={rightAlignActive}
+                    onRightAlignClick={() => editor?.chain().focus().setTextAlign("right").run()}
+                    isJustifyAlignActive={justifyAlignActive}
+                    onJustifyAlignClick={() =>
+                        editor?.chain().focus().setTextAlign("justify").run()
+                    }
                 />
             </DocumentHeader>
 
