@@ -101,7 +101,7 @@ export const DocumentContent = (): ReactElement => {
                     fontSize={fontSize}
                     onChangeFontSize={(size: number) => {
                         setFontSize(size);
-                        editor?.chain().focus().setFontSize(`${size}pt`).run();
+                        editor?.chain().setFontSize(`${size}pt`).run();
                     }}
                 />
             </DocumentHeader>

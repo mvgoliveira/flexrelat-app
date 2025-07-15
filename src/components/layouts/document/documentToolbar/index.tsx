@@ -2,8 +2,7 @@ import { FormatInkHighlighter } from "@/assets/svgs/icons";
 import { Selector } from "@/components/features/selector";
 import { Toolbar } from "@/components/features/toolbar";
 import { Theme } from "@/themes";
-import _ from "lodash";
-import { ChangeEvent, ReactElement, useMemo, useState, useEffect } from "react";
+import { ChangeEvent, ReactElement, useState, useEffect } from "react";
 import { BiMinus } from "react-icons/bi";
 import {
     MdAdd,
@@ -75,23 +74,10 @@ export const DocumentToolbar = ({
         setLocalFontSize(fontSize);
     }, [fontSize]);
 
-    const debouncedSaveFontSize = useMemo(
-        () =>
-            _.debounce((newFontSize: number) => {
-                try {
-                    onChangeFontSize(newFontSize);
-                } catch (error) {
-                    console.error("Error saving font size:", error);
-                    onChangeFontSize(12);
-                }
-            }, 500),
-        [onChangeFontSize]
-    );
-
     const changeFontSize = (newSize: number) => {
         if (newSize < 1 || newSize > 200) return;
         setLocalFontSize(newSize);
-        debouncedSaveFontSize(newSize);
+        onChangeFontSize(newSize);
     };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
