@@ -27,10 +27,11 @@ export const Root = styled.div<IRootProps>`
     background: ${({ theme }) => theme.colors.white};
     min-width: ${({ pageWidth }) => `${pageWidth}px`};
     max-width: ${({ pageWidth }) => `${pageWidth}px`};
-    zoom: ${({ zoom }) => zoom};
+    zoom: ${({ zoom }) => zoom / 100};
     border: 1px solid ${({ theme }) => theme.colors.gray40};
     font-size: ${({ theme }) => theme.fontSize.fs75};
     font-family: ${({ theme }) => theme.fontFamily.arial};
+    cursor: text;
 
     .ProseMirror {
         &:focus {

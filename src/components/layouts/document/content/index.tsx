@@ -1,13 +1,16 @@
+import ZoomButton from "@/components/features/zoomButton";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import TextEditor from "@/components/ui/textEditor";
 import { Editor } from "@tiptap/core";
 import { ReactElement, useEffect, useState } from "react";
 
 import { DocumentToolbar } from "../documentToolbar";
-import { DocumentHeader, DocumentRoot, Root } from "./styles";
+import { DocumentHeader, DocumentRoot, FloatContainer, Root } from "./styles";
+
+export type FontFamilies = "times-new-roman" | "arial";
 
 export const DocumentContent = (): ReactElement => {
-    const [zoom, setZoom] = useState<number>(0.83);
+    const [zoom, setZoom] = useState<number>(83);
     const [pageWidth, setPageWidth] = useState<number>(794);
     const [pageHeight, setPageHeight] = useState<number>(1123);
     const [editor, setEditor] = useState<Editor | null>(null);
@@ -22,6 +25,7 @@ export const DocumentContent = (): ReactElement => {
     const [justifyAlignActive, setJustifyAlignActive] = useState<boolean>(false);
 
     const [fontSize, setFontSize] = useState<number>(12);
+    const [fontType, setFontType] = useState<FontFamilies>("times-new-roman");
 
     useEffect(() => {
         if (!editor) return;
@@ -66,6 +70,12 @@ export const DocumentContent = (): ReactElement => {
                 setRightAlignActive(false);
                 setJustifyAlignActive(false);
             }
+
+            if (editor.getAttributes("textStyle")?.fontFamily) {
+                setFontType(editor.getAttributes("textStyle").fontFamily as FontFamilies);
+            } else {
+                setFontType("times-new-roman");
+            }
         };
 
         editor?.on("transaction", handleUpdate);
@@ -103,6 +113,11 @@ export const DocumentContent = (): ReactElement => {
                         setFontSize(size);
                         editor?.chain().setFontSize(`${size}pt`).run();
                     }}
+                    fontFamily={fontType}
+                    onChangeFontFamily={family => {
+                        setFontType(family);
+                        editor?.chain().setFontFamily(family).run();
+                    }}
                 />
             </DocumentHeader>
 
@@ -114,6 +129,14 @@ export const DocumentContent = (): ReactElement => {
                         zoom={zoom}
                         setEditor={setEditor}
                     />
+
+                    <FloatContainer>
+                        <ZoomButton
+                            initialZoom={zoom}
+                            onZoomChange={setZoom}
+                            className="custom-styles"
+                        />
+                    </FloatContainer>
                 </DocumentRoot>
             </ScrollArea>
         </Root>

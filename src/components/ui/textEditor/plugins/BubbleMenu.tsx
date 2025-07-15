@@ -58,7 +58,7 @@ export const ControlledBubbleMenu = ({
             flip({
                 padding: 8,
                 boundary: editor.options.element,
-                fallbackPlacements: ["top-end"],
+                fallbackPlacements: ["top-end", "top", "top-start"],
             }),
         ],
     });
@@ -235,7 +235,7 @@ export const ControlledBubbleMenu = ({
         position,
         top: y ?? 0,
         left: x ?? 0,
-        zIndex: 26,
+        zIndex: 49,
     };
 
     return (

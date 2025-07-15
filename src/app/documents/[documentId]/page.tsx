@@ -1,6 +1,7 @@
 "use client";
 import { AiChat } from "@/components/layouts/document/aiChat";
 import { DocumentContent } from "@/components/layouts/document/content";
+import { DocComponents } from "@/components/layouts/document/docComponents";
 import { Header } from "@/components/layouts/document/header";
 import { Layout } from "@/components/layouts/document/layout";
 import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeader";
@@ -64,6 +65,8 @@ export default function Dashboard(): ReactElement {
                     activeTab={activeLeftTab}
                     setActiveLeftTab={activeTab => setActiveLeftTab(activeTab as LeftTabsValue)}
                 />
+
+                {activeLeftTab === "components" && <DocComponents />}
             </Layout.LeftNavBar>
 
             <Layout.Content>

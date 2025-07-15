@@ -5,7 +5,7 @@ import Focus from "@tiptap/extension-focus";
 import { ListItem } from "@tiptap/extension-list-item";
 import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextAlign from "@tiptap/extension-text-align";
-import { FontSize, TextStyle } from "@tiptap/extension-text-style";
+import { FontSize, TextStyle, FontFamily } from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
@@ -116,6 +116,7 @@ const TextEditor = ({
             classes: ["change-remove", "change-add", "change-update", "change-loading"],
         }),
         Underline,
+        FontFamily,
     ];
 
     const currentEditor = useEditor({

@@ -4,7 +4,7 @@ export const Root = styled.div<{ zoom: number }>`
     display: flex;
     width: 100%;
     height: 100%;
-    max-width: ${({ zoom }) => `${810 * zoom}px`};
+    max-width: ${({ zoom }) => `${810 * (zoom / 100)}px`};
 
     > section {
         grid-template-columns: minmax(100px, 1fr) auto 86px 156px 156px 156px 50px;

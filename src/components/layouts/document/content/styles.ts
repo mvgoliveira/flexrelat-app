@@ -23,3 +23,15 @@ export const DocumentRoot = styled.div`
     padding: 10px;
     overflow: hidden;
 `;
+
+export const FloatContainer = styled.div`
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    height: fit-content;
+`;

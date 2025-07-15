@@ -6,7 +6,6 @@ export const Root = styled.div`
     grid-template-columns: auto 1fr auto;
     height: 100vh;
     max-height: 100vh;
-    overflow: hidden;
 `;
 
 export const StyledHeader = styled.header`

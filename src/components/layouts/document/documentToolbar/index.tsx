@@ -2,7 +2,7 @@ import { FormatInkHighlighter } from "@/assets/svgs/icons";
 import { Selector } from "@/components/features/selector";
 import { Toolbar } from "@/components/features/toolbar";
 import { Theme } from "@/themes";
-import { ChangeEvent, ReactElement, useState, useEffect } from "react";
+import { ChangeEvent, ReactElement } from "react";
 import { BiMinus } from "react-icons/bi";
 import {
     MdAdd,
@@ -22,6 +22,7 @@ import {
     MdOutlineFormatAlignCenter,
 } from "react-icons/md";
 
+import { FontFamilies } from "../content";
 import { ColorContainer, FontSizeButton, Root, SizeInput } from "./styles";
 
 interface IDocumentToolbarProps {
@@ -44,6 +45,8 @@ interface IDocumentToolbarProps {
     onJustifyAlignClick: () => void;
     fontSize: number;
     onChangeFontSize: (size: number) => void;
+    fontFamily: string;
+    onChangeFontFamily: (family: FontFamilies) => void;
 }
 
 export const DocumentToolbar = ({
@@ -66,17 +69,11 @@ export const DocumentToolbar = ({
     onJustifyAlignClick,
     fontSize,
     onChangeFontSize,
+    fontFamily,
+    onChangeFontFamily,
 }: IDocumentToolbarProps): ReactElement => {
-    const [fontType, setFontType] = useState<string>("arial");
-    const [localFontSize, setLocalFontSize] = useState<number>(fontSize);
-
-    useEffect(() => {
-        setLocalFontSize(fontSize);
-    }, [fontSize]);
-
     const changeFontSize = (newSize: number) => {
         if (newSize < 1 || newSize > 200) return;
-        setLocalFontSize(newSize);
         onChangeFontSize(newSize);
     };
 
@@ -90,11 +87,11 @@ export const DocumentToolbar = ({
     };
 
     const handleDecrease = () => {
-        changeFontSize(localFontSize - 1);
+        changeFontSize(fontSize - 1);
     };
 
     const handleIncrease = () => {
-        changeFontSize(localFontSize + 1);
+        changeFontSize(fontSize + 1);
     };
 
     return (
@@ -103,8 +100,8 @@ export const DocumentToolbar = ({
                 <Toolbar.Group padding="0 5px" className="FontSelector">
                     <Toolbar.Item>
                         <Selector
-                            value={fontType}
-                            onValueChange={setFontType}
+                            value={fontFamily}
+                            onValueChange={value => onChangeFontFamily(value as FontFamilies)}
                             options={[
                                 {
                                     key: "times-new-roman",
@@ -127,7 +124,7 @@ export const DocumentToolbar = ({
                             </FontSizeButton>
 
                             <SizeInput
-                                value={localFontSize}
+                                value={fontSize}
                                 type="number"
                                 onChange={handleInputChange}
                                 min="1"

@@ -28,7 +28,7 @@ export const Theme = {
         purple10: "#F6F6FF",
         purple20: "#DAD6FE",
         purple30: "#C3BDFD",
-        purple40: "#AD9DFB",
+        purple40: "#7A68FA",
         purple50: "#4732F8",
         purple60: "#3D2BE0",
         purple70: "#3224C9",

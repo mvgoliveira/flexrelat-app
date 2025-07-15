@@ -4,6 +4,7 @@ export const Root = styled.div`
     display: flex;
     position: relative;
     right: -13px;
+    z-index: 998;
 `;
 
 export const BubbleActionsContainer = styled.div`
