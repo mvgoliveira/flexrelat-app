@@ -11,7 +11,7 @@ export const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: "FlexReports",
+    title: "FlexRelat",
     description: "Generated reports with AI",
 };
 

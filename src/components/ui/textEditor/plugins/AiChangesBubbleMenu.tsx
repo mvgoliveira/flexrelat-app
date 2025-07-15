@@ -38,7 +38,7 @@ export const AiChangesControlledBubbleMenu = ({
         whileElementsMounted: autoUpdate,
         placement: "top-start",
         middleware: [
-            offset({ mainAxis: -41, alignmentAxis: -34 }),
+            offset({ mainAxis: -41, alignmentAxis: -30 }),
             flip({
                 padding: 8,
                 boundary: editor.options.element,

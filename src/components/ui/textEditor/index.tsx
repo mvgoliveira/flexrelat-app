@@ -5,7 +5,7 @@ import Focus from "@tiptap/extension-focus";
 import { ListItem } from "@tiptap/extension-list-item";
 import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextAlign from "@tiptap/extension-text-align";
-import TextStyle from "@tiptap/extension-text-style";
+import { FontSize, TextStyle } from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
@@ -69,8 +69,8 @@ const TextEditor = ({
                 "listItem",
             ],
         }),
-
         TextStyle.configure({ mergeNestedSpanStyles: true }),
+        FontSize,
         Focus.configure({
             className: "has-focus",
             mode: "shallowest",
@@ -228,6 +228,7 @@ const TextEditor = ({
                         "orderedList",
                         "listItem",
                         "blockquote",
+                        "table",
                     ]}
                 />
             )}

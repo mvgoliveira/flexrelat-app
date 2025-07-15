@@ -57,3 +57,9 @@ export const StyledButton = styled.button<IStyledButtonProps>`
         background: ${({ theme }) => theme.colors.gray20};
     }
 `;
+
+export const StyledInputContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;

@@ -2,8 +2,11 @@ import { FormatInkHighlighter } from "@/assets/svgs/icons";
 import { Selector } from "@/components/features/selector";
 import { Toolbar } from "@/components/features/toolbar";
 import { Theme } from "@/themes";
-import { ReactElement, useState } from "react";
+import _ from "lodash";
+import { ChangeEvent, ReactElement, useMemo, useState, useEffect } from "react";
+import { BiMinus } from "react-icons/bi";
 import {
+    MdAdd,
     MdFormatAlignJustify,
     MdFormatAlignLeft,
     MdFormatAlignRight,
@@ -20,7 +23,7 @@ import {
     MdOutlineFormatAlignCenter,
 } from "react-icons/md";
 
-import { ColorContainer, Root } from "./styles";
+import { ColorContainer, FontSizeButton, Root, SizeInput } from "./styles";
 
 interface IDocumentToolbarProps {
     zoom: number;
@@ -40,6 +43,8 @@ interface IDocumentToolbarProps {
     onCenterAlignClick: () => void;
     onRightAlignClick: () => void;
     onJustifyAlignClick: () => void;
+    fontSize: number;
+    onChangeFontSize: (size: number) => void;
 }
 
 export const DocumentToolbar = ({
@@ -60,8 +65,51 @@ export const DocumentToolbar = ({
     onRightAlignClick,
     isJustifyAlignActive,
     onJustifyAlignClick,
+    fontSize,
+    onChangeFontSize,
 }: IDocumentToolbarProps): ReactElement => {
     const [fontType, setFontType] = useState<string>("arial");
+    const [localFontSize, setLocalFontSize] = useState<number>(fontSize);
+
+    useEffect(() => {
+        setLocalFontSize(fontSize);
+    }, [fontSize]);
+
+    const debouncedSaveFontSize = useMemo(
+        () =>
+            _.debounce((newFontSize: number) => {
+                try {
+                    onChangeFontSize(newFontSize);
+                } catch (error) {
+                    console.error("Error saving font size:", error);
+                    onChangeFontSize(12);
+                }
+            }, 500),
+        [onChangeFontSize]
+    );
+
+    const changeFontSize = (newSize: number) => {
+        if (newSize < 1 || newSize > 200) return;
+        setLocalFontSize(newSize);
+        debouncedSaveFontSize(newSize);
+    };
+
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const size = Number(e.target.value);
+        if (!isNaN(size)) {
+            changeFontSize(size);
+        }
+    };
+
+    const handleDecrease = () => {
+        changeFontSize(localFontSize - 1);
+    };
+
+    const handleIncrease = () => {
+        changeFontSize(localFontSize + 1);
+    };
 
     return (
         <Root zoom={zoom}>
@@ -82,6 +130,28 @@ export const DocumentToolbar = ({
                                 },
                             ]}
                         />
+                    </Toolbar.Item>
+                </Toolbar.Group>
+
+                <Toolbar.Group className="FontSizeSelector Item">
+                    <Toolbar.Item>
+                        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            <FontSizeButton onClick={handleDecrease}>
+                                <BiMinus size={15} color="black" />
+                            </FontSizeButton>
+
+                            <SizeInput
+                                value={localFontSize}
+                                type="number"
+                                onChange={handleInputChange}
+                                min="1"
+                                max="200"
+                            />
+
+                            <FontSizeButton onClick={handleIncrease}>
+                                <MdAdd size={15} color="black" />
+                            </FontSizeButton>
+                        </div>
                     </Toolbar.Item>
                 </Toolbar.Group>
 

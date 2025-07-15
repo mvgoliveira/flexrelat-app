@@ -17,11 +17,11 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
         is_public: false,
         public_code: "ABCD1234",
         content: `
-            <h4 data-id="62e714dae9" style="text-align: center">Resumo</h4>
+            <h4 data-id="62e714dae9" style="text-align: center"><span style="font-size: 18pt">Resumo</span></h4>
 
             <p/>
             
-            <p>
+            <p style="text-align: justify">
                 A aumento necessidade de agilidade e precisão na execução de atividades complexas e repetitivas tem impulsionado o uso de tecnologias baseadas em Inteligência Artificial Generativa no cotidiano corporativo e institucional. Processos tradicionalmente onerosos, como a elaboração manual de relatórios detalhados, frequentemente enfrentam desafios significativos, incluindo a ocorrência de erros grosseiros, atrasos frequentes na entrega e a demanda por um elevado nível de conhecimento técnico especializado. Além disso, a variabilidade na qualidade dos documentos produzidos pode comprometer a tomada de decisões estratégicas e operacionais. Diante desse contexto, torna-se evidente a demanda por soluções tecnológicas que simplifiquem e agilizem esses processos. Propõe-se, portanto, a plataforma web FlexRelat, uma abordagem baseada em Inteligência Artificial Generativa (GenAI), que utiliza Modelos de Linguagem de Larga Escala (LLM) para gerar relatórios personalizados a partir de entradas em linguagem natural, exigindo o mínimo de conhecimento técnico por parte do usuário. Espera-se que a plataforma contribua significativamente para a redução de custos operacionais, aumento da produtividade e melhoria na qualidade dos relatórios produzidos, promovendo maior eficiência em setores como negócios, educação e saúde.
             <p/>
 
@@ -34,7 +34,11 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
             <p/>
             <p/>
             <p/>
-
+            <p>
+                <strong>
+                    Tabelas e Listas funcionais
+                </strong>
+            </p>
             <ul data-id="62e714dae1">
                 <li>Tabelas com linhas, células e cabeçalhos (opcional).</li>
                 <li>Suporte para <code>colgroup</code> e <code>rowspan</code>.</li>

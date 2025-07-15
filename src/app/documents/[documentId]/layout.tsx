@@ -4,7 +4,7 @@ import { ReactElement } from "react";
 import DocumentWrapProviders from "./doc-wrap-providers";
 
 export const metadata: Metadata = {
-    title: "FlexReports - Documento",
+    title: "FlexRelat - Documento",
     description: "Generated reports with AI",
 };
 

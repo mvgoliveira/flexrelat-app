@@ -85,12 +85,12 @@ export const getMessagesByChatId = async (
                     old_content: {
                         id: "62e714dae9",
                         type: "text",
-                        html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
+                        html: `<h4 data-id='62e714dae9' class='change-remove'><span style="font-size: 18pt">Resumo</span></h4>`,
                     },
                     new_content: {
-                        id: "52e714dae1",
-                        type: "chart",
-                        html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
+                        id: "",
+                        type: "text",
+                        html: `<h4 style="text-align: center"><span style="font-size: 18pt">Resumo Geral do Relatório</span></h4>`,
                     },
                 },
             ],
@@ -114,12 +114,12 @@ export const updateAiChangeStatus = async (
         old_content: {
             id: "62e714dae9",
             type: "text",
-            html: "<h1 data-id='62e714dae9' class='change-remove'>Você já conferiu nossas tabelas? Elas são impressionantes!</h1>",
+            html: `<h4 data-id='62e714dae9' class='change-remove'><span style="font-size: 18pt">Resumo</span></h4>`,
         },
         new_content: {
-            id: "52e714dae1",
-            type: "chart",
-            html: "<h1>Você já conferiu nossas tabelas? Elas são impressionantes! Desenvolvidas com precisão e elegância, oferecem tanto funcionalidade quanto estilo à sua interface.</h1>",
+            id: "",
+            type: "text",
+            html: `<h4 style="text-align: center"><span style="font-size: 18pt">Resumo Geral do Relatório</span></h4>`,
         },
     };
 };

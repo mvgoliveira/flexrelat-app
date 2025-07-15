@@ -69,15 +69,12 @@ export const Root = styled.div<IRootProps>`
     h6,
     p {
         margin-bottom: 12px;
-        text-align: justify;
+        text-align: start;
         font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
         font-size: 12pt;
         line-height: 1.5;
         word-break: break-word;
         hyphens: auto;
-
-        /* word-spacing: 20; */
-        /* letter-spacing: 5px; */
     }
 
     .error {
@@ -90,12 +87,7 @@ export const Root = styled.div<IRootProps>`
     h4,
     h5,
     h6 {
-        font-size: 14pt;
         line-height: 150%;
-    }
-
-    h4 {
-        font-size: 18pt;
     }
 
     h1 {

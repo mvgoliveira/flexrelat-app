@@ -16,10 +16,12 @@ export const DocumentContent = (): ReactElement => {
     const [italicActive, setItalicActive] = useState<boolean>(false);
     const [underlineActive, setUnderlineActive] = useState<boolean>(false);
     const [strikethroughActive, setStrikethroughActive] = useState<boolean>(false);
-    const [leftAlignActive, setLeftAlignActive] = useState<boolean>(false);
+    const [leftAlignActive, setLeftAlignActive] = useState<boolean>(true);
     const [centerAlignActive, setCenterAlignActive] = useState<boolean>(false);
     const [rightAlignActive, setRightAlignActive] = useState<boolean>(false);
     const [justifyAlignActive, setJustifyAlignActive] = useState<boolean>(false);
+
+    const [fontSize, setFontSize] = useState<number>(12);
 
     useEffect(() => {
         if (!editor) return;
@@ -29,10 +31,41 @@ export const DocumentContent = (): ReactElement => {
             setItalicActive(editor.isActive("italic"));
             setUnderlineActive(editor.isActive("underline"));
             setStrikethroughActive(editor.isActive("strike"));
-            setLeftAlignActive(editor.isActive({ textAlign: "left" }));
-            setCenterAlignActive(editor.isActive({ textAlign: "center" }));
-            setRightAlignActive(editor.isActive({ textAlign: "right" }));
-            setJustifyAlignActive(editor.isActive({ textAlign: "justify" }));
+
+            const currentFontSize = editor.getAttributes("textStyle")?.fontSize;
+            if (currentFontSize) {
+                const sizeValue = parseInt(currentFontSize.replace("px", "").replace("pt", ""));
+                setFontSize(sizeValue);
+            } else {
+                setFontSize(12);
+            }
+
+            if (editor.isActive({ textAlign: "left" })) {
+                setLeftAlignActive(true);
+                setCenterAlignActive(false);
+                setRightAlignActive(false);
+                setJustifyAlignActive(false);
+            } else if (editor.isActive({ textAlign: "center" })) {
+                setLeftAlignActive(false);
+                setCenterAlignActive(true);
+                setRightAlignActive(false);
+                setJustifyAlignActive(false);
+            } else if (editor.isActive({ textAlign: "right" })) {
+                setLeftAlignActive(false);
+                setCenterAlignActive(false);
+                setRightAlignActive(true);
+                setJustifyAlignActive(false);
+            } else if (editor.isActive({ textAlign: "justify" })) {
+                setLeftAlignActive(false);
+                setCenterAlignActive(false);
+                setRightAlignActive(false);
+                setJustifyAlignActive(true);
+            } else {
+                setLeftAlignActive(true);
+                setCenterAlignActive(false);
+                setRightAlignActive(false);
+                setJustifyAlignActive(false);
+            }
         };
 
         editor?.on("transaction", handleUpdate);
@@ -65,6 +98,11 @@ export const DocumentContent = (): ReactElement => {
                     onJustifyAlignClick={() =>
                         editor?.chain().focus().setTextAlign("justify").run()
                     }
+                    fontSize={fontSize}
+                    onChangeFontSize={(size: number) => {
+                        setFontSize(size);
+                        editor?.chain().focus().setFontSize(`${size}pt`).run();
+                    }}
                 />
             </DocumentHeader>
 
