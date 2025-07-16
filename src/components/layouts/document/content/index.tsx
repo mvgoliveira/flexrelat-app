@@ -1,11 +1,12 @@
+import { Typography } from "@/components/features/typography";
 import ZoomButton from "@/components/features/zoomButton";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import TextEditor from "@/components/ui/textEditor";
 import { Editor } from "@tiptap/core";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 
 import { DocumentToolbar } from "../documentToolbar";
-import { DocumentHeader, DocumentRoot, FloatContainer, Root } from "./styles";
+import { DocumentHeader, DocumentRoot, FloatContainer, PageContainer, Root } from "./styles";
 
 export type FontFamilies = "times-new-roman" | "arial";
 
@@ -13,7 +14,15 @@ export const DocumentContent = (): ReactElement => {
     const [zoom, setZoom] = useState<number>(83);
     const [pageWidth, setPageWidth] = useState<number>(794);
     const [pageHeight, setPageHeight] = useState<number>(1123);
+    const [marginTop, setMarginTop] = useState(113.39);
+    const [marginRight, setMarginRight] = useState(75.59);
+    const [marginBottom, setMarginBottom] = useState(75.59);
+    const [marginLeft, setMarginLeft] = useState(113.39);
     const [editor, setEditor] = useState<Editor | null>(null);
+
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
 
     const [boldActive, setBoldActive] = useState<boolean>(false);
     const [italicActive, setItalicActive] = useState<boolean>(false);
@@ -85,6 +94,76 @@ export const DocumentContent = (): ReactElement => {
         };
     }, [editor]);
 
+    useEffect(() => {
+        const calculateCurrentPage = () => {
+            const scrollElement = scrollAreaRef.current?.querySelector(
+                "[data-radix-scroll-area-viewport]"
+            );
+
+            if (!scrollElement) return;
+
+            const scrollTop = scrollElement.scrollTop;
+            const scaledPageHeight = (pageHeight * zoom) / 100;
+            const halfPage = scaledPageHeight - (marginTop + marginBottom);
+
+            const calculatedPage = Math.floor(scrollTop / halfPage) + 1;
+            setCurrentPage(Math.max(1, calculatedPage));
+        };
+
+        const scrollElement = scrollAreaRef.current?.querySelector(
+            "[data-radix-scroll-area-viewport]"
+        );
+        if (!scrollElement) return;
+
+        const handleScroll = () => {
+            calculateCurrentPage();
+        };
+
+        scrollElement.addEventListener("scroll", handleScroll);
+
+        // Calcular página inicial
+        calculateCurrentPage();
+
+        return () => {
+            scrollElement.removeEventListener("scroll", handleScroll);
+        };
+    }, [zoom, pageHeight]);
+
+    useEffect(() => {
+        const calculateTotalPages = () => {
+            const editorElement = document.querySelector(".ProseMirror");
+
+            if (!editorElement) {
+                setTotalPages(1);
+                return;
+            }
+
+            const contentHeight = editorElement.scrollHeight;
+
+            const effectivePageHeight = pageHeight;
+
+            const scaledEffectivePageHeight = (effectivePageHeight * zoom) / 100;
+
+            const calculatedTotalPages = Math.ceil(contentHeight / scaledEffectivePageHeight);
+
+            setTotalPages(Math.max(1, calculatedTotalPages - 1));
+        };
+
+        if (editor) {
+            calculateTotalPages();
+
+            const handleUpdate = () => {
+                setTimeout(calculateTotalPages, 0);
+            };
+
+            editor.on("transaction", handleUpdate);
+
+            return () => {
+                editor.off("transaction", handleUpdate);
+            };
+        }
+    }, [editor, pageHeight, marginTop, marginBottom, zoom]);
+
     return (
         <Root>
             <DocumentHeader>
@@ -121,7 +200,7 @@ export const DocumentContent = (): ReactElement => {
                 />
             </DocumentHeader>
 
-            <ScrollArea>
+            <ScrollArea ref={scrollAreaRef}>
                 <DocumentRoot className="DocumentRoot">
                     <TextEditor
                         pageWidth={pageWidth}
@@ -129,15 +208,26 @@ export const DocumentContent = (): ReactElement => {
                         zoom={zoom}
                         setEditor={setEditor}
                     />
-
-                    <FloatContainer>
-                        <ZoomButton
-                            initialZoom={zoom}
-                            onZoomChange={setZoom}
-                            className="custom-styles"
-                        />
-                    </FloatContainer>
                 </DocumentRoot>
+
+                <FloatContainer>
+                    <ZoomButton
+                        initialZoom={zoom}
+                        onZoomChange={setZoom}
+                        className="custom-styles"
+                    />
+
+                    <PageContainer>
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs75" }}
+                            color="black"
+                            fontWeight="regular"
+                        >
+                            {currentPage} de {totalPages}
+                        </Typography>
+                    </PageContainer>
+                </FloatContainer>
             </ScrollArea>
         </Root>
     );

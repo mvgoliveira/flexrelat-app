@@ -1,3 +1,4 @@
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const Root = styled.div`
@@ -32,6 +33,20 @@ export const FloatContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
     width: fit-content;
     height: fit-content;
+`;
+
+export const PageContainer = styled.div`
+    ${({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        background: ${theme.colors.white};
+        border: 1px solid ${theme.colors.gray40};
+        border-radius: 6px;
+        z-index: 999;
+    `};
 `;

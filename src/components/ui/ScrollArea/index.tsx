@@ -1,5 +1,5 @@
 import { IReactChildren } from "@/types/core";
-import { ReactElement } from "react";
+import { ReactElement, RefObject } from "react";
 
 import {
     StyledScrollbar,
@@ -11,14 +11,16 @@ import {
 
 interface IScrollAreaProps {
     scrollArea?: "horizontal" | "vertical" | "both";
+    ref: RefObject<HTMLDivElement | null>;
 }
 
 export const ScrollArea = ({
     children,
     scrollArea = "both",
+    ref,
 }: IScrollAreaProps & IReactChildren): ReactElement => {
     return (
-        <StyledScrollRoot className="StyledScrollRoot">
+        <StyledScrollRoot className="StyledScrollRoot" ref={ref}>
             <StyledScrollViewport className="StyledScrollViewport">{children}</StyledScrollViewport>
 
             {scrollArea === "vertical" ||
