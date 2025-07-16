@@ -8,16 +8,14 @@ interface ISearchInputProps {
     placeholder?: string;
 }
 
-export const SearchInput = ({
-    placeholder = "Pesquise por nome do grupo...",
-}: ISearchInputProps): ReactElement => {
+export const SearchInput = ({ placeholder = "Buscar" }: ISearchInputProps): ReactElement => {
     return (
         <Root>
-            <StyledInput placeholder={placeholder} />
-
             <StyledIcon>
-                <MdSearch size={14} color={Theme.colors.white} />
+                <MdSearch size={14} color={Theme.colors.gray70} />
             </StyledIcon>
+
+            <StyledInput placeholder={placeholder} />
         </Root>
     );
 };

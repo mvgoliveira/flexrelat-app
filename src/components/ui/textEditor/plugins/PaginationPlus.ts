@@ -131,10 +131,7 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                 ) as HTMLElement;
 
                 if (lastPageBreak) {
-                    const minHeight =
-                        lastPageBreak.offsetTop +
-                        this.options.pageHeaderHeight +
-                        lastPageBreak.offsetHeight;
+                    const minHeight = lastPageBreak.offsetTop + lastPageBreak.offsetHeight;
                     targetedNode.style.minHeight = `${minHeight}px`;
                 }
             }

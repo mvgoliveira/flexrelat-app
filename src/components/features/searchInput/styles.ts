@@ -18,10 +18,10 @@ export const StyledInput = styled.input`
     font-family: ${({ theme }) => theme.fontFamily.inter};
     font-size: ${({ theme }) => theme.fontSize.fs75};
     font-weight: ${({ theme }) => theme.fontWeight.regular};
-    color: ${({ theme }) => theme.colors.white};
+    color: ${({ theme }) => theme.colors.black};
 
     &::placeholder {
-        color: ${({ theme }) => theme.colors.gray40};
+        color: ${({ theme }) => theme.colors.gray70};
     }
 `;
 

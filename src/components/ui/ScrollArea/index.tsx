@@ -11,7 +11,7 @@ import {
 
 interface IScrollAreaProps {
     scrollArea?: "horizontal" | "vertical" | "both";
-    ref: RefObject<HTMLDivElement | null>;
+    ref?: RefObject<HTMLDivElement | null>;
 }
 
 export const ScrollArea = ({

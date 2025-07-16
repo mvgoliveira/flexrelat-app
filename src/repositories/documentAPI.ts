@@ -27,7 +27,11 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
 
             <p/>
             <p/>
-            <p/>
+
+            <p>
+                <strong>Palavras-chave:</strong> Inteligência Artificial Generativa; Relatórios inteligentes; Geração de relatórios; Plataforma Web; Aplicações com IA; Assistente virtual;    
+            </p>
+            
             <p/>
             <p/>
             <p/>
