@@ -113,8 +113,6 @@ export const TextBubbleMenu = ({
                 const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
                 const node = editor.state.doc.nodeAt(pos);
 
-                console.log(node?.type.name);
-
                 if (node) {
                     editor.commands.command(({ tr, dispatch }) => {
                         tr.replaceWith(pos, pos + node.nodeSize, newNode);

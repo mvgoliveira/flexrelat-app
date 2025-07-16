@@ -130,8 +130,6 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                     ".breaker"
                 ) as HTMLElement;
 
-                if (!lastPageBreak) console.log("No page break found");
-
                 if (lastPageBreak) {
                     const minHeight =
                         lastPageBreak.offsetTop +
