@@ -80,7 +80,7 @@ export const StyledLabel = styled(Select.Label)`
         display: flex;
         align-items: center;
         padding: 0 10px;
-        font-size: ${theme.fontSize.fs75};
+        font-size: ${theme.fontSize.fs50};
         font-family: ${theme.fontFamily.inter};
         font-weight: ${theme.fontWeight.regular};
         line-height: ${theme.lineHeight.fs75};

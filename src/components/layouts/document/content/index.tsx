@@ -105,13 +105,10 @@ export const DocumentContent = (): ReactElement => {
             const scrollTop = scrollElement.scrollTop;
             const viewportHeight = scrollElement.clientHeight;
 
-            // Altura da página com zoom aplicado
             const scaledPageHeight = pageHeight * (zoom / 100);
 
-            // Posição do centro da viewport
             const viewportCenter = scrollTop + viewportHeight / 2 - 10 * (totalPages - 1);
 
-            // Calcula em qual página está o centro da viewport
             const calculatedPage = Math.floor(viewportCenter / scaledPageHeight) + 1;
 
             setCurrentPage(Math.max(1, Math.min(calculatedPage, totalPages)));
