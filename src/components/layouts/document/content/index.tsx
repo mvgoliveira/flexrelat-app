@@ -142,7 +142,7 @@ export const DocumentContent = (): ReactElement => {
 
             const contentHeight = editorElement.scrollHeight;
 
-            const pagesCount = Math.round((contentHeight - 1236.39) / 1133 + 1);
+            const pagesCount = Math.round((contentHeight - 1123) / 1133 + 1);
 
             setTotalPages(Math.max(1, pagesCount));
         };

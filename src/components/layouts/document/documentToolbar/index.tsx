@@ -1,4 +1,4 @@
-import { FormatInkHighlighter } from "@/assets/svgs/icons";
+import { IconFormatInkHighlighter } from "@/assets/svgs/icons";
 import { Selector } from "@/components/features/selector";
 import { Toolbar } from "@/components/features/toolbar";
 import { Theme } from "@/themes";
@@ -140,7 +140,7 @@ export const DocumentToolbar = ({
 
                 <Toolbar.Group className="ColorSelector Item">
                     <Toolbar.ItemButton>
-                        <FormatInkHighlighter size={18} color="black" />
+                        <IconFormatInkHighlighter size={18} color="black" />
                         <ColorContainer color="black" />
                     </Toolbar.ItemButton>
                     <Toolbar.ItemButton>

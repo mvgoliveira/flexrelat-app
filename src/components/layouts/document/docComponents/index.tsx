@@ -1,3 +1,14 @@
+import {
+    IconElementCitation,
+    IconElementCode,
+    IconElementGeometric,
+    IconElementImage,
+    IconElementMath,
+    IconElementSeparator,
+    IconElementTable,
+    IconElementText,
+    IconElementTitle,
+} from "@/assets/svgs/icons";
 import { SearchInput } from "@/components/features/searchInput";
 import { Typography } from "@/components/features/typography";
 import { ScrollArea } from "@/components/ui/scrollArea";
@@ -8,10 +19,13 @@ import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import {
     ArrowButton,
     Content,
+    ElementContainer,
+    ElementIconContainer,
     GroupContainer,
     GroupContent,
     GroupLabelContainer,
     Root,
+    Separator,
 } from "./styles";
 
 interface IElementProps {
@@ -22,7 +36,20 @@ interface IElementProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Element = ({ value, name, icon }: IElementProps): ReactElement => {
-    return <div>Element</div>;
+    return (
+        <ElementContainer>
+            <ElementIconContainer>{icon}</ElementIconContainer>
+            <Typography
+                tag="span"
+                fontSize={{ xs: "fs50" }}
+                color="gray90"
+                textAlign="center"
+                fontWeight="regular"
+            >
+                {name}
+            </Typography>
+        </ElementContainer>
+    );
 };
 
 interface IElementsGroupProps {
@@ -34,35 +61,42 @@ const ElementsGroup = ({ name, elements }: IElementsGroupProps): ReactElement =>
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     return (
-        <GroupContainer>
-            <GroupLabelContainer onClick={() => setIsOpen(!isOpen)}>
-                <Typography
-                    tag="span"
-                    fontSize={{ xs: "fs75" }}
-                    color="gray70"
-                    fontWeight="regular"
-                >
-                    {name}
-                </Typography>
+        <>
+            <GroupContainer>
+                <GroupLabelContainer onClick={() => setIsOpen(!isOpen)}>
+                    <Typography
+                        tag="span"
+                        fontSize={{ xs: "fs75" }}
+                        color="gray70"
+                        fontWeight="regular"
+                    >
+                        {name}
+                    </Typography>
 
-                <ArrowButton>
-                    {isOpen ? (
-                        <MdKeyboardArrowDown size={14} color={Theme.colors.gray70} />
-                    ) : (
-                        <MdKeyboardArrowRight
-                            size={14}
-                            color={Theme.colors.gray70}
-                            style={{ transform: "rotate(180deg)" }}
-                        />
-                    )}
-                </ArrowButton>
-            </GroupLabelContainer>
-            <GroupContent>
-                {elements.map(element => (
-                    <Element key={element.value} {...element} />
-                ))}
-            </GroupContent>
-        </GroupContainer>
+                    <ArrowButton>
+                        {isOpen ? (
+                            <MdKeyboardArrowDown size={14} color={Theme.colors.gray70} />
+                        ) : (
+                            <MdKeyboardArrowRight
+                                size={14}
+                                color={Theme.colors.gray70}
+                                style={{ transform: "rotate(180deg)" }}
+                            />
+                        )}
+                    </ArrowButton>
+                </GroupLabelContainer>
+
+                {isOpen && (
+                    <GroupContent>
+                        {elements.map(element => (
+                            <Element key={element.value} {...element} />
+                        ))}
+                    </GroupContent>
+                )}
+            </GroupContainer>
+
+            <Separator />
+        </>
     );
 };
 
@@ -70,10 +104,24 @@ const elementsGroups: IElementsGroupProps[] = [
     {
         name: "Elementos Base",
         elements: [
-            { value: "text", name: "Texto", icon: <div>Icon</div> },
-            { value: "image", name: "Imagem", icon: <div>Icon</div> },
-            { value: "table", name: "Tabela", icon: <div>Icon</div> },
+            { value: "title", name: "Título", icon: <IconElementTitle size={20} /> },
+            { value: "text", name: "Texto", icon: <IconElementText size={20} /> },
+            { value: "citation", name: "Citação", icon: <IconElementCitation size={20} /> },
+            { value: "separator", name: "Separador", icon: <IconElementSeparator size={40} /> },
+            {
+                value: "geometric",
+                name: "Formas Geométricas",
+                icon: <IconElementGeometric size={40} />,
+            },
+            { value: "image", name: "Imagem", icon: <IconElementImage size={25} /> },
+            { value: "sheet", name: "Tabela", icon: <IconElementTable size={35} /> },
+            { value: "code", name: "Código", icon: <IconElementCode size={35} /> },
+            { value: "math", name: "matemática", icon: <IconElementMath size={35} /> },
         ],
+    },
+    {
+        name: "Gráficos",
+        elements: [],
     },
 ];
 
