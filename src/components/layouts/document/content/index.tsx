@@ -11,7 +11,7 @@ import { DocumentHeader, DocumentRoot, FloatContainer, PageContainer, Root } fro
 export type FontFamilies = "times-new-roman" | "arial";
 
 export const DocumentContent = (): ReactElement => {
-    const [zoom, setZoom] = useState<number>(83);
+    const [zoom, setZoom] = useState<number>(100);
     const [pageWidth, setPageWidth] = useState<number>(794);
     const [pageHeight, setPageHeight] = useState<number>(1123);
     const [marginTop, setMarginTop] = useState(113.39);
@@ -140,13 +140,11 @@ export const DocumentContent = (): ReactElement => {
 
             const contentHeight = editorElement.scrollHeight;
 
-            const effectivePageHeight = pageHeight;
+            console.log(contentHeight);
 
-            const scaledEffectivePageHeight = (effectivePageHeight * zoom) / 100;
+            // const totalPages = contentHeight - 1010 / 1133;
 
-            const calculatedTotalPages = Math.ceil(contentHeight / scaledEffectivePageHeight);
-
-            setTotalPages(Math.max(1, calculatedTotalPages - 1));
+            setTotalPages(Math.max(1, totalPages));
         };
 
         if (editor) {
@@ -205,6 +203,10 @@ export const DocumentContent = (): ReactElement => {
                     <TextEditor
                         pageWidth={pageWidth}
                         pageHeight={pageHeight}
+                        marginLeft={marginLeft}
+                        marginRight={marginRight}
+                        marginBottom={marginBottom}
+                        marginTop={marginTop}
                         zoom={zoom}
                         setEditor={setEditor}
                     />

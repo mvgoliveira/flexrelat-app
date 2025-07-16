@@ -7,6 +7,7 @@ interface IPaginationPlusOptions {
     pageGap: number;
     pageBreakBackground: string;
     pageHeaderHeight: number;
+    pageFooterHeight: number;
     pageGapBorderSize: number;
     footerRight: string;
     footerLeft: string;
@@ -18,11 +19,12 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
     name: "PaginationPlus",
     addOptions() {
         return {
-            pageHeight: 800,
+            pageHeight: 1123,
             pageGap: 50,
             pageGapBorderSize: 1,
             pageBreakBackground: "#ffffff",
-            pageHeaderHeight: 10,
+            pageHeaderHeight: 113.39,
+            pageFooterHeight: 75.59,
             footerRight: "{page}",
             footerLeft: "",
             headerRight: "",
@@ -34,7 +36,8 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
         targetNode.classList.add("rm-with-pagination");
         const config = { attributes: true };
         const _pageHeaderHeight = this.options.pageHeaderHeight;
-        const _pageHeight = this.options.pageHeight - _pageHeaderHeight * 2;
+        const _pageFooterHeight = this.options.pageFooterHeight;
+        const _pageHeight = this.options.pageHeight - _pageHeaderHeight - _pageFooterHeight;
 
         const style = document.createElement("style");
         style.dataset.rmPaginationStyle = "";
@@ -117,6 +120,7 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                 align-items: flex-end;
             }
         `;
+
         document.head.appendChild(style);
 
         const refreshPage = (targetedNode: HTMLElement) => {
@@ -125,8 +129,14 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                 const lastPageBreak = paginationElement.lastElementChild?.querySelector(
                     ".breaker"
                 ) as HTMLElement;
+
+                if (!lastPageBreak) console.log("No page break found");
+
                 if (lastPageBreak) {
-                    const minHeight = lastPageBreak.offsetTop + lastPageBreak.offsetHeight;
+                    const minHeight =
+                        lastPageBreak.offsetTop +
+                        this.options.pageHeaderHeight +
+                        lastPageBreak.offsetHeight;
                     targetedNode.style.minHeight = `${minHeight}px`;
                 }
             }
@@ -193,11 +203,11 @@ const getExistingPageCount = (view: EditorView) => {
 
 const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOptions) => {
     const editorDom = view.dom as HTMLElement;
-    const pageContentAreaHeight = pageOptions.pageHeight - pageOptions.pageHeaderHeight * 2;
+    const pageContentAreaHeight =
+        pageOptions.pageHeight - pageOptions.pageHeaderHeight - pageOptions.pageFooterHeight;
     const paginationElement = editorDom.querySelector("[data-rm-pagination]") as HTMLElement | null;
     const currentPageCount = getExistingPageCount(view);
 
-    // determina o fim exato do conteúdo via marker
     const marker = editorDom.querySelector("[data-end-of-content]") as HTMLElement | null;
     const contentBottom = marker
         ? marker.getBoundingClientRect().bottom
@@ -207,6 +217,7 @@ const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOption
         const lastPageBreak = paginationElement.lastElementChild?.querySelector(
             ".breaker"
         ) as HTMLElement | null;
+
         if (lastPageBreak) {
             const lastBreakBottom = lastPageBreak.getBoundingClientRect().bottom;
             const lastPageGap = contentBottom - lastBreakBottom;
@@ -240,7 +251,9 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
         view => {
             const _pageGap = pageOptions.pageGap;
             const _pageHeaderHeight = pageOptions.pageHeaderHeight;
-            const _pageHeight = pageOptions.pageHeight - _pageHeaderHeight * 2;
+            const _pageFooterHeight = pageOptions.pageFooterHeight;
+            const _pageHeight = pageOptions.pageHeight - _pageHeaderHeight - _pageFooterHeight;
+
             const _pageBreakBackground = pageOptions.pageBreakBackground;
 
             const el = document.createElement("div");
@@ -269,7 +282,7 @@ function createDecoration(state: EditorState, pageOptions: IPaginationPlusOption
 
                 const pageFooter = document.createElement("div");
                 pageFooter.classList.add("rm-page-footer");
-                pageFooter.style.height = _pageHeaderHeight + "px";
+                pageFooter.style.height = _pageFooterHeight + "px";
 
                 const footerRight = pageOptions.footerRight.replace(
                     "{page}",

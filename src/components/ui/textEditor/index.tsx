@@ -88,6 +88,7 @@ const TextEditor = ({
             pageGap: 10,
             pageBreakBackground: Theme.colors.gray10,
             pageHeaderHeight: marginTop,
+            pageFooterHeight: marginBottom,
             headerLeft: "",
             headerRight: "",
             footerLeft: "",
