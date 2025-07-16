@@ -10,7 +10,7 @@ import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
+import { ReactElement, useEffect, useLayoutEffect, useRef, useState } from "react";
 import ShortUniqueId from "short-unique-id";
 
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
@@ -42,7 +42,7 @@ const TextEditor = ({
     marginLeft = 113.39,
     pageWidth = 794,
     pageHeight = 1123,
-    zoom = 1,
+    zoom = 100,
     setEditor,
 }: ITextEditorProps): ReactElement => {
     const { randomUUID } = new ShortUniqueId({ length: 10 });
@@ -51,6 +51,8 @@ const TextEditor = ({
         useDocumentContext();
 
     const alreadyLoaded = useRef(false);
+
+    const [currentZoom, setCurrentZoom] = useState<number>(100);
 
     const extensions = [
         Indent,
@@ -248,6 +250,7 @@ const TextEditor = ({
             )}
 
             <Root
+                data-editor-root
                 zoom={zoom}
                 marginLeft={marginLeft}
                 marginRight={marginRight}

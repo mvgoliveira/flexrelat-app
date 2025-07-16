@@ -11,7 +11,7 @@ import { DocumentHeader, DocumentRoot, FloatContainer, PageContainer, Root } fro
 export type FontFamilies = "times-new-roman" | "arial";
 
 export const DocumentContent = (): ReactElement => {
-    const [zoom, setZoom] = useState<number>(100);
+    const [zoom, setZoom] = useState<number>(83);
     const [pageWidth, setPageWidth] = useState<number>(794);
     const [pageHeight, setPageHeight] = useState<number>(1123);
     const [marginTop, setMarginTop] = useState(113.39);
@@ -103,11 +103,18 @@ export const DocumentContent = (): ReactElement => {
             if (!scrollElement) return;
 
             const scrollTop = scrollElement.scrollTop;
-            const scaledPageHeight = (pageHeight * zoom) / 100;
-            const halfPage = scaledPageHeight - (marginTop + marginBottom);
+            const viewportHeight = scrollElement.clientHeight;
 
-            const calculatedPage = Math.floor(scrollTop / halfPage) + 1;
-            setCurrentPage(Math.max(1, calculatedPage));
+            // Altura da página com zoom aplicado
+            const scaledPageHeight = pageHeight * (zoom / 100);
+
+            // Posição do centro da viewport
+            const viewportCenter = scrollTop + viewportHeight / 2 - 10 * (totalPages - 1);
+
+            // Calcula em qual página está o centro da viewport
+            const calculatedPage = Math.floor(viewportCenter / scaledPageHeight) + 1;
+
+            setCurrentPage(Math.max(1, Math.min(calculatedPage, totalPages)));
         };
 
         const scrollElement = scrollAreaRef.current?.querySelector(
@@ -120,14 +127,12 @@ export const DocumentContent = (): ReactElement => {
         };
 
         scrollElement.addEventListener("scroll", handleScroll);
-
-        // Calcular página inicial
         calculateCurrentPage();
 
         return () => {
             scrollElement.removeEventListener("scroll", handleScroll);
         };
-    }, [zoom, pageHeight]);
+    }, [zoom, pageHeight, totalPages]);
 
     useEffect(() => {
         const calculateTotalPages = () => {
@@ -140,11 +145,9 @@ export const DocumentContent = (): ReactElement => {
 
             const contentHeight = editorElement.scrollHeight;
 
-            console.log(contentHeight);
+            const pagesCount = Math.round((contentHeight - 1236.39) / 1133 + 1);
 
-            // const totalPages = contentHeight - 1010 / 1133;
-
-            setTotalPages(Math.max(1, totalPages));
+            setTotalPages(Math.max(1, pagesCount));
         };
 
         if (editor) {
