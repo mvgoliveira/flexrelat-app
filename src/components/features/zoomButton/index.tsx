@@ -1,6 +1,6 @@
 import { Theme } from "@/themes";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, RefObject } from "react";
 import { FiCommand } from "react-icons/fi";
 import { MdKeyboardArrowUp, MdAdd, MdRemove } from "react-icons/md";
 
@@ -23,12 +23,16 @@ interface IZoomButtonProps {
     initialZoom?: number;
     onZoomChange?: (zoom: number) => void;
     className?: string;
+    scrollAreaRef: RefObject<HTMLDivElement | null>;
+    pageWidth: number;
 }
 
 const ZoomButton: React.FC<IZoomButtonProps> = ({
     initialZoom = 100,
     onZoomChange,
     className = "",
+    scrollAreaRef,
+    pageWidth,
 }) => {
     const [zoom, setZoom] = useState<number>(initialZoom);
     const [inputValue, setInputValue] = useState<string>(initialZoom.toString());
@@ -116,7 +120,11 @@ const ZoomButton: React.FC<IZoomButtonProps> = ({
     };
 
     const zoomToFit = () => {
-        handleZoomChange(83);
+        if (scrollAreaRef.current) {
+            const scrollWidth = scrollAreaRef.current.offsetWidth;
+            const availableWidth = scrollWidth - 20;
+            handleZoomChange(Math.round((availableWidth / pageWidth) * 100));
+        }
     };
 
     const presetZooms = [50, 75, 90, 100, 150];

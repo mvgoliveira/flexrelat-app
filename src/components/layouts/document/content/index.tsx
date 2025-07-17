@@ -24,6 +24,8 @@ export const DocumentContent = (): ReactElement => {
     const [totalPages, setTotalPages] = useState<number>(1);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+    const documentRootRef = useRef<HTMLDivElement>(null);
+
     const [boldActive, setBoldActive] = useState<boolean>(false);
     const [italicActive, setItalicActive] = useState<boolean>(false);
     const [underlineActive, setUnderlineActive] = useState<boolean>(false);
@@ -199,7 +201,7 @@ export const DocumentContent = (): ReactElement => {
             </DocumentHeader>
 
             <ScrollArea ref={scrollAreaRef}>
-                <DocumentRoot className="DocumentRoot">
+                <DocumentRoot className="DocumentRoot" ref={documentRootRef}>
                     <TextEditor
                         pageWidth={pageWidth}
                         pageHeight={pageHeight}
@@ -217,6 +219,8 @@ export const DocumentContent = (): ReactElement => {
                         initialZoom={zoom}
                         onZoomChange={setZoom}
                         className="custom-styles"
+                        scrollAreaRef={scrollAreaRef}
+                        pageWidth={pageWidth}
                     />
 
                     <PageContainer>
