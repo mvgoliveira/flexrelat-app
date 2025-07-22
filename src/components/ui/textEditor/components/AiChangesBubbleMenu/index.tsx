@@ -20,39 +20,23 @@ export const AiChangesBubbleMenu = ({
     editor,
     aiChange,
 }: IAiChangesBubbleMenuProps): ReactElement => {
-    const { approveChange } = useDocumentContext();
+    const { approveChange, disapproveChange } = useDocumentContext();
     const [selectedChanges, setSelectedChanges] = useState<SelectedChange[]>([]);
 
     const handleApproveChange = (): void => {
-        selectedChanges.forEach(change => {
-            if (change.type === "remove") {
-                editor
-                    .chain()
-                    .setNodeSelection(change.from)
-                    .deleteRange({
-                        from: change.from,
-                        to: change.to,
-                    })
-                    .run();
-            }
-
-            if (change.type === "add") {
-                editor
-                    .chain()
-                    .setNodeSelection(change.from)
-                    .updateAttributes(change.nodeTypeName, {
-                        class: "",
-                    })
-                    .run();
-            }
-        });
-
         setSelectedChanges([]);
         approveChange(aiChange);
     };
 
+    const handleDisapproveChange = (): void => {
+        editor.chain().focus().run();
+        setSelectedChanges([]);
+        disapproveChange(aiChange);
+    };
+
     useEffect(() => {
         if (!aiChange) return;
+        if (!editor) return;
 
         const element = editor.view.dom.querySelector(`[data-id="${aiChange.old_content.id}"]`);
 
@@ -92,13 +76,11 @@ export const AiChangesBubbleMenu = ({
                             from: pos,
                             to: pos + node.nodeSize,
                             type: "remove",
-                            nodeTypeName: elementTypeName,
                         },
                         {
                             from: pos + node.nodeSize + 1,
                             to: pos + node.nodeSize + 1,
                             type: "add",
-                            nodeTypeName: elementTypeName,
                         },
                     ]);
                 }
@@ -114,21 +96,17 @@ export const AiChangesBubbleMenu = ({
                 const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
                 const node = editor.state.doc.nodeAt(pos);
                 if (node) {
-                    const elementTypeName = node.type.name;
-
                     if (aiChange.type === "update") {
                         setSelectedChanges([
                             {
                                 from: pos,
                                 to: pos + node.nodeSize,
                                 type: "remove",
-                                nodeTypeName: elementTypeName,
                             },
                             {
                                 from: pos + node.nodeSize + 1,
                                 to: pos + node.nodeSize + 1,
                                 type: "add",
-                                nodeTypeName: elementTypeName,
                             },
                         ]);
                     }
@@ -146,11 +124,11 @@ export const AiChangesBubbleMenu = ({
     return (
         <AiChangesControlledBubbleMenu editor={editor} selectedContent={selectedChanges[0]}>
             <Root>
-                <StyledButton onClick={() => {}} color="green30">
-                    <MdDone size={12} color={Theme.colors.green80} onClick={handleApproveChange} />
+                <StyledButton onClick={handleApproveChange} color="green30">
+                    <MdDone size={12} color={Theme.colors.green80} />
                 </StyledButton>
 
-                <StyledButton onClick={() => {}} color="red30">
+                <StyledButton onClick={handleDisapproveChange} color="red30">
                     <MdClose size={12} color={Theme.colors.red80} />
                 </StyledButton>
             </Root>

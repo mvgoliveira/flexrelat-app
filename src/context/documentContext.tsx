@@ -2,13 +2,21 @@ import {
     AiChange,
     getMessagesByChatId,
     Message,
-    removeAiChange,
     updateAiChangeStatus,
 } from "@/repositories/changesApi";
 import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
 import { useQuery } from "@tanstack/react-query";
+import { Editor } from "@tiptap/core";
 import { useParams } from "next/navigation";
-import { createContext, useContext, ReactNode, useState, useEffect } from "react";
+import {
+    createContext,
+    useContext,
+    ReactNode,
+    useState,
+    useEffect,
+    Dispatch,
+    SetStateAction,
+} from "react";
 
 type Status = "error" | "success" | "pending";
 
@@ -21,14 +29,18 @@ type DocumentContextType = {
     documentData: DocumentData | undefined;
     documentStatus: Status;
     approveChange: (change: AiChange) => void;
-    removeChange: (change: AiChange) => void;
+    disapproveChange: (change: AiChange) => void;
     loadingComponentId: string;
     updateLoadingComponentId: (componentId: string) => void;
+    clearChange: (change: AiChange) => void;
+    editor: Editor | null;
+    setEditor: Dispatch<SetStateAction<Editor | null>>;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
 
 export function DocumentProvider({ children }: { children: ReactNode }): React.ReactElement {
+    const [editor, setEditor] = useState<Editor | null>(null);
     const { documentId } = useParams();
     const [changes, setChanges] = useState<AiChange[]>([]);
     const [selectedChanges, setSelectedChanges] = useState<AiChange[]>([]);
@@ -67,9 +79,39 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     };
 
     const approveChange = async (change: AiChange): Promise<void> => {
-        setSelectedChanges(selectedChanges.filter(prevChange => prevChange.id !== change.id));
+        if (!editor) return;
+
+        setSelectedChanges(prevState =>
+            prevState.filter(prevChange => prevChange.id !== change.id)
+        );
 
         const newAiChange = await updateAiChangeStatus(change.id, "approved");
+
+        const element = editor.view.dom.querySelector(`[data-id="${change.old_content.id}"]`);
+
+        if (element) {
+            const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
+            const node = editor.state.doc.nodeAt(pos);
+
+            if (node) {
+                if (change.type === "update") {
+                    editor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .insertContentAt(pos + node.nodeSize, change.new_content.html)
+                        .setNodeSelection(pos + node.nodeSize)
+                        .deleteRange({
+                            from: pos,
+                            to: pos + node.nodeSize,
+                        })
+                        .run();
+                }
+            }
+        }
+
+        setChanges(prevChanges =>
+            prevChanges.map(prevChange => (prevChange.id === change.id ? newAiChange : prevChange))
+        );
 
         setMessages(prevMessages =>
             prevMessages.map(message => {
@@ -82,14 +124,12 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 return message;
             })
         );
+    };
 
+    const clearChange = (change: AiChange): void => {
         setSelectedChanges(prevState =>
             prevState.filter(prevChange => prevChange.id !== change.id)
         );
-    };
-
-    const removeChange = (change: AiChange): void => {
-        setSelectedChanges(selectedChanges.filter(prevChange => prevChange.id !== change.id));
 
         setMessages(prevMessages =>
             prevMessages.map(message => {
@@ -102,8 +142,26 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 return message;
             })
         );
+    };
 
-        removeAiChange(change.id);
+    const disapproveChange = async (change: AiChange): Promise<void> => {
+        setSelectedChanges(prevState =>
+            prevState.filter(prevChange => prevChange.id !== change.id)
+        );
+
+        const newAiChange = await updateAiChangeStatus(change.id, "rejected");
+
+        setMessages(prevMessages =>
+            prevMessages.map(message => {
+                if (message.id === change.message_id) {
+                    return {
+                        ...message,
+                        changes: message.changes.map(c => (c.id === change.id ? newAiChange : c)),
+                    };
+                }
+                return message;
+            })
+        );
     };
 
     const updateLoadingComponentId = (componentId: string): void => {
@@ -131,9 +189,12 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 documentStatus,
                 updateSelectedChange,
                 approveChange,
-                removeChange,
+                disapproveChange,
                 loadingComponentId,
                 updateLoadingComponentId,
+                clearChange,
+                editor,
+                setEditor,
             }}
         >
             {children}

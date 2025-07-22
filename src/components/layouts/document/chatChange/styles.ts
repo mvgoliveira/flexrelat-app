@@ -1,4 +1,4 @@
-import { ChangesType } from "@/repositories/changesApi";
+import { ChangesType, StatusType } from "@/repositories/changesApi";
 import styled from "@emotion/styled";
 
 import { CHANGES_BADGE_VARIANTS, CHANGES_COLOR_VARIANTS } from "./variants";
@@ -7,12 +7,15 @@ interface IActiveProps {
     active: boolean;
 }
 
-interface IVariantsProps {
-    variant: ChangesType;
-    status: "pending" | "approved" | "rejected";
+interface IStatusProps {
+    status: StatusType;
 }
 
-export const Root = styled.button<IVariantsProps & IActiveProps>`
+interface IVariantsProps {
+    variant: ChangesType | StatusType;
+}
+
+export const Root = styled.button<IVariantsProps & IStatusProps & IActiveProps>`
     display: flex;
     width: 100%;
     border: 1px solid
@@ -41,7 +44,7 @@ export const Content = styled.div`
     gap: 10px;
 `;
 
-export const StyledCheckBox = styled.div<IVariantsProps & IActiveProps>`
+export const StyledCheckBox = styled.div<IVariantsProps & IStatusProps & IActiveProps>`
     display: ${({ status }) => (status === "pending" ? "flex" : "none")};
     align-items: center;
     justify-content: center;

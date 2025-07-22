@@ -8,7 +8,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import { FontSize, TextStyle, FontFamily } from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
-import { Editor, EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ReactElement, useEffect, useLayoutEffect, useRef, useState } from "react";
 import ShortUniqueId from "short-unique-id";
@@ -31,7 +31,6 @@ interface ITextEditorProps {
     marginBottom?: number;
     pageWidth?: number;
     pageHeight?: number;
-    setEditor: (editor: Editor | null) => void;
 }
 
 const TextEditor = ({
@@ -43,11 +42,12 @@ const TextEditor = ({
     pageWidth = 794,
     pageHeight = 1123,
     zoom = 100,
-    setEditor,
 }: ITextEditorProps): ReactElement => {
+    const { setEditor } = useDocumentContext();
+
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
-    const { documentData, selectedChanges, changes, removeChange, loadingComponentId } =
+    const { documentData, selectedChanges, changes, clearChange, loadingComponentId } =
         useDocumentContext();
 
     const alreadyLoaded = useRef(false);
@@ -144,7 +144,7 @@ const TextEditor = ({
                 `[data-id="${change.old_content.id}"]`
             );
             if (!element && change.status === "pending") {
-                removeChange(change);
+                clearChange(change);
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps

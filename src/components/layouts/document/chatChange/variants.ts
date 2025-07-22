@@ -1,4 +1,4 @@
-import { ChangesType } from "@/repositories/changesApi";
+import { ChangesType, StatusType } from "@/repositories/changesApi";
 import { Theme } from "@/themes";
 
 type BadgeStyles = {
@@ -6,20 +6,26 @@ type BadgeStyles = {
     textColor: keyof typeof Theme.colors;
 };
 
-type BadgeColorMap = Record<ChangesType, BadgeStyles>;
-type ColorMap = Record<ChangesType, keyof typeof Theme.colors>;
-type TextMap = Record<ChangesType, string>;
+type BadgeColorMap = Record<ChangesType | StatusType, BadgeStyles>;
+type ColorMap = Record<ChangesType | StatusType, keyof typeof Theme.colors>;
+type TextMap = Record<ChangesType | StatusType, string>;
 
 export const CHANGES_COLOR_VARIANTS: ColorMap = {
     add: "green50",
     remove: "red50",
     update: "yellow50",
+    approved: "green50",
+    rejected: "red50",
+    pending: "transparent",
 };
 
 export const CHANGES_TEXT_VARIANTS: TextMap = {
-    add: "ADICIONADO",
-    remove: "REMOVIDO",
-    update: "ALTERADO",
+    add: "ADIÇÃO",
+    remove: "REMOÇÃO",
+    update: "ALTERAÇÃO",
+    approved: "APROVADA",
+    rejected: "REJEITADA",
+    pending: "",
 };
 
 export const CHANGES_BADGE_VARIANTS: BadgeColorMap = {
@@ -33,6 +39,18 @@ export const CHANGES_BADGE_VARIANTS: BadgeColorMap = {
     },
     update: {
         bgColor: "yellow10",
-        textColor: "yellow60",
+        textColor: "yellow70",
+    },
+    approved: {
+        bgColor: "blue20",
+        textColor: "blue50",
+    },
+    rejected: {
+        bgColor: "red30",
+        textColor: "red80",
+    },
+    pending: {
+        bgColor: "transparent",
+        textColor: "transparent",
     },
 };

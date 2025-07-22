@@ -21,7 +21,8 @@ interface IChatChangeProps {
 }
 
 export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
-    const { updateSelectedChange, selectedChanges } = useDocumentContext();
+    const { updateSelectedChange, selectedChanges, approveChange, disapproveChange } =
+        useDocumentContext();
 
     const handleSelectChange = () => {
         if (metadata.status === "pending") {
@@ -36,7 +37,7 @@ export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
             onClick={handleSelectChange}
             status={metadata.status}
         >
-            <ColorContainer variant={metadata.type} status={metadata.status} />
+            <ColorContainer variant={metadata.type} />
 
             <Content>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -47,17 +48,33 @@ export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
                             justifyContent: "space-between",
                         }}
                     >
-                        <StyledBadge variant={metadata.type} status={metadata.status}>
-                            <Typography
-                                tag="p"
-                                fontSize={{ xs: "fs25" }}
-                                color={CHANGES_BADGE_VARIANTS[metadata.type].textColor}
-                                fontWeight="bold"
-                                textAlign="center"
-                            >
-                                {CHANGES_TEXT_VARIANTS[metadata.type]}
-                            </Typography>
-                        </StyledBadge>
+                        <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
+                            <StyledBadge variant={metadata.type}>
+                                <Typography
+                                    tag="p"
+                                    fontSize={{ xs: "fs25" }}
+                                    color={CHANGES_BADGE_VARIANTS[metadata.type].textColor}
+                                    fontWeight="bold"
+                                    textAlign="center"
+                                >
+                                    {CHANGES_TEXT_VARIANTS[metadata.type]}
+                                </Typography>
+                            </StyledBadge>
+
+                            {metadata.status !== "pending" && (
+                                <StyledBadge variant={metadata.status}>
+                                    <Typography
+                                        tag="p"
+                                        fontSize={{ xs: "fs25" }}
+                                        color={CHANGES_BADGE_VARIANTS[metadata.status].textColor}
+                                        fontWeight="bold"
+                                        textAlign="center"
+                                    >
+                                        {CHANGES_TEXT_VARIANTS[metadata.status]}
+                                    </Typography>
+                                </StyledBadge>
+                            )}
+                        </div>
 
                         <StyledCheckBox
                             variant={metadata.type}
@@ -87,20 +104,22 @@ export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
                         justifyContent: "space-between",
                     }}
                 >
-                    <StyledSmlButton>
-                        <MdDoneAll
-                            size={14}
-                            color={Theme.colors.black}
-                            onClick={e => e.stopPropagation()}
-                        />
+                    <StyledSmlButton
+                        onClick={e => {
+                            e.stopPropagation();
+                            approveChange(metadata);
+                        }}
+                    >
+                        <MdDoneAll size={14} color={Theme.colors.black} />
                     </StyledSmlButton>
 
-                    <StyledSmlButton>
-                        <RiDeleteBin6Line
-                            size={12}
-                            color={Theme.colors.black}
-                            onClick={e => e.stopPropagation()}
-                        />
+                    <StyledSmlButton
+                        onClick={e => {
+                            e.stopPropagation();
+                            disapproveChange(metadata);
+                        }}
+                    >
+                        <RiDeleteBin6Line size={12} color={Theme.colors.black} />
                     </StyledSmlButton>
                 </div>
             </Content>

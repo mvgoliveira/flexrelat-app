@@ -72,7 +72,7 @@ export const AiChat = (): ReactElement => {
                                 color="black"
                                 fontWeight="regular"
                             >
-                                {changes.length}
+                                {changes.filter(change => change.status === "pending").length}
                             </Typography>
                         </ChangesNumberContainer>
 
@@ -86,7 +86,7 @@ export const AiChat = (): ReactElement => {
                         </Typography>
                     </div>
 
-                    {changes.length > 0 && (
+                    {changes.filter(change => change.status === "pending").length > 0 && (
                         <div style={{ display: "flex", gap: 5 }}>
                             <Button height="30px" variant="secondary" padding="0 10px">
                                 <MdCheck size={12} color={Theme.colors.black} />

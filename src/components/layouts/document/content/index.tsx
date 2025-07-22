@@ -2,7 +2,7 @@ import { Typography } from "@/components/features/typography";
 import ZoomButton from "@/components/features/zoomButton";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import TextEditor from "@/components/ui/textEditor";
-import { Editor } from "@tiptap/core";
+import { useDocumentContext } from "@/context/documentContext";
 import { ReactElement, useEffect, useRef, useState } from "react";
 
 import { DocumentToolbar } from "../documentToolbar";
@@ -11,6 +11,8 @@ import { DocumentHeader, DocumentRoot, FloatContainer, PageContainer, Root } fro
 export type FontFamilies = "times-new-roman" | "arial";
 
 export const DocumentContent = (): ReactElement => {
+    const { editor } = useDocumentContext();
+
     const [zoom, setZoom] = useState<number>(83);
     const [pageWidth, setPageWidth] = useState<number>(794);
     const [pageHeight, setPageHeight] = useState<number>(1123);
@@ -18,7 +20,6 @@ export const DocumentContent = (): ReactElement => {
     const [marginRight, setMarginRight] = useState(75.59);
     const [marginBottom, setMarginBottom] = useState(75.59);
     const [marginLeft, setMarginLeft] = useState(113.39);
-    const [editor, setEditor] = useState<Editor | null>(null);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -210,7 +211,6 @@ export const DocumentContent = (): ReactElement => {
                         marginBottom={marginBottom}
                         marginTop={marginTop}
                         zoom={zoom}
-                        setEditor={setEditor}
                     />
                 </DocumentRoot>
 

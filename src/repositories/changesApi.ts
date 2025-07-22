@@ -10,10 +10,12 @@ type Content = {
 
 export type ChangesType = "add" | "remove" | "update";
 
+export type StatusType = "pending" | "approved" | "rejected";
+
 export type AiChange = {
     id: string;
     message_id: string;
-    status: "pending" | "approved" | "rejected";
+    status: StatusType;
     type: ChangesType;
     text: string;
     old_content: Content;
@@ -100,17 +102,36 @@ export const getMessagesByChatId = async (
 
 export const updateAiChangeStatus = async (
     changeId: string,
-    status: "pending" | "approved" | "rejected"
+    status: "approved" | "rejected"
 ): Promise<AiChange> => {
     console.log(`Updating change status for ID: ${changeId} to ${status}`);
 
-    // Simulate an API call to update the change status
+    if (status === "approved") {
+        return {
+            id: changeId,
+            message_id: "4f4f4f4f-4f4f-5f5f-6f6f-7f7f7f7f7f7",
+            status: status,
+            type: "update",
+            text: "Alteração de título aprovada.",
+            old_content: {
+                id: "62e714dae9",
+                type: "text",
+                html: `<h4 data-id='62e714dae9' class='change-remove'><span style="font-size: 18pt">Resumo</span></h4>`,
+            },
+            new_content: {
+                id: "",
+                type: "text",
+                html: `<h4 style="text-align: center"><span style="font-size: 18pt">Resumo Geral do Relatório</span></h4>`,
+            },
+        };
+    }
+
     return {
         id: changeId,
         message_id: "4f4f4f4f-4f4f-5f5f-6f6f-7f7f7f7f7f7",
         status: status,
         type: "update",
-        text: "Alteração de título aprovada.",
+        text: "Alteração de título reprovada.",
         old_content: {
             id: "62e714dae9",
             type: "text",
@@ -122,14 +143,6 @@ export const updateAiChangeStatus = async (
             html: `<h4 style="text-align: center"><span style="font-size: 18pt">Resumo Geral do Relatório</span></h4>`,
         },
     };
-};
-
-export const removeAiChange = async (changeId: string): Promise<void> => {
-    console.log(`Removing AI change with ID: ${changeId}`);
-
-    // Simulate an API call to remove the change
-    // In a real application, you would make an API call here
-    return Promise.resolve();
 };
 
 export const getMoreText = async (content: string): Promise<string> => {
