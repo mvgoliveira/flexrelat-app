@@ -125,6 +125,22 @@ export const Root = styled.div<IRootProps>`
         content: counter(h1) "." counter(h2) "." counter(h3) ". ";
     }
 
+    h1[contenteditable="false"],
+    h2[contenteditable="false"],
+    h3[contenteditable="false"],
+    h4[contenteditable="false"],
+    h5[contenteditable="false"],
+    h6[contenteditable="false"],
+    p[contenteditable="false"] {
+        margin-bottom: 12px !important;
+        text-align: start;
+        font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
+        font-size: 12pt;
+        line-height: 1.5 !important;
+        word-break: break-word !important;
+        hyphens: auto !important;
+    }
+
     table {
         border-collapse: collapse;
         overflow: hidden;
