@@ -14,7 +14,9 @@ interface IPaginationPlusOptions {
     headerRight: string;
     headerLeft: string;
 }
+
 const page_count_meta_key = "PAGE_COUNT_META_KEY";
+
 export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
     name: "PaginationPlus",
     addOptions() {
@@ -34,7 +36,12 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
     onCreate() {
         const targetNode = this.editor.view.dom;
         targetNode.classList.add("rm-with-pagination");
-        const config = { attributes: true };
+
+        // Cache para evitar recálculos desnecessários
+        let lastPageCount = 0;
+        let isUpdating = false;
+        let updateTimeout: NodeJS.Timeout | null = null;
+
         const _pageHeaderHeight = this.options.pageHeaderHeight;
         const _pageFooterHeight = this.options.pageFooterHeight;
         const _pageHeight = this.options.pageHeight - _pageHeaderHeight - _pageFooterHeight;
@@ -108,10 +115,9 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                 content: counter(page-number);
             }
             .rm-with-pagination .rm-first-page-header{
-                display: inline-flex;
+                display: flex;
                 justify-content: space-between;
-                width: 100%;
-                padding-top: 15px !important;
+                align-items: flex-end;
             }
 
             .rm-with-pagination .rm-page-header{
@@ -124,6 +130,8 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
         document.head.appendChild(style);
 
         const refreshPage = (targetedNode: HTMLElement) => {
+            if (isUpdating) return;
+
             const paginationElement = targetedNode.querySelector("[data-rm-pagination]");
             if (paginationElement) {
                 const lastPageBreak = paginationElement.lastElementChild?.querySelector(
@@ -137,13 +145,26 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
             }
         };
 
-        const callback = (mutationList: MutationRecord[]) => {
-            if (mutationList.length > 0 && mutationList[0].target) {
-                const _target = mutationList[0].target as HTMLElement;
-                if (_target.classList.contains("rm-with-pagination")) {
+        const debouncedUpdate = () => {
+            if (updateTimeout) {
+                clearTimeout(updateTimeout);
+            }
+
+            updateTimeout = setTimeout(() => {
+                if (isUpdating) return;
+
+                isUpdating = true;
+
+                try {
                     const currentPageCount = getExistingPageCount(this.editor.view);
-                    const pageCount = calculatePageCount(this.editor.view, this.options);
-                    if (currentPageCount !== pageCount) {
+                    const newPageCount = calculatePageCount(this.editor.view, this.options);
+
+                    if (
+                        Math.abs(currentPageCount - newPageCount) > 0 &&
+                        newPageCount !== lastPageCount
+                    ) {
+                        lastPageCount = newPageCount;
+
                         const tr = this.editor.view.state.tr.setMeta(
                             page_count_meta_key,
                             Date.now()
@@ -151,14 +172,60 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                         this.editor.view.dispatch(tr);
                     }
 
-                    refreshPage(_target);
+                    refreshPage(targetNode);
+                } finally {
+                    isUpdating = false;
                 }
+            }, 100); // Debounce de 100ms
+        };
+
+        const callback = (mutationList: MutationRecord[]) => {
+            // Filtra apenas mutações relevantes para evitar processamento desnecessário
+            const relevantMutations = mutationList.filter(mutation => {
+                if (mutation.type === "childList") {
+                    // Ignora mudanças em elementos de paginação para evitar loop
+                    const target = mutation.target as HTMLElement;
+                    if (
+                        target.hasAttribute("data-rm-pagination") ||
+                        target.closest("[data-rm-pagination]") ||
+                        target.classList.contains("rm-page-break") ||
+                        target.classList.contains("breaker")
+                    ) {
+                        return false;
+                    }
+                    return true;
+                }
+
+                if (mutation.type === "attributes") {
+                    // Ignora mudanças de estilo que não afetam conteúdo
+                    if (mutation.attributeName === "style" || mutation.attributeName === "class") {
+                        return false;
+                    }
+                    return true;
+                }
+
+                return false;
+            });
+
+            if (relevantMutations.length > 0) {
+                debouncedUpdate();
             }
         };
+
+        // Observer mais específico para evitar excesso de eventos
         const observer = new MutationObserver(callback);
-        observer.observe(targetNode, config);
+        observer.observe(targetNode, {
+            childList: true,
+            subtree: true,
+            attributes: false, // Removido attributes: true que causava muitos eventos
+            characterData: true,
+        });
+
+        // Inicialização
         refreshPage(targetNode);
+        lastPageCount = getExistingPageCount(this.editor.view);
     },
+
     addProseMirrorPlugins() {
         const pageOptions = this.options;
         return [
@@ -170,6 +237,8 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
                         return DecorationSet.create(state.doc, widgetList);
                     },
                     apply(tr, oldDeco, oldState, newState) {
+                        // Só recria decorations se realmente houver mudança no documento
+                        // ou se for especificamente um update de paginação
                         if (tr.docChanged || tr.getMeta(page_count_meta_key)) {
                             const widgetList = createDecoration(newState, pageOptions);
                             return DecorationSet.create(newState.doc, [...widgetList]);
@@ -196,7 +265,7 @@ const getExistingPageCount = (view: EditorView) => {
     return 0;
 };
 
-const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOptions) => {
+const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOptions): number => {
     const editorDom = view.dom as HTMLElement;
     const pageContentAreaHeight =
         pageOptions.pageHeight - pageOptions.pageHeaderHeight - pageOptions.pageFooterHeight;
@@ -204,6 +273,13 @@ const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOption
     const currentPageCount = getExistingPageCount(view);
 
     const marker = editorDom.querySelector("[data-end-of-content]") as HTMLElement | null;
+
+    if (!marker) {
+        const editorHeight = editorDom.scrollHeight;
+        const pageCount = Math.ceil(editorHeight / pageContentAreaHeight);
+        return pageCount <= 0 ? 1 : pageCount;
+    }
+
     const contentBottom = marker
         ? marker.getBoundingClientRect().bottom
         : editorDom.getBoundingClientRect().bottom;
@@ -215,7 +291,7 @@ const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOption
         const rootEl = editorDom.closest("[data-editor-root]") as HTMLElement;
 
         if (lastPageBreak && rootEl) {
-            const zoom = Number(getComputedStyle(rootEl).zoom);
+            const zoom = Number(getComputedStyle(rootEl).zoom) || 1; // Fallback para zoom
             const lastBreakBottom = lastPageBreak.getBoundingClientRect().bottom;
             const lastPageGap = contentBottom - lastBreakBottom;
             const newLastPageGap = lastPageGap / zoom;
@@ -230,7 +306,9 @@ const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOption
                     return currentPageCount;
                 } else if (newLastPageGap < lpTo) {
                     const pageHeightOnRemove = pageOptions.pageHeight + pageOptions.pageGap;
-                    return currentPageCount + Math.floor(newLastPageGap / pageHeightOnRemove);
+                    return (
+                        currentPageCount + Math.floor(newLastPageGap / (pageHeightOnRemove / zoom))
+                    );
                 } else {
                     return currentPageCount;
                 }
@@ -256,7 +334,6 @@ function createDecoration(
             const _pageHeaderHeight = pageOptions.pageHeaderHeight;
             const _pageFooterHeight = pageOptions.pageFooterHeight;
             const _pageHeight = pageOptions.pageHeight - _pageHeaderHeight - _pageFooterHeight;
-
             const _pageBreakBackground = pageOptions.pageBreakBackground;
 
             const el = document.createElement("div");
@@ -342,9 +419,7 @@ function createDecoration(
 
             const page = pageBreakDefinition({ firstPage: false });
             const firstPage = pageBreakDefinition({ firstPage: true });
-
             const fragment = document.createDocumentFragment();
-
             const pageCount = calculatePageCount(view, pageOptions);
 
             for (let i = 0; i < pageCount; i++) {
@@ -354,9 +429,9 @@ function createDecoration(
                     fragment.appendChild(page.cloneNode(true));
                 }
             }
+
             el.append(fragment);
             el.id = "pages";
-
             return el;
         },
         { side: -1 }

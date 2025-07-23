@@ -86,6 +86,7 @@ export const AiChangesControlledBubbleMenu = ({
                 },
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedContent, view, refs, editor.view]);
 
     if (!open) return <></>;

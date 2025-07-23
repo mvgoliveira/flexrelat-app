@@ -115,7 +115,7 @@ export const TableRowGroup = Node.create({
     },
 });
 
-export const getMaximumRowSpan = (row: ProseMirrorNode) => {
+export const getMaximumRowSpan = (row: ProseMirrorNode): number => {
     let maxRowSpan = 0;
     row.forEach(child => {
         const rowspan = child.attrs.rowspan || 1;
@@ -148,7 +148,10 @@ function deepMatch(obj1: Record<number, number>, obj2: Record<number, number>) {
     return true;
 }
 
-export const getRowGroupList = (totalRows: number, rowSpanList: Record<number, number>) => {
+export const getRowGroupList = (
+    totalRows: number,
+    rowSpanList: Record<number, number>
+): number[][] => {
     const rowGroupListWithRowCount = [];
 
     for (let i = 1; i <= totalRows; i++) {

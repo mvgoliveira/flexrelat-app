@@ -177,6 +177,7 @@ export const ControlledBubbleMenu = ({
 
         view.dom.addEventListener("click", handler);
         return () => view.dom.removeEventListener("click", handler);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor.state.selection]);
 
     useLayoutEffect(() => {
@@ -227,6 +228,7 @@ export const ControlledBubbleMenu = ({
         return () => {
             editor.unregisterPlugin(key);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [prevSelection]);
 
     if (!isOpen || !open) return <></>;

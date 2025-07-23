@@ -21,7 +21,7 @@ import {
 } from "./styles";
 
 export const AiChat = (): ReactElement => {
-    const { messagesStatus, messages, changes } = useDocumentContext();
+    const { messagesStatus, messages, changes, approveChange } = useDocumentContext();
 
     if (messagesStatus === "pending") {
         return (
@@ -60,6 +60,14 @@ export const AiChat = (): ReactElement => {
         );
     }
 
+    const handleApproveAllChanges = () => {
+        changes.forEach(change => {
+            if (change.status === "pending") {
+                approveChange(change);
+            }
+        });
+    };
+
     return (
         <Root>
             <div>
@@ -88,7 +96,12 @@ export const AiChat = (): ReactElement => {
 
                     {changes.filter(change => change.status === "pending").length > 0 && (
                         <div style={{ display: "flex", gap: 5 }}>
-                            <Button height="30px" variant="secondary" padding="0 10px">
+                            <Button
+                                height="30px"
+                                variant="secondary"
+                                padding="0 10px"
+                                onClick={handleApproveAllChanges}
+                            >
                                 <MdCheck size={12} color={Theme.colors.black} />
 
                                 <Typography

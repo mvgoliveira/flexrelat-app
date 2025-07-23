@@ -73,17 +73,9 @@ export const PreventEditExtension = Extension.create<IPreventEditOptions>({
                         attributeFilter: ["class"],
                     });
 
-                    // Também escuta updates do editor
-                    const handleUpdate = () => {
-                        updateContentEditable();
-                    };
-
-                    editorView.dom.addEventListener("DOMNodeInserted", handleUpdate);
-
                     return {
                         destroy: () => {
                             observer.disconnect();
-                            editorView.dom.removeEventListener("DOMNodeInserted", handleUpdate);
                         },
                     };
                 },

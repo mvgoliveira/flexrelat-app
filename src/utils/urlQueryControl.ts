@@ -11,7 +11,6 @@ export function UrlQueryControl(prefix: string, path: any, newQueries: any): str
 
     newQueries?.forEach((item: any) => {
         if (path[item.key]) {
-            // eslint-disable-next-line no-param-reassign
             path[item.key] = item.value;
             newPath = FormatUrlString(path);
         } else {

@@ -119,6 +119,7 @@ export const AiChangesBubbleMenu = ({
         return () => {
             editor.off("transaction", handler);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor]);
 
     return (
