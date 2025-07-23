@@ -20,7 +20,7 @@ export const AiChangesBubbleMenu = ({
     editor,
     aiChange,
 }: IAiChangesBubbleMenuProps): ReactElement => {
-    const { approveChange, disapproveChange } = useDocumentContext();
+    const { approveChange, rejectChange } = useDocumentContext();
     const [selectedChanges, setSelectedChanges] = useState<SelectedChange[]>([]);
 
     const handleApproveChange = (): void => {
@@ -28,10 +28,10 @@ export const AiChangesBubbleMenu = ({
         approveChange(aiChange);
     };
 
-    const handleDisapproveChange = (): void => {
+    const handlerejectChange = (): void => {
         editor.chain().focus().run();
         setSelectedChanges([]);
-        disapproveChange(aiChange);
+        rejectChange(aiChange);
     };
 
     useEffect(() => {
@@ -129,7 +129,7 @@ export const AiChangesBubbleMenu = ({
                     <MdDone size={12} color={Theme.colors.green80} />
                 </StyledButton>
 
-                <StyledButton onClick={handleDisapproveChange} color="red30">
+                <StyledButton onClick={handlerejectChange} color="red30">
                     <MdClose size={12} color={Theme.colors.red80} />
                 </StyledButton>
             </Root>

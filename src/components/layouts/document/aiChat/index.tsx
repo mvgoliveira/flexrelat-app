@@ -21,7 +21,7 @@ import {
 } from "./styles";
 
 export const AiChat = (): ReactElement => {
-    const { messagesStatus, messages, changes, approveChange } = useDocumentContext();
+    const { messagesStatus, messages, changes, approveChange, rejectChange } = useDocumentContext();
 
     if (messagesStatus === "pending") {
         return (
@@ -64,6 +64,14 @@ export const AiChat = (): ReactElement => {
         changes.forEach(change => {
             if (change.status === "pending") {
                 approveChange(change);
+            }
+        });
+    };
+
+    const handleRejectAllChanges = () => {
+        changes.forEach(change => {
+            if (change.status === "pending") {
+                rejectChange(change);
             }
         });
     };
@@ -111,11 +119,16 @@ export const AiChat = (): ReactElement => {
                                     fontWeight="regular"
                                     textAlign="center"
                                 >
-                                    Aprovar todos
+                                    Aprovar todas
                                 </Typography>
                             </Button>
 
-                            <Button height="30px" variant="secondary" padding="0 10px">
+                            <Button
+                                height="30px"
+                                variant="secondary"
+                                padding="0 10px"
+                                onClick={handleRejectAllChanges}
+                            >
                                 <MdClose size={12} color={Theme.colors.black} />
 
                                 <Typography
@@ -125,7 +138,7 @@ export const AiChat = (): ReactElement => {
                                     fontWeight="regular"
                                     textAlign="center"
                                 >
-                                    Descartar todos
+                                    Rejeitar todas
                                 </Typography>
                             </Button>
                         </div>

@@ -21,7 +21,7 @@ interface IChatChangeProps {
 }
 
 export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
-    const { updateSelectedChange, selectedChanges, approveChange, disapproveChange } =
+    const { updateSelectedChange, selectedChanges, approveChange, rejectChange } =
         useDocumentContext();
 
     const handleSelectChange = () => {
@@ -116,7 +116,7 @@ export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
                     <StyledSmlButton
                         onClick={e => {
                             e.stopPropagation();
-                            disapproveChange(metadata);
+                            rejectChange(metadata);
                         }}
                     >
                         <RiDeleteBin6Line size={12} color={Theme.colors.black} />

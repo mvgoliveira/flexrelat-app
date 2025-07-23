@@ -29,7 +29,7 @@ type DocumentContextType = {
     documentData: DocumentData | undefined;
     documentStatus: Status;
     approveChange: (change: AiChange) => void;
-    disapproveChange: (change: AiChange) => void;
+    rejectChange: (change: AiChange) => void;
     loadingComponentId: string;
     updateLoadingComponentId: (componentId: string) => void;
     clearChange: (change: AiChange) => void;
@@ -144,7 +144,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
         );
     };
 
-    const disapproveChange = async (change: AiChange): Promise<void> => {
+    const rejectChange = async (change: AiChange): Promise<void> => {
         setSelectedChanges(prevState =>
             prevState.filter(prevChange => prevChange.id !== change.id)
         );
@@ -189,7 +189,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 documentStatus,
                 updateSelectedChange,
                 approveChange,
-                disapproveChange,
+                rejectChange,
                 loadingComponentId,
                 updateLoadingComponentId,
                 clearChange,
