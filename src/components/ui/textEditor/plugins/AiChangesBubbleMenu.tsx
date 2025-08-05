@@ -40,7 +40,7 @@ export const AiChangesControlledBubbleMenu = ({
             offset({ mainAxis: -41, alignmentAxis: -30 }),
             flip({
                 padding: 8,
-                boundary: editor.options.element,
+                boundary: editor.options.element || undefined,
                 fallbackPlacements: ["top-end"],
             }),
         ],

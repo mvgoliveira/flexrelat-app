@@ -1,4 +1,4 @@
-import Table, { createColGroup } from "@tiptap/extension-table";
+import { Table, createColGroup } from "@tiptap/extension-table";
 
 import { TableRowGroup } from "./TableRowGroup";
 
@@ -7,14 +7,14 @@ export const TablePlus = Table.extend({
 
     addAttributes() {
         // Pega TODOS os atributos da extensão pai
-        const parentAttributes = this.parent?.() || {};
+        const parentAttributes = this.options?.HTMLAttributes;
 
         return {
             ...parentAttributes,
             class: {
                 default: null,
-                parseHTML: element => element.getAttribute("class"),
-                renderHTML: attributes => {
+                parseHTML: (element: any) => element.getAttribute("class"),
+                renderHTML: (attributes: any) => {
                     if (!attributes.class) return {};
                     return {
                         class: attributes.class,
@@ -24,8 +24,8 @@ export const TablePlus = Table.extend({
             // Suporte explícito para id (o TipTap converte automaticamente para data-id no HTML)
             id: {
                 default: null,
-                parseHTML: element => element.getAttribute("data-id"),
-                renderHTML: attributes => {
+                parseHTML: (element: any) => element.getAttribute("data-id"),
+                renderHTML: (attributes: any) => {
                     if (!attributes.id) return {};
                     return {
                         "data-id": attributes.id,
@@ -37,7 +37,7 @@ export const TablePlus = Table.extend({
 
     addOptions() {
         return {
-            ...this.parent?.(),
+            ...this.options?.HTMLAttributes,
             resizable: true,
         };
     },
@@ -46,17 +46,8 @@ export const TablePlus = Table.extend({
         return [TableRowGroup];
     },
 
-    // Remove o renderHTML customizado para usar o padrão da extensão pai
-    // renderHTML({ HTMLAttributes }) {
-    //     return [
-    //         "table",
-    //         mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { border: 1 }),
-    //         0,
-    //     ];
-    // },
-
     addNodeView() {
-        return ({ node }) => {
+        return ({ node }: { node: any }) => {
             const wrapper = document.createElement("div");
             const table = document.createElement("table");
 
@@ -65,13 +56,13 @@ export const TablePlus = Table.extend({
                 if (value !== null && value !== undefined) {
                     if (key === "class") {
                         // Aplica class tanto no wrapper quanto na table
-                        wrapper.className = value;
-                        table.className = value;
+                        wrapper.className = String(value);
+                        table.className = String(value);
                     } else if (key === "id") {
                         // Converte id para data-id no HTML
-                        table.setAttribute("data-id", value);
+                        table.setAttribute("data-id", String(value));
                     } else {
-                        table.setAttribute(key, value);
+                        table.setAttribute(key, String(value));
                     }
                 }
             });
@@ -88,9 +79,9 @@ export const TablePlus = Table.extend({
             }
 
             let maxCellCount = 0;
-            node.forEach(child => {
+            node.forEach((child: any) => {
                 if (child.type.name === "tableRowGroup") {
-                    child.forEach(row => {
+                    child.forEach((row: any) => {
                         if (row.type.name === "tableRow" && row.childCount > maxCellCount) {
                             maxCellCount = row.childCount;
                         }
