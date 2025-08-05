@@ -1,16 +1,16 @@
 import { useDocumentContext } from "@/context/documentContext";
 import { Theme } from "@/themes";
 import { BulletList } from "@tiptap/extension-bullet-list";
-import Focus from "@tiptap/extension-focus";
 import { ListItem } from "@tiptap/extension-list-item";
 import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextAlign from "@tiptap/extension-text-align";
 import { FontSize, TextStyle, FontFamily } from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
+import { Focus, UndoRedo } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ReactElement, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
 import ShortUniqueId from "short-unique-id";
 
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
@@ -52,12 +52,12 @@ const TextEditor = ({
 
     const alreadyLoaded = useRef(false);
 
-    const [currentZoom, setCurrentZoom] = useState<number>(100);
-
     const extensions = [
         Indent,
+        UndoRedo,
         StarterKit.configure({
             dropcursor: false,
+            undoRedo: false,
         }),
         TextAlign.configure({
             types: [
@@ -71,8 +71,6 @@ const TextEditor = ({
                 "listItem",
             ],
         }),
-        TextStyle.configure({ mergeNestedSpanStyles: true }),
-        FontSize,
         Focus.configure({
             className: "has-focus",
             mode: "shallowest",
@@ -120,10 +118,13 @@ const TextEditor = ({
         }),
         Underline,
         FontFamily,
+        TextStyle.configure(),
+        FontSize,
     ];
 
     const currentEditor = useEditor({
         extensions,
+        immediatelyRender: false,
         autofocus: false,
         content: ``,
         onUpdate: ({ editor }) => {
