@@ -53,6 +53,7 @@ export const TablePlus = Table.extend({
 
             // Aplica TODOS os atributos do nó
             Object.entries(node.attrs).forEach(([key, value]) => {
+                wrapper.setAttribute("class", "table-wrapper");
                 if (value !== null && value !== undefined) {
                     if (key === "class") {
                         // Aplica class tanto no wrapper quanto na table
