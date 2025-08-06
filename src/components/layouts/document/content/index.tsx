@@ -35,6 +35,8 @@ export const DocumentContent = (): ReactElement => {
     const [centerAlignActive, setCenterAlignActive] = useState<boolean>(false);
     const [rightAlignActive, setRightAlignActive] = useState<boolean>(false);
     const [justifyAlignActive, setJustifyAlignActive] = useState<boolean>(false);
+    const [fontColor, setFontColor] = useState<string>("#000000");
+    const [highlightColor, setHighlightColor] = useState<string | null>(null);
 
     const [fontSize, setFontSize] = useState<number>(12);
     const [fontType, setFontType] = useState<FontFamilies>("times-new-roman");
@@ -47,6 +49,8 @@ export const DocumentContent = (): ReactElement => {
             setItalicActive(editor.isActive("italic"));
             setUnderlineActive(editor.isActive("underline"));
             setStrikethroughActive(editor.isActive("strike"));
+            setFontColor(editor.getAttributes("textStyle")?.color || "#000000");
+            setHighlightColor(editor.getAttributes("textStyle")?.backgroundColor || null);
 
             const currentFontSize = editor.getAttributes("textStyle")?.fontSize;
             if (currentFontSize) {
@@ -197,6 +201,15 @@ export const DocumentContent = (): ReactElement => {
                     onChangeFontFamily={family => {
                         setFontType(family);
                         editor?.chain().setFontFamily(family).run();
+                    }}
+                    fontColor={fontColor}
+                    onChangeFontColor={color => editor?.chain().setColor(color).run()}
+                    highlightColor={highlightColor}
+                    onChangeHighlightColor={color => {
+                        editor
+                            ?.chain()
+                            .setBackgroundColor(color || "")
+                            .run();
                     }}
                 />
             </DocumentHeader>

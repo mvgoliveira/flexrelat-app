@@ -56,6 +56,10 @@ export const StyledButton = styled.button<IStyledButtonProps>`
     &:active {
         background: ${({ theme }) => theme.colors.gray20};
     }
+
+    &:focus {
+        background: ${({ theme }) => theme.colors.gray20};
+    }
 `;
 
 export const StyledInputContainer = styled.div`

@@ -1,4 +1,5 @@
 import { IconFormatInkHighlighter } from "@/assets/svgs/icons";
+import { ColorPicker } from "@/components/features/colorPicker";
 import { Selector } from "@/components/features/selector";
 import { Toolbar } from "@/components/features/toolbar";
 import { Theme } from "@/themes";
@@ -24,6 +25,7 @@ import {
 
 import { FontFamilies } from "../content";
 import { ColorContainer, FontSizeButton, Root, SizeInput } from "./styles";
+import { PRESET_FONT_COLORS, TEXT_HIGHLIGHT_COLORS } from "./variables";
 
 interface IDocumentToolbarProps {
     zoom: number;
@@ -47,6 +49,10 @@ interface IDocumentToolbarProps {
     onChangeFontSize: (size: number) => void;
     fontFamily: string;
     onChangeFontFamily: (family: FontFamilies) => void;
+    fontColor: string;
+    onChangeFontColor: (color: string) => void;
+    highlightColor: string | null;
+    onChangeHighlightColor: (color: string | null) => void;
 }
 
 export const DocumentToolbar = ({
@@ -71,6 +77,10 @@ export const DocumentToolbar = ({
     onChangeFontSize,
     fontFamily,
     onChangeFontFamily,
+    fontColor,
+    onChangeFontColor,
+    highlightColor,
+    onChangeHighlightColor,
 }: IDocumentToolbarProps): ReactElement => {
     const changeFontSize = (newSize: number) => {
         if (newSize < 1 || newSize > 200) return;
@@ -139,14 +149,27 @@ export const DocumentToolbar = ({
                 </Toolbar.Group>
 
                 <Toolbar.Group className="ColorSelector Item">
-                    <Toolbar.ItemButton>
-                        <IconFormatInkHighlighter size={18} color="black" />
-                        <ColorContainer color="black" />
-                    </Toolbar.ItemButton>
-                    <Toolbar.ItemButton>
-                        <MdFormatColorText size={18} color={Theme.colors.black} />
-                        <ColorContainer color="black" />
-                    </Toolbar.ItemButton>
+                    <ColorPicker
+                        presetColors={TEXT_HIGHLIGHT_COLORS}
+                        currentColor={highlightColor || ""}
+                        onChangeColor={onChangeHighlightColor}
+                    >
+                        <Toolbar.ItemButton>
+                            <IconFormatInkHighlighter size={18} color="black" />
+                            <ColorContainer color={highlightColor || "white"} />
+                        </Toolbar.ItemButton>
+                    </ColorPicker>
+
+                    <ColorPicker
+                        presetColors={PRESET_FONT_COLORS}
+                        currentColor={fontColor}
+                        onChangeColor={onChangeFontColor}
+                    >
+                        <Toolbar.ItemButton>
+                            <MdFormatColorText size={18} color={Theme.colors.black} />
+                            <ColorContainer color={fontColor} />
+                        </Toolbar.ItemButton>
+                    </ColorPicker>
                 </Toolbar.Group>
 
                 <Toolbar.Group className="TextFormat Item">

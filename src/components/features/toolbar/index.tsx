@@ -41,7 +41,7 @@ const ItemButton = ({
     ...props
 }: IReactChildren & ButtonHTMLAttributes<HTMLButtonElement> & IItemButtonProps): ReactElement => {
     return (
-        <StyledButton active={active} as="button" {...props}>
+        <StyledButton active={active} {...props}>
             {children}
         </StyledButton>
     );

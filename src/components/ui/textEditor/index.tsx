@@ -4,7 +4,13 @@ import { BulletList } from "@tiptap/extension-bullet-list";
 import { ListItem } from "@tiptap/extension-list-item";
 import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextAlign from "@tiptap/extension-text-align";
-import { FontSize, TextStyle, FontFamily } from "@tiptap/extension-text-style";
+import {
+    FontSize,
+    TextStyle,
+    FontFamily,
+    Color,
+    BackgroundColor,
+} from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import UniqueID from "@tiptap/extension-unique-id";
 import { Focus, UndoRedo } from "@tiptap/extensions";
@@ -118,8 +124,10 @@ const TextEditor = ({
         }),
         Underline,
         FontFamily,
-        TextStyle.configure(),
+        TextStyle,
         FontSize,
+        Color,
+        BackgroundColor,
     ];
 
     const currentEditor = useEditor({
