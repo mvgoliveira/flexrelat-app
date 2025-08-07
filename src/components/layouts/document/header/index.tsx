@@ -1,4 +1,5 @@
 import { Button } from "@/components/features/button";
+import { Menu } from "@/components/features/Menu";
 import { Typography } from "@/components/features/typography";
 import { Tooltip } from "@/components/ui/tooltip";
 import { updateDocumentTitle } from "@/repositories/documentAPI";
@@ -6,6 +7,7 @@ import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
 import _ from "lodash";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
+import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
 import {
     MdArrowBack,
     MdHistory,
@@ -255,19 +257,36 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                 </ButtonsContainer>
 
                 <ButtonsContainer>
-                    <Button height="30px" variant="primary" padding="0 10px">
-                        <MdOutlineFileDownload size={12} color={Theme.colors.white} />
+                    <Menu>
+                        <Menu.Trigger>
+                            <Button height="30px" variant="primary" padding="0 10px">
+                                <MdOutlineFileDownload size={12} color={Theme.colors.white} />
 
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="white"
-                            fontWeight="regular"
-                            textAlign="left"
-                        >
-                            Download
-                        </Typography>
-                    </Button>
+                                <Typography
+                                    tag="p"
+                                    fontSize={{ xs: "fs75" }}
+                                    color="white"
+                                    fontWeight="regular"
+                                    textAlign="left"
+                                >
+                                    Download
+                                </Typography>
+                            </Button>
+                        </Menu.Trigger>
+
+                        <Menu.Content>
+                            <Menu.Item
+                                text="Download em PDF"
+                                iconPosition="left"
+                                icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
+                            />
+                            <Menu.Item
+                                text="Download em DOCX"
+                                iconPosition="left"
+                                icon={<AiOutlineFileWord size={12} color={Theme.colors.black} />}
+                            />
+                        </Menu.Content>
+                    </Menu>
 
                     <Button height="30px" width="30px" variant="tertiary">
                         <MdMoreHoriz size={16} color={Theme.colors.gray100} />
