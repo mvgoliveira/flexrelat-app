@@ -5,6 +5,7 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { updateDocumentTitle } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
+import { Document, Page, StyleSheet, pdf } from "@react-pdf/renderer";
 import _ from "lodash";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
@@ -19,8 +20,257 @@ import {
     MdOutlineFileDownload,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
+import Html from "react-pdf-html";
 
 import { ButtonsContainer, RightContainer, Root, TitleContainer, TitleContent } from "./styles";
+
+const styles = StyleSheet.create({
+    body: {
+        paddingTop: "3cm",
+        paddingRight: "2cm",
+        paddingBottom: "2cm",
+        paddingLeft: "3cm",
+    },
+});
+
+const stylesheet = {
+    p: {
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+        fontWeight: "normal",
+        minHeight: 12,
+    },
+    h1: {
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+        counterIncrement: "h1",
+        counterReset: "h2",
+    },
+    h2: {
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+        counterIncrement: "h2",
+        counterReset: "h3",
+    },
+    h3: {
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+        counterIncrement: "h3",
+    },
+    h4: {
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+    },
+    h5: {
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+    },
+    h6: {
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+    },
+    "h1::before": {
+        content: `counter(h1) ". "`,
+    },
+    "h2::before": {
+        content: `counter(h1) "." counter(h2) ". "`,
+    },
+    "h3::before": {
+        content: `counter(h1) "." counter(h2) "." counter(h3) ". "`,
+    },
+    table: {
+        borderCollapse: "collapse",
+        overflow: "hidden",
+        tableLayout: "fixed",
+        width: "100%",
+        marginBottom: 14,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+    },
+    "table tr:last-of-type": {
+        marginBottom: 14,
+    },
+    "table td": {
+        borderRight: "1px solid #000",
+        borderBottom: "1px solid #000",
+        boxSizing: "border-box",
+        padding: 6,
+        position: "relative",
+        verticalAlign: "top",
+    },
+    "table th": {
+        borderRight: "1px solid #000",
+        borderBottom: "1px solid #000",
+        borderTop: "1px solid #000",
+        boxSizing: "border-box",
+        padding: 6,
+        position: "relative",
+        verticalAlign: "top",
+        fontWeight: "bold",
+    },
+    "table td:first-of-type": {
+        borderLeft: "1px solid #000",
+    },
+    "table th:first-of-type": {
+        borderLeft: "1px solid #000",
+    },
+    "table th p": {
+        textAlign: "start",
+    },
+    ul: {
+        marginTop: 0,
+        marginBottom: 14,
+        paddingLeft: 22,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+        gap: 12,
+    },
+    ol: {
+        marginTop: 0,
+        marginBottom: 14,
+        paddingLeft: 22,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+    },
+    li: {
+        paddingLeft: 10,
+        textAlign: "start",
+        fontFamily: "Times-Roman",
+        fontSize: 12,
+        lineHeight: 1.5,
+        wordBreak: "break-word",
+        hyphens: "auto",
+    },
+};
+
+const html = `
+    <html>
+        <body>
+            <h4 data-id="62e714dae9" style="text-align: center"><span style="font-size: 18pt">Resumo</span></h4>
+
+            <p/>
+            
+            <p style="text-align: justify">
+                A aumento necessidade de agilidade e precisão na execução de atividades complexas e repetitivas tem impulsionado o uso de tecnologias baseadas em Inteligência Artificial Generativa no cotidiano corporativo e institucional. Processos tradicionalmente onerosos, como a elaboração manual de relatórios detalhados, frequentemente enfrentam desafios significativos, incluindo a ocorrência de erros grosseiros, atrasos frequentes na entrega e a demanda por um elevado nível de conhecimento técnico especializado. Além disso, a variabilidade na qualidade dos documentos produzidos pode comprometer a tomada de decisões estratégicas e operacionais. Diante desse contexto, torna-se evidente a demanda por soluções tecnológicas que simplifiquem e agilizem esses processos. Propõe-se, portanto, a plataforma web FlexRelat, uma abordagem baseada em Inteligência Artificial Generativa (GenAI), que utiliza Modelos de Linguagem de Larga Escala (LLM) para gerar relatórios personalizados a partir de entradas em linguagem natural, exigindo o mínimo de conhecimento técnico por parte do usuário. Espera-se que a plataforma contribua significativamente para a redução de custos operacionais, aumento da produtividade e melhoria na qualidade dos relatórios produzidos, promovendo maior eficiência em setores como negócios, educação e saúde.
+            </p>
+
+            <p/>
+            <p/>
+
+            <p>
+                <strong>Palavras-chave:</strong> Inteligência Artificial Generativa; Relatórios inteligentes; Geração de relatórios; Plataforma Web; Aplicações com IA; Assistente virtual;    
+            </p>
+            
+            <p/>
+            <p/>
+            <p/>
+            <p/>
+            <p/>
+            <p/>
+            <p/>
+            <p/>
+            <p/>
+            
+            <p>
+                <strong>
+                    Tabelas e Listas funcionais
+                </strong>
+            </p>
+            <ul data-id="62e714dae1">
+                <li>Tabelas com linhas, células e cabeçalhos (opcional).</li>
+                <li>Suporte para <code>colgroup</code> e <code>rowspan</code>.</li>
+                <li>E até mesmo colunas redimensionáveis (opcional).</li>
+            </ul>
+            <p>
+                <span data-decoration-id="id_1428080181" class="expression-active">
+                    Aqui está um exemplo:
+                </span>
+            </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th colwidth="200">Nome</th>
+                        <th colspan="3" colwidth="150,100">Descrição</th>
+                    </tr>
+                    <tr>
+                        <td>Cyndi Lauper</td>
+                        <td>Cantora</td>
+                        <td>Compositora</td>
+                        <td>Atriz</td>
+                    </tr>
+                    <tr>
+                        <td>Marie Curie</td>
+                        <td>Cientista</td>
+                        <td>Química</td>
+                        <td>Física</td>
+                    </tr>
+                    <tr>
+                        <td>Indira Gandhi</td>
+                        <td>Primeira-ministra</td>
+                        <td colspan="2">Política</td>
+                    </tr>
+                </tbody>
+            </table>
+        </body>
+    </html>
+`;
+
+const MyDoc = (): ReactElement => (
+    <Document>
+        <Page size="A4" style={styles.body}>
+            <Html resetStyles stylesheet={stylesheet}>
+                {html}
+            </Html>
+        </Page>
+    </Document>
+);
 
 interface IHeaderProps {
     metadata: {
@@ -93,6 +343,16 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         if (titleRef.current && titleRef.current.textContent === "Relatório sem título") {
             titleRef.current.textContent = "";
         }
+    };
+
+    const handleDownloadPDF = async () => {
+        const blob = await pdf(<MyDoc />).toBlob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "documento.pdf";
+        link.click();
+        URL.revokeObjectURL(url);
     };
 
     useEffect(() => {
@@ -277,9 +537,11 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         <Menu.Content>
                             <Menu.Item
                                 text="Download em PDF"
+                                onClick={handleDownloadPDF}
                                 iconPosition="left"
                                 icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
                             />
+
                             <Menu.Item
                                 text="Download em DOCX"
                                 iconPosition="left"
