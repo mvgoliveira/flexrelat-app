@@ -172,7 +172,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     const getHtmlContent = (): string => {
         if (!editor) return "";
         // const html = editor.getHTML();
-        // return html.replace(/<p><br><\/p>/g, "<p></p>");
         return editor.getHTML();
     };
 
