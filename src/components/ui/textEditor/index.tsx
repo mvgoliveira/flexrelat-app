@@ -49,12 +49,10 @@ const TextEditor = ({
     pageHeight = 1123,
     zoom = 100,
 }: ITextEditorProps): ReactElement => {
-    const { setEditor } = useDocumentContext();
+    const { documentData, selectedChanges, changes, clearChange, loadingComponentId, setEditor } =
+        useDocumentContext();
 
     const { randomUUID } = new ShortUniqueId({ length: 10 });
-
-    const { documentData, selectedChanges, changes, clearChange, loadingComponentId } =
-        useDocumentContext();
 
     const alreadyLoaded = useRef(false);
 

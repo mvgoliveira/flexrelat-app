@@ -35,6 +35,7 @@ type DocumentContextType = {
     clearChange: (change: AiChange) => void;
     editor: Editor | null;
     setEditor: Dispatch<SetStateAction<Editor | null>>;
+    getHtmlContent: () => string;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -168,6 +169,13 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
         setLoadingComponentId(componentId);
     };
 
+    const getHtmlContent = (): string => {
+        if (!editor) return "";
+        // const html = editor.getHTML();
+        // return html.replace(/<p><br><\/p>/g, "<p></p>");
+        return editor.getHTML();
+    };
+
     useEffect(() => {
         if (messages) {
             const allChanges = messages.flatMap(message => message.changes);
@@ -195,6 +203,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 clearChange,
                 editor,
                 setEditor,
+                getHtmlContent,
             }}
         >
             {children}

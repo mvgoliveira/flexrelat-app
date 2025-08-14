@@ -69,7 +69,7 @@ export const Root = styled.div<IRootProps>`
     h5,
     h6,
     p {
-        margin-bottom: 12px;
+        margin-bottom: 9pt;
         text-align: start;
         font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
         font-size: 12pt;

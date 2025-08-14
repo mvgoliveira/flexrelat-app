@@ -2,6 +2,7 @@ import { Button } from "@/components/features/button";
 import { Menu } from "@/components/features/Menu";
 import { Typography } from "@/components/features/typography";
 import { Tooltip } from "@/components/ui/tooltip";
+import { useDocumentContext } from "@/context/documentContext";
 import { updateDocumentTitle } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
@@ -34,8 +35,8 @@ const styles = StyleSheet.create({
 });
 
 const stylesheet = {
-    p: {
-        marginBottom: 14,
+    "> p": {
+        marginBottom: 9,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
@@ -43,7 +44,7 @@ const stylesheet = {
         wordBreak: "break-word",
         hyphens: "auto",
         fontWeight: "normal",
-        minHeight: 12,
+        minHeight: 17.21,
     },
     h1: {
         marginBottom: 14,
@@ -117,12 +118,10 @@ const stylesheet = {
         borderCollapse: "collapse",
         overflow: "hidden",
         tableLayout: "fixed",
-        width: "100%",
         marginBottom: 14,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
-        lineHeight: 1.5,
         wordBreak: "break-word",
         hyphens: "auto",
     },
@@ -135,7 +134,7 @@ const stylesheet = {
         boxSizing: "border-box",
         padding: 6,
         position: "relative",
-        verticalAlign: "top",
+        verticalAlign: "center",
     },
     "table th": {
         borderRight: "1px solid #000",
@@ -144,7 +143,7 @@ const stylesheet = {
         boxSizing: "border-box",
         padding: 6,
         position: "relative",
-        verticalAlign: "top",
+        verticalAlign: "center",
         fontWeight: "bold",
     },
     "table td:first-of-type": {
@@ -152,9 +151,6 @@ const stylesheet = {
     },
     "table th:first-of-type": {
         borderLeft: "1px solid #000",
-    },
-    "table th p": {
-        textAlign: "start",
     },
     ul: {
         marginTop: 0,
@@ -190,79 +186,11 @@ const stylesheet = {
     },
 };
 
-const html = `
-    <html>
-        <body>
-            <h4 data-id="62e714dae9" style="text-align: center"><span style="font-size: 18pt">Resumo</span></h4>
+interface IMyDocProps {
+    html: string;
+}
 
-            <p/>
-            
-            <p style="text-align: justify">
-                A aumento necessidade de agilidade e precisão na execução de atividades complexas e repetitivas tem impulsionado o uso de tecnologias baseadas em Inteligência Artificial Generativa no cotidiano corporativo e institucional. Processos tradicionalmente onerosos, como a elaboração manual de relatórios detalhados, frequentemente enfrentam desafios significativos, incluindo a ocorrência de erros grosseiros, atrasos frequentes na entrega e a demanda por um elevado nível de conhecimento técnico especializado. Além disso, a variabilidade na qualidade dos documentos produzidos pode comprometer a tomada de decisões estratégicas e operacionais. Diante desse contexto, torna-se evidente a demanda por soluções tecnológicas que simplifiquem e agilizem esses processos. Propõe-se, portanto, a plataforma web FlexRelat, uma abordagem baseada em Inteligência Artificial Generativa (GenAI), que utiliza Modelos de Linguagem de Larga Escala (LLM) para gerar relatórios personalizados a partir de entradas em linguagem natural, exigindo o mínimo de conhecimento técnico por parte do usuário. Espera-se que a plataforma contribua significativamente para a redução de custos operacionais, aumento da produtividade e melhoria na qualidade dos relatórios produzidos, promovendo maior eficiência em setores como negócios, educação e saúde.
-            </p>
-
-            <p/>
-            <p/>
-
-            <p>
-                <strong>Palavras-chave:</strong> Inteligência Artificial Generativa; Relatórios inteligentes; Geração de relatórios; Plataforma Web; Aplicações com IA; Assistente virtual;    
-            </p>
-            
-            <p/>
-            <p/>
-            <p/>
-            <p/>
-            <p/>
-            <p/>
-            <p/>
-            <p/>
-            <p/>
-            
-            <p>
-                <strong>
-                    Tabelas e Listas funcionais
-                </strong>
-            </p>
-            <ul data-id="62e714dae1">
-                <li>Tabelas com linhas, células e cabeçalhos (opcional).</li>
-                <li>Suporte para <code>colgroup</code> e <code>rowspan</code>.</li>
-                <li>E até mesmo colunas redimensionáveis (opcional).</li>
-            </ul>
-            <p>
-                <span data-decoration-id="id_1428080181" class="expression-active">
-                    Aqui está um exemplo:
-                </span>
-            </p>
-            <table>
-                <tbody>
-                    <tr>
-                        <th colwidth="200">Nome</th>
-                        <th colspan="3" colwidth="150,100">Descrição</th>
-                    </tr>
-                    <tr>
-                        <td>Cyndi Lauper</td>
-                        <td>Cantora</td>
-                        <td>Compositora</td>
-                        <td>Atriz</td>
-                    </tr>
-                    <tr>
-                        <td>Marie Curie</td>
-                        <td>Cientista</td>
-                        <td>Química</td>
-                        <td>Física</td>
-                    </tr>
-                    <tr>
-                        <td>Indira Gandhi</td>
-                        <td>Primeira-ministra</td>
-                        <td colspan="2">Política</td>
-                    </tr>
-                </tbody>
-            </table>
-        </body>
-    </html>
-`;
-
-const MyDoc = (): ReactElement => (
+export const MyDoc = ({ html }: IMyDocProps): ReactElement => (
     <Document>
         <Page size="A4" style={styles.body}>
             <Html resetStyles stylesheet={stylesheet}>
@@ -285,6 +213,8 @@ interface IHeaderProps {
 export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     const titleRef = useRef<HTMLHeadingElement>(null);
     const [title, setTitle] = useState<string>(metadata.title);
+
+    const { getHtmlContent } = useDocumentContext();
 
     const saveTitle = useMemo(
         () =>
@@ -346,13 +276,59 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     };
 
     const handleDownloadPDF = async () => {
-        const blob = await pdf(<MyDoc />).toBlob();
+        const htmlContent = getHtmlContent();
+
+        // Remove all id
+        let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
+
+        // Remove inline style min-width
+        filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
+
+        const blob = await pdf(<MyDoc html={filteredHtml} />).toBlob();
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.download = "documento.pdf";
         link.click();
         URL.revokeObjectURL(url);
+    };
+
+    const handleDownloadDOCX = async () => {
+        const htmlContent = getHtmlContent();
+
+        // Remove all id
+        let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
+
+        // Remove p inside table but keep the content
+        const doc = new DOMParser().parseFromString(filteredHtml, "text/html");
+        const tables = doc.querySelectorAll("table");
+        tables.forEach(table => {
+            table.querySelectorAll("p").forEach(p => {
+                if (p.parentElement?.tagName === "TD" || p.parentElement?.tagName === "TH") {
+                    // Replace <p> with its children (move content up)
+                    while (p.firstChild) {
+                        p.parentElement.insertBefore(p.firstChild, p);
+                    }
+                    p.remove();
+                }
+            });
+        });
+
+        // Convert to string
+        filteredHtml = doc.documentElement.outerHTML;
+
+        // Remains just body content
+        filteredHtml = filteredHtml.replace(/<body[^>]*>([\s\S]*)<\/body>/, "$1");
+        filteredHtml = filteredHtml.replace(/<html[^>]*>([\s\S]*)<\/html>/, "$1");
+        filteredHtml = filteredHtml.replace(/<head[^>]*>([\s\S]*)<\/head>/, "$1");
+
+        // Remove colgroup
+        filteredHtml = filteredHtml.replace(/<colgroup[^>]*>[\s\S]*?<\/colgroup>/g, "");
+
+        // Remove inline style min-width
+        filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
+
+        console.log(filteredHtml);
     };
 
     useEffect(() => {
@@ -544,6 +520,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                             <Menu.Item
                                 text="Download em DOCX"
+                                onClick={handleDownloadDOCX}
                                 iconPosition="left"
                                 icon={<AiOutlineFileWord size={12} color={Theme.colors.black} />}
                             />
