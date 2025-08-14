@@ -328,7 +328,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         // Remove inline style min-width
         filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
 
-        console.log(filteredHtml);
     };
 
     useEffect(() => {
