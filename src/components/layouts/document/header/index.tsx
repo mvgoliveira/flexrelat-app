@@ -288,7 +288,9 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "documento.pdf";
+        // Use the current title or fallback
+        const currentTitle = titleRef.current?.textContent || title || "documento";
+        link.download = getSafeFilename(currentTitle);
         link.click();
         URL.revokeObjectURL(url);
     };
