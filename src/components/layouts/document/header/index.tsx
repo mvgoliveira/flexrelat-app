@@ -288,9 +288,8 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        // Use the current title or fallback
-        const currentTitle = titleRef.current?.textContent || title || "documento";
-        link.download = getSafeFilename(currentTitle);
+        const currentTitle = title || "Relatório sem título";
+        link.download = currentTitle;
         link.click();
         URL.revokeObjectURL(url);
     };
@@ -329,7 +328,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
         // Remove inline style min-width
         filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
-
     };
 
     useEffect(() => {
