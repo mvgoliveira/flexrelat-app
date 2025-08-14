@@ -9,6 +9,9 @@ export const Container = styled.div`
     padding: 8px;
     gap: 8px;
     width: 200px;
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
 `;
 
 export const PresetContainer = styled.div`

@@ -46,7 +46,7 @@ interface IContentProps extends IReactChildren {
 }
 
 const Content = ({ children, width = 250 }: IReactChildren & IContentProps): ReactElement => (
-    <StyledContent width={width} position="popper" align="end" sideOffset={5}>
+    <StyledContent width={width} position="popper" align="start" sideOffset={5}>
         <StyledViewport>{children}</StyledViewport>
     </StyledContent>
 );

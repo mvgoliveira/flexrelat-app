@@ -2,12 +2,13 @@ import { IReactChildren } from "@/types/core";
 import {
     Root as RadixRoot,
     Trigger as RadixTrigger,
-    Content as RadixContent,
     Arrow as RadixArrow,
     Close as RadixClose,
     Portal as RadixPortal,
 } from "@radix-ui/react-popover";
 import { ReactElement } from "react";
+
+import { StyledContent } from "./styles";
 
 interface IPopoverProps extends IReactChildren {
     open?: boolean;
@@ -28,22 +29,26 @@ const Trigger = ({ children }: IReactChildren): ReactElement => {
 Popover.Trigger = Trigger;
 
 interface IContentProps extends IReactChildren {
+    sideOffset?: number;
     hasCloseButton?: boolean;
     hasArrow?: boolean;
+    align?: "start" | "center" | "end";
 }
 
 const Content = ({
+    sideOffset = 5,
     children,
     hasCloseButton = true,
     hasArrow = true,
+    align = "start",
 }: IContentProps): ReactElement => {
     return (
         <RadixPortal>
-            <RadixContent sideOffset={5} align="start" side="bottom">
+            <StyledContent sideOffset={sideOffset} align={align} side="bottom">
                 {hasCloseButton && <RadixClose />}
                 {hasArrow && <RadixArrow />}
                 {children}
-            </RadixContent>
+            </StyledContent>
         </RadixPortal>
     );
 };
