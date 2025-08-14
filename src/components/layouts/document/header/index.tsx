@@ -288,7 +288,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        // Use the current title or fallback
         const currentTitle = title || "Relatório sem título";
         link.download = currentTitle;
         link.click();
