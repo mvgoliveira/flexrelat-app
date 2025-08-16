@@ -1,5 +1,5 @@
 import { Typography } from "@/components/features/typography";
-import { Message } from "@/repositories/changesApi";
+import { Message } from "@/repositories/messageApi";
 import { Theme } from "@/themes";
 import { getElapsedTime } from "@/utils/date";
 import { ReactElement } from "react";
