@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ReactElement } from "react";
 
 import "@/styles/globals.css";
+import "react-loading-skeleton/dist/skeleton.css";
 import WrapProviders from "./wrap-providers";
 
 export const inter = Inter({

@@ -1,10 +1,6 @@
-import {
-    AiChange,
-    getMessagesByChatId,
-    Message,
-    updateAiChangeStatus,
-} from "@/repositories/changesApi";
+import { AiChange, updateAiChangeStatus } from "@/repositories/changesApi";
 import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
+import { getMessagesByChatId, Message } from "@/repositories/messageApi";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/core";
 import { useParams } from "next/navigation";
@@ -36,6 +32,7 @@ type DocumentContextType = {
     editor: Editor | null;
     setEditor: Dispatch<SetStateAction<Editor | null>>;
     getHtmlContent: () => string;
+    refetchMessages: () => void;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -48,7 +45,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     const [messages, setMessages] = useState<Message[]>([]);
     const [loadingComponentId, setLoadingComponentId] = useState<string>("");
 
-    const { status: messagesStatus } = useQuery({
+    const { status: messagesStatus, refetch: refetchMessages } = useQuery({
         queryKey: ["get_ai_messages", documentId],
         queryFn: async (): Promise<Message[]> => {
             const response: Message[] = await getMessagesByChatId(documentId as string, "document");
@@ -203,6 +200,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 editor,
                 setEditor,
                 getHtmlContent,
+                refetchMessages,
             }}
         >
             {children}
