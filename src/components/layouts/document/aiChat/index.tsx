@@ -254,6 +254,27 @@ export const AiChat = (): ReactElement => {
                                                         color={Theme.colors.gray60}
                                                     />
                                                 </AiLoadingIconContainer>
+
+                                                <AiLoadingIconContainer>
+                                                    <RiBrainLine
+                                                        size={12}
+                                                        color={Theme.colors.gray60}
+                                                    />
+                                                </AiLoadingIconContainer>
+
+                                                <AiLoadingIconContainer>
+                                                    <RiChatAiLine
+                                                        size={12}
+                                                        color={Theme.colors.gray60}
+                                                    />
+                                                </AiLoadingIconContainer>
+
+                                                <AiLoadingIconContainer>
+                                                    <RiBarChartBoxAiLine
+                                                        size={12}
+                                                        color={Theme.colors.gray60}
+                                                    />
+                                                </AiLoadingIconContainer>
                                             </IconChangeAnimation>
                                         </IconChangeContainer>
 
@@ -281,6 +302,12 @@ export const AiChat = (): ReactElement => {
                                 value={chatMessage}
                                 onChange={e => setChatMessage(e.target.value)}
                                 maxLength={500}
+                                onKeyDown={e => {
+                                    if (e.key === "Enter" && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSendMessage();
+                                    }
+                                }}
                             />
 
                             <IconContainer>

@@ -114,7 +114,7 @@ export const IconContainer = styled.div`
     justify-content: center;
     width: fit-content;
     height: 100%;
-    padding: 10px;
+    padding: 10px 10px 8px 10px;
     right: 0;
 `;
 
@@ -170,35 +170,15 @@ export const TypingAnimation = styled.div`
 const iconChange = keyframes`
     0% {
         transform: translateY(0);
-        opacity: 1;
     }
-    12.5% {
-        opacity: 0.5;
-    }
-    25% {
+    33.33% {
         transform: translateY(-16px);
-        opacity: 1;
     }
-    37.5% {
-        opacity: 0.5;
-    }
-    50% {
+    66.66% {
         transform: translateY(-32px);
-        opacity: 1;
-    }
-    62.5% {
-        opacity: 0.5;
-    }
-    75% {
-        transform: translateY(-16px);
-        opacity: 1;
-    }
-    87.5% {
-        opacity: 0.5;
     }
     100% {
-        transform: translateY(0);
-        opacity: 1;
+        transform: translateY(-48px);
     }
 `;
 
@@ -212,7 +192,15 @@ export const IconChangeAnimation = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
-    animation: ${iconChange} 5s infinite cubic-bezier(0.165, 0.84, 0.44, 1);
+    animation: ${iconChange} 3s infinite cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    /* Duplicar os ícones para criar o efeito infinito */
+    &::after {
+        content: "";
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
 `;
 
 export const AiLoadingIconContainer = styled.div`
