@@ -26,7 +26,7 @@ export const StyledGroup = styled.div<IStyledGroupProps>`
     }
 `;
 
-export const StyledItem = styled.button`
+export const StyledItem = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;

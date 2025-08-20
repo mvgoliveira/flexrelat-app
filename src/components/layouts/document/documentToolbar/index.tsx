@@ -16,7 +16,6 @@ import {
     MdFormatClear,
     MdFormatColorText,
     MdFormatItalic,
-    MdFormatLineSpacing,
     MdFormatListBulleted,
     MdFormatListNumbered,
     MdFormatStrikethrough,
@@ -224,12 +223,8 @@ export const DocumentToolbar = ({
                     </Toolbar.Group>
                 )}
 
-                {windowWidth > 1400 && (
+                {windowWidth > 1310 && (
                     <Toolbar.Group className="ListFormat Item">
-                        <Toolbar.ItemButton>
-                            <MdFormatLineSpacing size={18} color="black" />
-                        </Toolbar.ItemButton>
-
                         <Toolbar.ItemButton>
                             <MdFormatListBulleted size={18} color={Theme.colors.black} />
                         </Toolbar.ItemButton>
@@ -244,113 +239,120 @@ export const DocumentToolbar = ({
                     </Toolbar.Group>
                 )}
 
-                <Toolbar.Group className="MoreOptions Item">
-                    <ToolbarMenu open={moreOptionsIsActive}>
-                        <ToolbarMenu.Trigger>
-                            <Toolbar.ItemButton
-                                active={moreOptionsIsActive}
-                                onClick={() => setMoreOptionsIsActive(!moreOptionsIsActive)}
-                            >
-                                <MdMoreHoriz size={18} color="black" />
-                            </Toolbar.ItemButton>
-                        </ToolbarMenu.Trigger>
+                {windowWidth <= 1310 && (
+                    <Toolbar.Group className="MoreOptions Item">
+                        <ToolbarMenu open={moreOptionsIsActive}>
+                            <ToolbarMenu.Trigger>
+                                <Toolbar.ItemButton
+                                    active={moreOptionsIsActive}
+                                    onClick={() => setMoreOptionsIsActive(!moreOptionsIsActive)}
+                                >
+                                    <MdMoreHoriz size={18} color="black" />
+                                </Toolbar.ItemButton>
+                            </ToolbarMenu.Trigger>
 
-                        <ToolbarMenu.Content>
-                            {windowWidth < 1400 && (
-                                <Toolbar.Group className="ListFormat Item">
-                                    <Toolbar.ItemButton>
-                                        <MdFormatLineSpacing size={18} color="black" />
-                                    </Toolbar.ItemButton>
+                            <ToolbarMenu.Content>
+                                {windowWidth < 1080 && (
+                                    <Toolbar.Group className="TextFormat Item">
+                                        <Toolbar.ItemButton
+                                            active={isBoldActive}
+                                            onClick={onBoldClick}
+                                        >
+                                            <MdFormatBold size={18} color="black" />
+                                        </Toolbar.ItemButton>
 
-                                    <Toolbar.ItemButton>
-                                        <MdFormatListBulleted
-                                            size={18}
-                                            color={Theme.colors.black}
-                                        />
-                                    </Toolbar.ItemButton>
+                                        <Toolbar.ItemButton
+                                            active={isItalicActive}
+                                            onClick={onItalicClick}
+                                        >
+                                            <MdFormatItalic size={18} color={Theme.colors.black} />
+                                        </Toolbar.ItemButton>
 
-                                    <Toolbar.ItemButton>
-                                        <MdFormatListNumbered
-                                            size={18}
-                                            color={Theme.colors.black}
-                                        />
-                                    </Toolbar.ItemButton>
+                                        <Toolbar.ItemButton
+                                            active={isUnderlineActive}
+                                            onClick={onUnderlineClick}
+                                        >
+                                            <MdFormatUnderlined
+                                                size={18}
+                                                color={Theme.colors.black}
+                                            />
+                                        </Toolbar.ItemButton>
 
-                                    <Toolbar.ItemButton>
-                                        <MdFormatClear size={18} color={Theme.colors.black} />
-                                    </Toolbar.ItemButton>
-                                </Toolbar.Group>
-                            )}
+                                        <Toolbar.ItemButton
+                                            active={isStrikethroughActive}
+                                            onClick={onStrikethroughClick}
+                                        >
+                                            <MdFormatStrikethrough
+                                                size={18}
+                                                color={Theme.colors.black}
+                                            />
+                                        </Toolbar.ItemButton>
+                                    </Toolbar.Group>
+                                )}
 
-                            {windowWidth < 1240 && (
-                                <Toolbar.Group className="TextAlignment Item">
-                                    <Toolbar.ItemButton
-                                        active={isLeftAlignActive}
-                                        onClick={onLeftAlignClick}
-                                    >
-                                        <MdFormatAlignLeft size={18} color="black" />
-                                    </Toolbar.ItemButton>
-                                    <Toolbar.ItemButton
-                                        active={isCenterAlignActive}
-                                        onClick={onCenterAlignClick}
-                                    >
-                                        <MdOutlineFormatAlignCenter
-                                            size={18}
-                                            color={Theme.colors.black}
-                                        />
-                                    </Toolbar.ItemButton>
-                                    <Toolbar.ItemButton
-                                        active={isRightAlignActive}
-                                        onClick={onRightAlignClick}
-                                    >
-                                        <MdFormatAlignRight size={18} color={Theme.colors.black} />
-                                    </Toolbar.ItemButton>
-                                    <Toolbar.ItemButton
-                                        active={isJustifyAlignActive}
-                                        onClick={onJustifyAlignClick}
-                                    >
-                                        <MdFormatAlignJustify
-                                            size={18}
-                                            color={Theme.colors.black}
-                                        />
-                                    </Toolbar.ItemButton>
-                                </Toolbar.Group>
-                            )}
+                                {windowWidth < 1240 && (
+                                    <Toolbar.Group className="TextAlignment Item">
+                                        <Toolbar.ItemButton
+                                            active={isLeftAlignActive}
+                                            onClick={onLeftAlignClick}
+                                        >
+                                            <MdFormatAlignLeft size={18} color="black" />
+                                        </Toolbar.ItemButton>
+                                        <Toolbar.ItemButton
+                                            active={isCenterAlignActive}
+                                            onClick={onCenterAlignClick}
+                                        >
+                                            <MdOutlineFormatAlignCenter
+                                                size={18}
+                                                color={Theme.colors.black}
+                                            />
+                                        </Toolbar.ItemButton>
+                                        <Toolbar.ItemButton
+                                            active={isRightAlignActive}
+                                            onClick={onRightAlignClick}
+                                        >
+                                            <MdFormatAlignRight
+                                                size={18}
+                                                color={Theme.colors.black}
+                                            />
+                                        </Toolbar.ItemButton>
+                                        <Toolbar.ItemButton
+                                            active={isJustifyAlignActive}
+                                            onClick={onJustifyAlignClick}
+                                        >
+                                            <MdFormatAlignJustify
+                                                size={18}
+                                                color={Theme.colors.black}
+                                            />
+                                        </Toolbar.ItemButton>
+                                    </Toolbar.Group>
+                                )}
 
-                            {windowWidth < 1080 && (
-                                <Toolbar.Group className="TextFormat Item">
-                                    <Toolbar.ItemButton active={isBoldActive} onClick={onBoldClick}>
-                                        <MdFormatBold size={18} color="black" />
-                                    </Toolbar.ItemButton>
+                                {windowWidth < 1310 && (
+                                    <Toolbar.Group className="ListFormat Item">
+                                        <Toolbar.ItemButton>
+                                            <MdFormatListBulleted
+                                                size={18}
+                                                color={Theme.colors.black}
+                                            />
+                                        </Toolbar.ItemButton>
 
-                                    <Toolbar.ItemButton
-                                        active={isItalicActive}
-                                        onClick={onItalicClick}
-                                    >
-                                        <MdFormatItalic size={18} color={Theme.colors.black} />
-                                    </Toolbar.ItemButton>
+                                        <Toolbar.ItemButton>
+                                            <MdFormatListNumbered
+                                                size={18}
+                                                color={Theme.colors.black}
+                                            />
+                                        </Toolbar.ItemButton>
 
-                                    <Toolbar.ItemButton
-                                        active={isUnderlineActive}
-                                        onClick={onUnderlineClick}
-                                    >
-                                        <MdFormatUnderlined size={18} color={Theme.colors.black} />
-                                    </Toolbar.ItemButton>
-
-                                    <Toolbar.ItemButton
-                                        active={isStrikethroughActive}
-                                        onClick={onStrikethroughClick}
-                                    >
-                                        <MdFormatStrikethrough
-                                            size={18}
-                                            color={Theme.colors.black}
-                                        />
-                                    </Toolbar.ItemButton>
-                                </Toolbar.Group>
-                            )}
-                        </ToolbarMenu.Content>
-                    </ToolbarMenu>
-                </Toolbar.Group>
+                                        <Toolbar.ItemButton>
+                                            <MdFormatClear size={18} color={Theme.colors.black} />
+                                        </Toolbar.ItemButton>
+                                    </Toolbar.Group>
+                                )}
+                            </ToolbarMenu.Content>
+                        </ToolbarMenu>
+                    </Toolbar.Group>
+                )}
             </Toolbar>
         </Root>
     );
