@@ -4,35 +4,11 @@ export const Root = styled.div<{ zoom: number }>`
     display: flex;
     width: 100%;
     height: 100%;
-    max-width: ${({ zoom }) => `${810 * (zoom / 100)}px`};
+    /* max-width: ${({ zoom }) => `${810 * (zoom / 100)}px`}; */
 
     > section {
-        grid-template-columns: minmax(100px, 1fr) auto 86px 156px 156px 156px 50px;
+        grid-template-columns: minmax(100px, 1fr) auto auto auto auto auto auto;
         grid-template-rows: 1fr;
-
-        @media (max-width: 1304px) {
-            grid-template-columns: minmax(100px, 1fr) auto 86px 156px 156px 50px;
-
-            .ListFormat {
-                display: none;
-            }
-        }
-
-        @media (max-width: 1147px) {
-            grid-template-columns: minmax(100px, 1fr) auto 86px 156px 50px;
-
-            .TextAlignment {
-                display: none;
-            }
-        }
-
-        @media (max-width: 994px) {
-            grid-template-columns: minmax(100px, 1fr) auto 86px 50px;
-
-            .TextFormat {
-                display: none;
-            }
-        }
     }
 `;
 
