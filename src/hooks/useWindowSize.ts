@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 
-interface IWindowsSize {
+interface IWindowSize {
     width: number;
     height: number;
 }
 
-const useWindowSize = (): IWindowsSize => {
-    const [windowsSize, setWindowsSize] = useState<IWindowsSize>({ width: 0, height: 0 });
+const useWindowSize = (): IWindowSize => {
+    const [windowSize, setWindowSize] = useState<IWindowSize>({ width: 0, height: 0 });
 
     useEffect(() => {
         const handleResize = (): void => {
-            setWindowsSize({
+            setWindowSize({
                 width: window.innerWidth,
                 height: window.innerHeight,
             });
@@ -22,7 +22,7 @@ const useWindowSize = (): IWindowsSize => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    return windowsSize;
+    return windowSize;
 };
 
 export { useWindowSize };

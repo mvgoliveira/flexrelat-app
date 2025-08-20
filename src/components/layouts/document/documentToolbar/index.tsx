@@ -84,7 +84,7 @@ export const DocumentToolbar = ({
     highlightColor,
     onChangeHighlightColor,
 }: IDocumentToolbarProps): ReactElement => {
-    const { width: windowsWidth } = useWindowSize();
+    const { width: windowWidth } = useWindowSize();
 
     const [moreOptionsIsActive, setMoreOptionsIsActive] = useState<boolean>(false);
 
@@ -178,7 +178,7 @@ export const DocumentToolbar = ({
                     </ColorPicker>
                 </Toolbar.Group>
 
-                {windowsWidth > 1080 && (
+                {windowWidth > 1080 && (
                     <Toolbar.Group className="TextFormat Item">
                         <Toolbar.ItemButton active={isBoldActive} onClick={onBoldClick}>
                             <MdFormatBold size={18} color="black" />
@@ -201,7 +201,7 @@ export const DocumentToolbar = ({
                     </Toolbar.Group>
                 )}
 
-                {windowsWidth > 1240 && (
+                {windowWidth > 1240 && (
                     <Toolbar.Group className="TextAlignment Item">
                         <Toolbar.ItemButton active={isLeftAlignActive} onClick={onLeftAlignClick}>
                             <MdFormatAlignLeft size={18} color="black" />
@@ -224,7 +224,7 @@ export const DocumentToolbar = ({
                     </Toolbar.Group>
                 )}
 
-                {windowsWidth > 1400 && (
+                {windowWidth > 1400 && (
                     <Toolbar.Group className="ListFormat Item">
                         <Toolbar.ItemButton>
                             <MdFormatLineSpacing size={18} color="black" />
@@ -256,7 +256,7 @@ export const DocumentToolbar = ({
                         </ToolbarMenu.Trigger>
 
                         <ToolbarMenu.Content>
-                            {windowsWidth < 1400 && (
+                            {windowWidth < 1400 && (
                                 <Toolbar.Group className="ListFormat Item">
                                     <Toolbar.ItemButton>
                                         <MdFormatLineSpacing size={18} color="black" />
@@ -282,7 +282,7 @@ export const DocumentToolbar = ({
                                 </Toolbar.Group>
                             )}
 
-                            {windowsWidth < 1240 && (
+                            {windowWidth < 1240 && (
                                 <Toolbar.Group className="TextAlignment Item">
                                     <Toolbar.ItemButton
                                         active={isLeftAlignActive}
@@ -317,7 +317,7 @@ export const DocumentToolbar = ({
                                 </Toolbar.Group>
                             )}
 
-                            {windowsWidth < 1080 && (
+                            {windowWidth < 1080 && (
                                 <Toolbar.Group className="TextFormat Item">
                                     <Toolbar.ItemButton active={isBoldActive} onClick={onBoldClick}>
                                         <MdFormatBold size={18} color="black" />
