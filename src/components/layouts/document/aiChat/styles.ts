@@ -39,8 +39,12 @@ export const StyledTextArea = styled(Input.TextArea)`
     }
 `;
 
-export const StyledSplitter = styled(Splitter)`
-    height: calc(100vh - 59px - 40px - 78px);
+interface ISplitterProps {
+    changesHeaderHeight: number;
+}
+
+export const StyledSplitter = styled(Splitter)<ISplitterProps>`
+    height: calc(100vh - 59px - 40px - ${({ changesHeaderHeight }) => changesHeaderHeight}px);
 `;
 
 export const StyledSplitterPanel = styled(Splitter.Panel)`

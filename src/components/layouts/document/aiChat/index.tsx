@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scrollArea";
 import { useDocumentContext } from "@/context/documentContext";
 import { sendMessage } from "@/repositories/messageApi";
 import { Theme } from "@/themes";
+import { useElementSize } from "@mantine/hooks";
 import { ReactElement, useRef, useState } from "react";
 import { MdCheck, MdClose, MdSend } from "react-icons/md";
 import { RiBarChartBoxAiLine, RiBrainLine, RiChatAiLine } from "react-icons/ri";
@@ -42,6 +43,8 @@ export const AiChat = (): ReactElement => {
         documentData,
         refetchMessages,
     } = useDocumentContext();
+
+    const { ref: changesHeaderRef, height: changesHeaderHeight } = useElementSize();
 
     const [chatMessage, setChatMessage] = useState("");
     const [aiIsLoading, setAiIsLoading] = useState(true);
@@ -130,7 +133,7 @@ export const AiChat = (): ReactElement => {
 
     return (
         <Root>
-            <ChangesHeader>
+            <ChangesHeader ref={changesHeaderRef}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <ChangesNumberContainer>
                         <Typography
@@ -196,7 +199,7 @@ export const AiChat = (): ReactElement => {
                 )}
             </ChangesHeader>
 
-            <StyledSplitter layout="vertical">
+            <StyledSplitter layout="vertical" changesHeaderHeight={changesHeaderHeight}>
                 <StyledSplitterPanel>
                     <ScrollArea ref={scrollAreaRef}>
                         <MessagesContent>

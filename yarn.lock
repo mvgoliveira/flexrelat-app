@@ -603,10 +603,10 @@
     react-textarea-autosize "8.5.9"
     type-fest "^4.27.0"
 
-"@mantine/hooks@^8.2.3":
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-8.2.3.tgz#d6fff808916c20ce0802ef05b71472bf54f8f539"
-  integrity sha512-RBXAYqmxLk2DBIqN2DnWa9ShFEL1zpbQb0kgc8JIERmJyNwTjHKjHBDgX0jD7oeZjYfGh/g8du2MQEgF9BpsfQ==
+"@mantine/hooks@^8.2.5":
+  version "8.2.5"
+  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-8.2.5.tgz#a566e8a3327a4889a196e59725d2a0b2dacd43fb"
+  integrity sha512-uIB7CN+isRZs81JrpcdOd/EmtReC3aMmOXCfuy55jlCLcWN374O5p2Ht+lC1FDk9+r5pFhw9iMzqMv5P0rbZAw==
 
 "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.12"
