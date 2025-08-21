@@ -1,9 +1,12 @@
 import {
+    IconElementBarGraph,
     IconElementCitation,
     IconElementCode,
     IconElementGeometric,
     IconElementImage,
+    IconElementLineGraph,
     IconElementMath,
+    IconElementPieChart,
     IconElementSeparator,
     IconElementTable,
     IconElementText,
@@ -116,24 +119,28 @@ const elementsGroups: IElementsGroupProps[] = [
             { value: "image", name: "Imagem", icon: <IconElementImage size={25} /> },
             { value: "sheet", name: "Tabela", icon: <IconElementTable size={35} /> },
             { value: "code", name: "Código", icon: <IconElementCode size={35} /> },
-            { value: "math", name: "matemática", icon: <IconElementMath size={35} /> },
+            { value: "math", name: "Matemática", icon: <IconElementMath size={35} /> },
         ],
     },
     {
         name: "Gráficos",
-        elements: [],
+        elements: [
+            { value: "lineGraph", name: "Linha", icon: <IconElementLineGraph size={35} /> },
+            { value: "barGraph", name: "Barras", icon: <IconElementBarGraph size={35} /> },
+            { value: "sectorGraph", name: "Setores", icon: <IconElementPieChart size={35} /> },
+        ],
     },
 ];
 
 export const DocComponents = (): ReactElement => {
     return (
         <Root>
-            <div style={{ height: 30 }}>
+            <div style={{ height: 30, paddingRight: 15 }}>
                 <SearchInput />
             </div>
 
             <ScrollArea>
-                <Content>
+                <Content style={{ paddingRight: 15 }}>
                     {elementsGroups.map((group, index) => (
                         <ElementsGroup key={index} name={group.name} elements={group.elements} />
                     ))}

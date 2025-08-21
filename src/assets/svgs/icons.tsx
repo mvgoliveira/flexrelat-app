@@ -253,3 +253,104 @@ export const IconElementMath = ({ size = 44 }: ISVGsDynamicSize): ReactElement =
         </svg>
     );
 };
+
+export const IconElementLineGraph = ({ size = 50 }: ISVGsDynamicSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 77 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_435_51)">
+                <mask id="path-1-inside-1_435_51" fill="white">
+                    <path d="M0 50L-2.18557e-06 0L76.6667 -3.35121e-06L76.6667 50L0 50Z" />
+                </mask>
+                <path
+                    d="M12 22.6829L0 41.4634V50H78V35.8818V28.2317L62 15L49.5 22.6829L42 38.0488L31.5 33.7805L23 38.0488L12 22.6829Z"
+                    fill="white"
+                    stroke="#D7D7D7"
+                />
+            </g>
+            <path
+                d="M0 50L-1 50L-1 51L4.37114e-08 51L0 50ZM0 50L1 50L0.999998 -4.37114e-08L-2.18557e-06 0L-1 4.37114e-08L-1 50L0 50ZM76.6667 50L76.6667 49L-4.37114e-08 49L0 50L4.37114e-08 51L76.6667 51L76.6667 50Z"
+                fill="#D7D7D7"
+                mask="url(#path-1-inside-1_435_51)"
+            />
+            <defs>
+                <clipPath id="clip0_435_51">
+                    <path
+                        d="M0 50L-2.18557e-06 0L76.6667 -3.35121e-06L76.6667 50L0 50Z"
+                        fill="white"
+                    />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+export const IconElementBarGraph = ({ size = 50 }: ISVGsDynamicSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 78 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_435_78)">
+                <mask id="path-1-inside-1_435_78" fill="white">
+                    <path d="M0.666687 50L0.666685 0L77.3334 -3.35121e-06L77.3334 50L0.666687 50Z" />
+                </mask>
+                <rect x="11.1667" y="17.5" width="7" height="32" fill="white" stroke="#D7D7D7" />
+                <rect x="23.6667" y="38.5" width="7" height="11" fill="#EAEAEA" stroke="#D7D7D7" />
+                <rect x="36.1667" y="27.5" width="7" height="22" fill="white" stroke="#D7D7D7" />
+                <rect x="48.6667" y="9.5" width="7" height="40" fill="#EAEAEA" stroke="#D7D7D7" />
+                <rect x="61.1667" y="21.5" width="7" height="28" fill="white" stroke="#D7D7D7" />
+            </g>
+            <path
+                d="M0.666687 50L-0.333313 50L-0.333313 51L0.666687 51L0.666687 50ZM0.666687 50L1.66669 50L1.66668 -4.37114e-08L0.666685 0L-0.333315 4.37114e-08L-0.333313 50L0.666687 50ZM77.3334 50L77.3334 49L0.666687 49L0.666687 50L0.666687 51L77.3334 51L77.3334 50Z"
+                fill="#D7D7D7"
+                mask="url(#path-1-inside-1_435_78)"
+            />
+            <defs>
+                <clipPath id="clip0_435_78">
+                    <path
+                        d="M0.666687 50L0.666685 0L77.3334 -3.35121e-06L77.3334 50L0.666687 50Z"
+                        fill="white"
+                    />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+export const IconElementPieChart = ({ size = 50 }: ISVGsDynamicSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 77 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_437_26)">
+                <mask id="path-1-inside-1_437_26" fill="white">
+                    <path d="M0.333344 50L0.333341 0L77 -3.35121e-06L77 50L0.333344 50Z" />
+                </mask>
+                <path
+                    d="M38 9C34.6377 9 31.3509 9.96771 28.5553 11.7808C25.7597 13.5938 23.5807 16.1707 22.294 19.1857C21.0074 22.2007 20.6707 25.5183 21.3267 28.719C21.9826 31.9197 23.6017 34.8597 25.9792 37.1673L38 25.5L38 9Z"
+                    fill="#D7D7D7"
+                />
+                <path
+                    d="M25.9792 37.1673C28.0318 39.1595 30.5757 40.6084 33.3687 41.3759C36.1617 42.1435 39.1107 42.2041 41.9347 41.552C44.7586 40.8999 47.3635 39.5568 49.5012 37.6507C51.6388 35.7446 53.238 33.339 54.1463 30.6631L38 25.5L25.9792 37.1673Z"
+                    fill="white"
+                />
+                <path
+                    d="M53.9393 31.237C54.9043 28.7113 55.2175 25.9947 54.8516 23.3244C54.4856 20.6541 53.4516 18.1114 51.8399 15.9184C50.2282 13.7253 48.0878 11.9486 45.6057 10.7434C43.1235 9.53824 40.3751 8.94124 37.6004 9.00456L38 25.5L53.9393 31.237Z"
+                    fill="#EAEAEA"
+                />
+                <path
+                    d="M38 9.5C47.1269 9.5 54.5 16.6774 54.5 25.5C54.5 34.3226 47.1269 41.5 38 41.5C28.8731 41.5 21.5 34.3226 21.5 25.5C21.5 16.6774 28.8731 9.5 38 9.5Z"
+                    stroke="#D7D7D7"
+                />
+            </g>
+            <path
+                d="M0.333344 50L-0.666656 50L-0.666656 51L0.333344 51L0.333344 50ZM0.333344 50L1.33334 50L1.33334 -4.37114e-08L0.333341 0L-0.666659 4.37114e-08L-0.666656 50L0.333344 50ZM77 50L77 49L0.333343 49L0.333344 50L0.333344 51L77 51L77 50Z"
+                fill="#D7D7D7"
+                mask="url(#path-1-inside-1_437_26)"
+            />
+            <defs>
+                <clipPath id="clip0_437_26">
+                    <path
+                        d="M0.333344 50L0.333341 0L77 -3.35121e-06L77 50L0.333344 50Z"
+                        fill="white"
+                    />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};

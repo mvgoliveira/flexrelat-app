@@ -7,7 +7,7 @@ import { Layout } from "@/components/layouts/document/layout";
 import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeader";
 import { useDocumentContext } from "@/context/documentContext";
 import { ReactElement, useState } from "react";
-import { MdOutlineAutoAwesomeMosaic, MdOutlineFormatListNumbered } from "react-icons/md";
+import { MdOutlineAutoAwesomeMosaic } from "react-icons/md";
 import { RiRobot2Line } from "react-icons/ri";
 
 export type LeftTabsValue = "elements" | "components" | "models";
@@ -18,11 +18,6 @@ const leftTabs: TabHeaderType<LeftTabsValue>[] = [
         value: "components",
         icon: <MdOutlineAutoAwesomeMosaic size={12} />,
         text: "Componentes",
-    },
-    {
-        value: "elements",
-        icon: <MdOutlineFormatListNumbered size={14} />,
-        text: "Elementos",
     },
 ];
 
