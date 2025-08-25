@@ -23,10 +23,10 @@ import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
 import { LoadingFloating } from "./components/LoadingFloating";
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
-import { ChartComponent } from "./plugins/ChartComponent";
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { PreventEditExtension } from "./plugins/PreventEdit";
+import { VictoryChartExtension } from "./plugins/VictoryChart";
 import { Root } from "./styles";
 
 interface ITextEditorProps {
@@ -127,7 +127,7 @@ const TextEditor = ({
         FontSize,
         Color,
         BackgroundColor,
-        ChartComponent,
+        VictoryChartExtension,
     ];
 
     const currentEditor = useEditor({
