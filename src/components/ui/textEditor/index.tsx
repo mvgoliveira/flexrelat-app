@@ -23,6 +23,7 @@ import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
 import { LoadingFloating } from "./components/LoadingFloating";
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
+import { ChartComponent } from "./plugins/ChartComponent";
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { PreventEditExtension } from "./plugins/PreventEdit";
@@ -126,6 +127,7 @@ const TextEditor = ({
         FontSize,
         Color,
         BackgroundColor,
+        ChartComponent,
     ];
 
     const currentEditor = useEditor({

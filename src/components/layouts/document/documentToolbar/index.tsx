@@ -3,6 +3,7 @@ import { ColorPicker } from "@/components/features/colorPicker";
 import { Selector } from "@/components/features/selector";
 import { Toolbar } from "@/components/features/toolbar";
 import { ToolbarMenu } from "@/components/features/ToolbarMenu";
+import { useDocumentContext } from "@/context/documentContext";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { Theme } from "@/themes";
 import { ChangeEvent, ReactElement, useState } from "react";
@@ -84,8 +85,15 @@ export const DocumentToolbar = ({
     onChangeHighlightColor,
 }: IDocumentToolbarProps): ReactElement => {
     const { width: windowWidth } = useWindowSize();
+    const { editor } = useDocumentContext();
 
     const [moreOptionsIsActive, setMoreOptionsIsActive] = useState<boolean>(false);
+
+    // const meusDados = [
+    //     { x: 2020, y: 100 },
+    //     { x: 2021, y: 150 },
+    //     { x: 2022, y: 200 },
+    // ];
 
     const changeFontSize = (newSize: number) => {
         if (newSize < 1 || newSize > 200) return;
@@ -345,7 +353,21 @@ export const DocumentToolbar = ({
                                         </Toolbar.ItemButton>
 
                                         <Toolbar.ItemButton>
-                                            <MdFormatClear size={18} color={Theme.colors.black} />
+                                            <MdFormatClear
+                                                size={18}
+                                                color={Theme.colors.black}
+                                                onClick={() => {
+                                                    if (!editor) return;
+
+                                                    // editor
+                                                    //     .chain()
+                                                    //     .focus()
+                                                    //     .insertContent({
+                                                    //         type: "chartNode",
+                                                    //     })
+                                                    //     .run();
+                                                }}
+                                            />
                                         </Toolbar.ItemButton>
                                     </Toolbar.Group>
                                 )}

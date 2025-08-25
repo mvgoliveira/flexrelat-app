@@ -287,7 +287,7 @@ export const IconElementLineGraph = ({ size = 50 }: ISVGsDynamicSize): ReactElem
 export const IconElementBarGraph = ({ size = 50 }: ISVGsDynamicSize): ReactElement => {
     return (
         <svg height={size} viewBox="0 0 78 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_435_78)">
+            <g clipPath="url(#clip0_435_78)">
                 <mask id="path-1-inside-1_435_78" fill="white">
                     <path d="M0.666687 50L0.666685 0L77.3334 -3.35121e-06L77.3334 50L0.666687 50Z" />
                 </mask>
@@ -317,7 +317,7 @@ export const IconElementBarGraph = ({ size = 50 }: ISVGsDynamicSize): ReactEleme
 export const IconElementPieChart = ({ size = 50 }: ISVGsDynamicSize): ReactElement => {
     return (
         <svg height={size} viewBox="0 0 77 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_437_26)">
+            <g clipPath="url(#clip0_437_26)">
                 <mask id="path-1-inside-1_437_26" fill="white">
                     <path d="M0.333344 50L0.333341 0L77 -3.35121e-06L77 50L0.333344 50Z" />
                 </mask>
