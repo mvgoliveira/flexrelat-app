@@ -88,7 +88,7 @@ export const Root = styled.div<IRootProps>`
     h4,
     h5,
     h6 {
-        line-height: 150%;
+        line-height: 1.5;
     }
 
     h1 {

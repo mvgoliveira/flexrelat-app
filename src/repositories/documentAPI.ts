@@ -130,7 +130,7 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
             <p/>
             <p/>
             <p/>
-            <p/>
+
             <p>
                 <strong>
                     1. Tabelas e Listas funcionais
