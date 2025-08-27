@@ -16,10 +16,10 @@ export const DocumentContent = (): ReactElement => {
     const [zoom, setZoom] = useState<number>(83);
     const [pageWidth, setPageWidth] = useState<number>(794);
     const [pageHeight, setPageHeight] = useState<number>(1123);
-    const [marginTop, setMarginTop] = useState(113.39);
-    const [marginRight, setMarginRight] = useState(75.59);
-    const [marginBottom, setMarginBottom] = useState(75.59);
-    const [marginLeft, setMarginLeft] = useState(113.39);
+    const [marginTop, setMarginTop] = useState(113.385826772);
+    const [marginRight, setMarginRight] = useState(75.590551181);
+    const [marginBottom, setMarginBottom] = useState(75.590551181);
+    const [marginLeft, setMarginLeft] = useState(113.385826772);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);

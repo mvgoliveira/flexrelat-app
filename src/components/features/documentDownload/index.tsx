@@ -4,16 +4,16 @@ import Html from "react-pdf-html";
 
 const styles = StyleSheet.create({
     body: {
-        paddingTop: "3cm",
+        paddingTop: "3.1cm",
         paddingRight: "2cm",
-        paddingBottom: "2cm",
+        paddingBottom: "1.5cm",
         paddingLeft: "3cm",
     },
 });
 
 const stylesheet = {
     "> p": {
-        marginBottom: 9,
+        marginBottom: 5.7,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
@@ -21,10 +21,11 @@ const stylesheet = {
         wordBreak: "break-word",
         hyphens: "auto",
         fontWeight: "normal",
-        minHeight: 17.21,
+        // minHeight: "14.61pt",
+        minHeight: 21,
     },
     h1: {
-        marginBottom: 14,
+        marginBottom: 6.5,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
@@ -35,7 +36,7 @@ const stylesheet = {
         counterReset: "h2",
     },
     h2: {
-        marginBottom: 14,
+        marginBottom: 6.5,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
@@ -46,7 +47,7 @@ const stylesheet = {
         counterReset: "h3",
     },
     h3: {
-        marginBottom: 14,
+        marginBottom: 6.5,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
@@ -56,7 +57,7 @@ const stylesheet = {
         counterIncrement: "h3",
     },
     h4: {
-        marginBottom: 14,
+        marginBottom: 6.5,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
@@ -65,16 +66,7 @@ const stylesheet = {
         hyphens: "auto",
     },
     h5: {
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-    },
-    h6: {
-        marginBottom: 14,
+        marginBottom: 6.5,
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
@@ -95,28 +87,24 @@ const stylesheet = {
         borderCollapse: "collapse",
         overflow: "hidden",
         tableLayout: "fixed",
-        marginBottom: 14,
+        marginBottom: "9pt",
         textAlign: "start",
         fontFamily: "Times-Roman",
         fontSize: 12,
         wordBreak: "break-word",
         hyphens: "auto",
     },
-    "table td": {
+    td: {
         borderRight: "1px solid #000",
         borderBottom: "1px solid #000",
-        boxSizing: "border-box",
-        padding: 6.6,
-        position: "relative",
+        padding: 6.5,
         verticalAlign: "center",
     },
-    "table th": {
+    th: {
         borderRight: "1px solid #000",
         borderBottom: "1px solid #000",
         borderTop: "1px solid #000",
-        boxSizing: "border-box",
-        padding: 6.6,
-        position: "relative",
+        padding: 6.5,
         verticalAlign: "center",
         fontWeight: "bold",
     },

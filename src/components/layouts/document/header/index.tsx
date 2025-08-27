@@ -107,10 +107,32 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
 
         // Remove inline style min-width
-        filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
+        filteredHtml = filteredHtml.replaceAll(/style="[^"]*min-width:[^;"]*;?"/g, "");
 
-        const blob = await pdf(<DocumentDownload html={filteredHtml} />).toBlob();
-        const url = URL.createObjectURL(blob);
+        // Replace quick-chart with img
+        filteredHtml = filteredHtml.replaceAll(
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData) => {
+                try {
+                    // const decoded = decodeURIComponent(chartData);
+                    // console.log(JSON.parse(decoded));
+                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    return `
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+                            <img src="${url}" style="width: 375pt;" />
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("Erro ao processar chartdata:", e);
+                    return "";
+                }
+            }
+        );
+
+        console.log(filteredHtml);
+
+        const pdfBlob = await pdf(<DocumentDownload html={filteredHtml} />).toBlob();
+        const url = URL.createObjectURL(pdfBlob);
         const link = document.createElement("a");
         link.href = url;
         const currentTitle = title || "Relatório sem título";
@@ -128,39 +150,22 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         // Remove inline style min-width
         filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
 
+        // replace quick-chart with img
+        filteredHtml = filteredHtml.replaceAll(
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData) => {
+                try {
+                    const decoded = decodeURIComponent(chartData);
+                    const url = `https://quickchart.io/chart?c=${encodeURIComponent(decoded)}`;
+                    return `<img src="${url}" />`;
+                } catch (e) {
+                    console.error("Erro ao processar chartdata:", e);
+                    return "";
+                }
+            }
+        );
+
         console.log(filteredHtml);
-
-        // // Remove all id
-        // let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
-
-        // // Remove p inside table but keep the content
-        // const doc = new DOMParser().parseFromString(filteredHtml, "text/html");
-        // const tables = doc.querySelectorAll("table");
-        // tables.forEach(table => {
-        //     table.querySelectorAll("p").forEach(p => {
-        //         if (p.parentElement?.tagName === "TD" || p.parentElement?.tagName === "TH") {
-        //             // Replace <p> with its children (move content up)
-        //             while (p.firstChild) {
-        //                 p.parentElement.insertBefore(p.firstChild, p);
-        //             }
-        //             p.remove();
-        //         }
-        //     });
-        // });
-
-        // // Convert to string
-        // filteredHtml = doc.documentElement.outerHTML;
-
-        // // Remains just body content
-        // filteredHtml = filteredHtml.replace(/<body[^>]*>([\s\S]*)<\/body>/, "$1");
-        // filteredHtml = filteredHtml.replace(/<html[^>]*>([\s\S]*)<\/html>/, "$1");
-        // filteredHtml = filteredHtml.replace(/<head[^>]*>([\s\S]*)<\/head>/, "$1");
-
-        // // Remove colgroup
-        // filteredHtml = filteredHtml.replace(/<colgroup[^>]*>[\s\S]*?<\/colgroup>/g, "");
-
-        // // Remove inline style min-width
-        // filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
     };
 
     useEffect(() => {

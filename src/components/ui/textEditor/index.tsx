@@ -26,7 +26,7 @@ import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { PreventEditExtension } from "./plugins/PreventEdit";
-import { VictoryChartExtension } from "./plugins/VictoryChart";
+import { QuickChart } from "./plugins/QuickChart";
 import { Root } from "./styles";
 
 interface ITextEditorProps {
@@ -127,7 +127,7 @@ const TextEditor = ({
         FontSize,
         Color,
         BackgroundColor,
-        VictoryChartExtension,
+        QuickChart,
     ];
 
     const currentEditor = useEditor({

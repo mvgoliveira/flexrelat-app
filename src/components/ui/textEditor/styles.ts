@@ -69,7 +69,7 @@ export const Root = styled.div<IRootProps>`
     h5,
     h6,
     p {
-        margin-bottom: 9pt;
+        margin-bottom: 12px;
         text-align: start;
         font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
         font-size: 12pt;
@@ -198,23 +198,14 @@ export const Root = styled.div<IRootProps>`
         list-style-type: disc;
         padding-left: 40px;
         gap: 12px;
-        margin-bottom: 12pt;
+        margin-bottom: 16;
     }
 
     ol {
         list-style-type: decimal;
         padding-left: 40px;
         gap: 12px;
-        margin-bottom: 12pt;
-    }
-
-    code {
-        background: ${({ theme }) => theme.colors.gray30};
-        border: 1.5px solid ${({ theme }) => theme.colors.gray50};
-        padding: 2px 4px;
-        border-radius: 4px;
-        font-size: ${({ theme }) => theme.fontSize.fs75};
-        font-family: monospace;
+        margin-bottom: 16;
     }
 
     .multi-selected {

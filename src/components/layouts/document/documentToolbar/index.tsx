@@ -89,12 +89,6 @@ export const DocumentToolbar = ({
 
     const [moreOptionsIsActive, setMoreOptionsIsActive] = useState<boolean>(false);
 
-    // const meusDados = [
-    //     { x: 2020, y: 100 },
-    //     { x: 2021, y: 150 },
-    //     { x: 2022, y: 200 },
-    // ];
-
     const changeFontSize = (newSize: number) => {
         if (newSize < 1 || newSize > 200) return;
         onChangeFontSize(newSize);
