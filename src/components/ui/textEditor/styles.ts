@@ -74,8 +74,8 @@ export const Root = styled.div<IRootProps>`
         font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
         font-size: 12pt;
         line-height: 1.5;
-        word-break: break-word;
-        hyphens: auto;
+        /* word-break: break-word; */
+        /* hyphens: auto; */
     }
 
     .error {
