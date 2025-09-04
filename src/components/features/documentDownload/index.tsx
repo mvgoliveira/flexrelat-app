@@ -19,7 +19,6 @@ const stylesheet = {
         fontSize: 12,
         lineHeight: 1.5,
         fontWeight: "normal",
-        backgroundColor: "wheat",
     },
     "p:empty": {
         marginBottom: 7,
@@ -61,7 +60,6 @@ const stylesheet = {
         fontFamily: "Times-Roman",
         fontSize: 12,
         lineHeight: 1.5,
-        backgroundColor: "tomato",
     },
     h5: {
         marginBottom: 7,
