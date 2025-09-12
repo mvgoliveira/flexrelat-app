@@ -1,6 +1,6 @@
 import { Button } from "@/components/features/button";
 import { DocumentDownload } from "@/components/features/documentDownload";
-import { Menu } from "@/components/features/Menu";
+import { Menu } from "@/components/features/menu";
 import { Typography } from "@/components/features/typography";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useDocumentContext } from "@/context/documentContext";
