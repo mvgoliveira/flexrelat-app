@@ -20,8 +20,8 @@ const ChartContainer = styled(NodeViewWrapper)`
 `;
 
 const ChartContent = styled.div`
-    height: 225pt;
-    width: 375pt;
+    height: 300px;
+    width: 500px;
     cursor: pointer;
     position: relative;
 
@@ -36,7 +36,12 @@ const QuickChartComponent = ({ node }: any) => {
     return (
         <ChartContainer contentEditable={false} suppressContentEditableWarning={true}>
             <ChartContent>
-                <Image src={`https://quickchart.io/chart?c=${chartData}`} fill alt="chart" />
+                <Image
+                    src={`https://quickchart.io/chart?c=${chartData}`}
+                    height={300}
+                    width={500}
+                    alt="chart"
+                />
             </ChartContent>
         </ChartContainer>
     );

@@ -1,6 +1,8 @@
-import { Document, Page, StyleSheet } from "@react-pdf/renderer";
+import { Document, Font, Page, StyleSheet } from "@react-pdf/renderer";
 import { ReactElement } from "react";
 import Html from "react-pdf-html";
+
+Font.registerHyphenationCallback(word => [word]);
 
 const styles = StyleSheet.create({
     body: {
@@ -19,6 +21,7 @@ const stylesheet = {
         fontSize: 12,
         lineHeight: 1.5,
         fontWeight: "normal",
+        hyphens: "none",
     },
     "p:empty": {
         marginBottom: 7,

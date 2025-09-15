@@ -268,7 +268,7 @@ const TextEditor = ({
                 pageWidth={pageWidth}
                 pageHeight={pageHeight}
             >
-                <EditorContent editor={currentEditor} />
+                <EditorContent id="print" editor={currentEditor} />
             </Root>
         </>
     );

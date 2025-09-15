@@ -8,6 +8,7 @@ import { updateDocumentTitle } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
 import { pdf } from "@react-pdf/renderer";
+import html2pdf from "html2pdf.js";
 import _ from "lodash";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
@@ -129,8 +130,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             }
         );
 
-        console.log(filteredHtml);
-
         const pdfBlob = await pdf(<DocumentDownload html={filteredHtml} />).toBlob();
         const url = URL.createObjectURL(pdfBlob);
         const link = document.createElement("a");
@@ -144,20 +143,17 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     const handleDownloadDOCX = async () => {
         const htmlContent = getHtmlContent();
 
-        // Remove all id
-        let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
-
-        // Remove inline style min-width
-        filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
-
-        // replace quick-chart with img
-        filteredHtml = filteredHtml.replaceAll(
+        // Replace quick-chart with img
+        const filteredHtml = htmlContent.replaceAll(
             /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
             (match, chartData) => {
                 try {
-                    const decoded = decodeURIComponent(chartData);
-                    const url = `https://quickchart.io/chart?c=${encodeURIComponent(decoded)}`;
-                    return `<img src="${url}" />`;
+                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    return `
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+                            <img src="${url}" style="width: 500px; height: 300px;" />
+                        </div>
+                    `;
                 } catch (e) {
                     console.error("Erro ao processar chartdata:", e);
                     return "";
@@ -165,7 +161,112 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             }
         );
 
-        console.log(filteredHtml);
+        const styles = `
+            <style>
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6,
+                p {
+                    margin-bottom: 12px;
+                    text-align: start;
+                    font-family: "Times New Roman, serif";
+                    font-size: 16px;
+                    line-height: 1.5;
+                    word-wrap: break-word;
+                }
+
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6 {
+                    font-weight: bold;
+                }
+
+                p:empty {
+                    margin-bottom: 12px;
+                    min-height: 24px;
+                    width: 100%;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    overflow: hidden;
+                    table-layout: fixed;
+                    width: 100%;
+                    margin-bottom: 12px;
+                    page-break-inside: auto;
+                }
+
+                table p {
+                    margin-bottom: 0;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+
+                table tr:last-of-type { margin-bottom: 12px; }
+
+                td, th {
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    box-sizing: border-box;
+                    padding: 6px;
+                    position: relative;
+                }
+
+                table td:first-of-type,
+                table th:first-of-type {
+                    border-left: 1px solid black;
+                }
+
+                table th {
+                    font-weight: bold;
+                    text-align: start;
+                    border-top: 1px solid black;
+                }
+
+                table th p {
+                    text-align: start;
+                }
+
+                ul {
+                    list-style-type: disc;
+                    padding-left: 40px;
+                }
+
+                ol {
+                    list-style-type: decimal;
+                    padding-left: 40px;
+                }
+            </style>
+        `;
+
+        const finalHtml = `
+            <html>
+                <head>${styles}</head>
+                <body>${filteredHtml}</body>
+            </html>
+        `;
+
+        console.log(finalHtml);
+
+        const opt = {
+            margin: [85.039, 85.039, 56.693, 56.693],
+            filename: `${title || "Relatório sem título"}.pdf`,
+            image: { type: "webp", quality: 0.98 },
+            html2canvas: { scale: 2, dpi: 300, letterRendering: true, useCORS: true },
+            jsPDF: { unit: "pt", format: "a4", orientation: "portrait", compress: true },
+            pagebreak: { mode: ["css"], avoid: ["img", "h1", "h2", "h3", "h4", "h5", "h6"] },
+        };
+
+        html2pdf().set(opt).from(finalHtml).save();
     };
 
     useEffect(() => {

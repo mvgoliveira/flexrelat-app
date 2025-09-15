@@ -171,7 +171,7 @@ export const DocumentContent = (): ReactElement => {
 
     return (
         <Root>
-            <DocumentHeader>
+            <DocumentHeader className="no-print">
                 <DocumentToolbar
                     zoom={zoom}
                     isBoldActive={boldActive}
@@ -227,7 +227,7 @@ export const DocumentContent = (): ReactElement => {
                     />
                 </DocumentRoot>
 
-                <FloatContainer>
+                <FloatContainer className="no-print">
                     <ZoomButton
                         initialZoom={zoom}
                         onZoomChange={setZoom}

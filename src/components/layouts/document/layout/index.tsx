@@ -8,7 +8,7 @@ const Layout = ({ children }: IReactChildren): ReactElement => {
 };
 
 const Header = ({ children }: IReactChildren): ReactElement => {
-    return <StyledHeader>{children}</StyledHeader>;
+    return <StyledHeader className="no-print">{children}</StyledHeader>;
 };
 Layout.Header = Header;
 
@@ -18,12 +18,12 @@ const Content = ({ children }: IReactChildren): ReactElement => {
 Layout.Content = Content;
 
 const LeftNavBar = ({ children }: IReactChildren): ReactElement => {
-    return <StyledLeftNavbar>{children}</StyledLeftNavbar>;
+    return <StyledLeftNavbar className="no-print">{children}</StyledLeftNavbar>;
 };
 Layout.LeftNavBar = LeftNavBar;
 
 const RightNavBar = ({ children }: IReactChildren): ReactElement => {
-    return <StyledRightNavbar>{children}</StyledRightNavbar>;
+    return <StyledRightNavbar className="no-print">{children}</StyledRightNavbar>;
 };
 Layout.RightNavBar = RightNavBar;
 
