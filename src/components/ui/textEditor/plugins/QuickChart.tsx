@@ -1,4 +1,6 @@
+import { ChartOptionsModal } from "@/components/layouts/document/modals/chartOptionsModal";
 import styled from "@emotion/styled";
+import { useDisclosure } from "@mantine/hooks";
 import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
@@ -17,6 +19,10 @@ const ChartContainer = styled(NodeViewWrapper)`
     pointer-events: auto;
     justify-content: center;
     margin-bottom: 9pt;
+
+    &:hover {
+        background: ${props => props.theme.colors.purple10};
+    }
 `;
 
 const ChartContent = styled.div`
@@ -24,26 +30,31 @@ const ChartContent = styled.div`
     width: 500px;
     cursor: pointer;
     position: relative;
-
-    &:hover {
-        background: ${props => props.theme.colors.purple10};
-    }
 `;
 
 const QuickChartComponent = ({ node }: any) => {
     const { chartData }: IChartAttributes = node.attrs;
+    const [opened, { open, close }] = useDisclosure(false);
 
     return (
-        <ChartContainer contentEditable={false} suppressContentEditableWarning={true}>
-            <ChartContent>
-                <Image
-                    src={`https://quickchart.io/chart?c=${chartData}`}
-                    height={300}
-                    width={500}
-                    alt="chart"
-                />
-            </ChartContent>
-        </ChartContainer>
+        <>
+            <ChartOptionsModal isOpen={opened} close={close} />
+
+            <ChartContainer
+                contentEditable={false}
+                suppressContentEditableWarning={true}
+                onClick={open}
+            >
+                <ChartContent>
+                    <Image
+                        src={`https://quickchart.io/chart?c=${chartData}`}
+                        height={300}
+                        width={500}
+                        alt="chart"
+                    />
+                </ChartContent>
+            </ChartContainer>
+        </>
     );
 };
 
