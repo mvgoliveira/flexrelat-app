@@ -2,6 +2,7 @@ import { Button } from "@/components/features/button";
 import { Typography } from "@/components/features/typography";
 import { Modal } from "@/components/ui/modal";
 import { Theme } from "@/themes";
+import Image from "next/image";
 import { ReactElement, useState } from "react";
 import { TbBrush, TbChartBubble, TbDatabase } from "react-icons/tb";
 
@@ -9,6 +10,7 @@ import { DataConfiguration } from "./components/dataConfiguration";
 import {
     BottomContainer,
     ChartContainer,
+    ChartContent,
     ConfigurationContainer,
     ConfigurationContent,
     Tab,
@@ -19,9 +21,14 @@ import {
 interface IChartOptionsModalProps {
     isOpen: boolean;
     close: () => void;
+    metadata: string;
 }
 
-export const ChartOptionsModal = ({ isOpen, close }: IChartOptionsModalProps): ReactElement => {
+export const ChartOptionsModal = ({
+    isOpen,
+    close,
+    metadata,
+}: IChartOptionsModalProps): ReactElement => {
     const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("data");
 
     return (
@@ -77,7 +84,16 @@ export const ChartOptionsModal = ({ isOpen, close }: IChartOptionsModalProps): R
                     </ConfigurationContent>
                 </ConfigurationContainer>
 
-                <ChartContainer></ChartContainer>
+                <ChartContainer>
+                    <ChartContent>
+                        <Image
+                            src={`https://quickchart.io/chart?c=${metadata}`}
+                            height={240}
+                            width={400}
+                            alt="chart"
+                        />
+                    </ChartContent>
+                </ChartContainer>
             </TopContainer>
 
             <BottomContainer>

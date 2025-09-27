@@ -24,7 +24,7 @@ export const Header = styled.div`
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
-    height: 200px;
+    height: 250px;
     border-right: 1px solid ${({ theme }) => theme.colors.gray40};
     border-left: 1px solid ${({ theme }) => theme.colors.gray40};
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray40};

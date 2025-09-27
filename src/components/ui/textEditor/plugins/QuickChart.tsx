@@ -7,7 +7,6 @@ import { NodeViewWrapper } from "@tiptap/react";
 import Image from "next/image";
 import React from "react";
 
-// Tipos para os atributos
 interface IChartAttributes {
     chartData: string;
 }
@@ -36,14 +35,23 @@ const QuickChartComponent = ({ node }: any) => {
     const { chartData }: IChartAttributes = node.attrs;
     const [opened, { open, close }] = useDisclosure(false);
 
+    const handleOpenChartOptions = () => {
+        const decoded = decodeURIComponent(chartData);
+        const config = JSON.parse(decoded);
+
+        console.log(config);
+
+        open();
+    };
+
     return (
         <>
-            <ChartOptionsModal isOpen={opened} close={close} />
+            <ChartOptionsModal isOpen={opened} close={close} metadata={chartData} />
 
             <ChartContainer
                 contentEditable={false}
                 suppressContentEditableWarning={true}
-                onClick={open}
+                onClick={handleOpenChartOptions}
             >
                 <ChartContent>
                     <Image

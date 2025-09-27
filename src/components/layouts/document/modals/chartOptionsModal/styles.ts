@@ -9,6 +9,7 @@ export const TopContainer = styled.div`
 export const ConfigurationContainer = styled.div`
     height: 100%;
     width: 300px;
+    min-width: 300px;
     background: ${({ theme }) => theme.colors.white};
     border-right: 1px solid ${props => props.theme.colors.gray40};
 `;
@@ -71,7 +72,16 @@ export const ConfigurationContent = styled.div`
 `;
 
 export const ChartContainer = styled.div`
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    width: 100%;
+    overflow: auto;
+
+    @media (max-width: 820px) {
+        justify-content: flex-start;
+    }
 `;
 
 export const BottomContainer = styled.div`
@@ -83,5 +93,12 @@ export const BottomContainer = styled.div`
     width: 100%;
     padding: 0 10px;
     border-top: 1px solid ${props => props.theme.colors.gray40};
+    background: ${({ theme }) => theme.colors.white};
+`;
+
+export const ChartContent = styled.div`
+    display: flex;
+    padding: 10px;
+    position: relative;
     background: ${({ theme }) => theme.colors.white};
 `;
