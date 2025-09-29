@@ -5,7 +5,24 @@ import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+
+export type ChartData = {
+    type: string;
+    data: {
+        labels: string[];
+        datasets: Array<{
+            label: string;
+            data: { x: number | string; y: number | string }[];
+            backgroundColor?: string | string[];
+            borderColor?: string | string[];
+            borderWidth?: number;
+            lineTension?: number;
+            showLine?: boolean;
+        }>;
+    };
+    options?: object;
+};
 
 interface IChartAttributes {
     chartData: string;
@@ -34,19 +51,21 @@ const ChartContent = styled.div`
 const QuickChartComponent = ({ node }: any) => {
     const { chartData }: IChartAttributes = node.attrs;
     const [opened, { open, close }] = useDisclosure(false);
+    const [decodedData, setDecodedData] = useState<ChartData | null>(null);
 
     const handleOpenChartOptions = () => {
         const decoded = decodeURIComponent(chartData);
         const config = JSON.parse(decoded);
-
+        setDecodedData(config);
         console.log(config);
-
         open();
     };
 
     return (
         <>
-            <ChartOptionsModal isOpen={opened} close={close} metadata={chartData} />
+            {decodedData && (
+                <ChartOptionsModal isOpen={opened} close={close} metadata={decodedData} />
+            )}
 
             <ChartContainer
                 contentEditable={false}

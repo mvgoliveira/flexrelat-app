@@ -1,13 +1,26 @@
 import { Input } from "@/components/features/input";
-import { ReactElement, useState } from "react";
+import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
+import { ReactElement, useEffect, useState } from "react";
 
 import { DataSet } from "../dataSet";
 import { Separator } from "./styles";
 
-export const DataConfiguration = (): ReactElement => {
+interface IDataConfigurationProps {
+    metadata: ChartData;
+}
+
+export const DataConfiguration = ({ metadata }: IDataConfigurationProps): ReactElement => {
     const [chartTitle, setChartTitle] = useState<string>("");
     const [xAxisTitle, setXAxisTitle] = useState<string>("");
     const [yAxisTitle, setYAxisTitle] = useState<string>("");
+
+    useEffect(() => {
+        if (metadata) {
+            // setChartTitle(metadata.title || "");
+            // setXAxisTitle(metadata.xAxisTitle || "");
+            // setYAxisTitle(metadata.yAxisTitle || "");
+        }
+    }, [metadata]);
 
     return (
         <>
@@ -34,7 +47,19 @@ export const DataConfiguration = (): ReactElement => {
 
             <Separator />
 
-            <DataSet name="Conjunto de dados 1" />
+            <DataSet
+                name="Conjunto de dados 1"
+                data={
+                    Array.isArray(metadata.data.datasets[0].data)
+                        ? metadata.data.datasets[0].data.map(
+                              (point: { x: string | number; y: string | number }) => [
+                                  String(point.x),
+                                  String(point.y),
+                              ]
+                          )
+                        : []
+                }
+            />
         </>
     );
 };

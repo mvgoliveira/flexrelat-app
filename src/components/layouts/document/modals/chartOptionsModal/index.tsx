@@ -1,6 +1,7 @@
 import { Button } from "@/components/features/button";
 import { Typography } from "@/components/features/typography";
 import { Modal } from "@/components/ui/modal";
+import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
 import { Theme } from "@/themes";
 import Image from "next/image";
 import { ReactElement, useState } from "react";
@@ -21,7 +22,7 @@ import {
 interface IChartOptionsModalProps {
     isOpen: boolean;
     close: () => void;
-    metadata: string;
+    metadata: ChartData;
 }
 
 export const ChartOptionsModal = ({
@@ -80,7 +81,7 @@ export const ChartOptionsModal = ({
                     </TabsContainer>
 
                     <ConfigurationContent>
-                        {activeTab === "data" && <DataConfiguration />}
+                        {activeTab === "data" && <DataConfiguration metadata={metadata} />}
                     </ConfigurationContent>
                 </ConfigurationContainer>
 
