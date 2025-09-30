@@ -72,12 +72,12 @@ export const ChartOptionsModal = ({
         }
     };
 
-    useEffect(() => {
-        if (decodedData && decodedData !== metadata) {
+    const handleConfirmChanges = () => {
+        if (decodedData) {
             changeChartData(decodedData);
+            close();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [decodedData, metadata]);
+    };
 
     useEffect(() => {
         if (metadata) {
@@ -158,7 +158,13 @@ export const ChartOptionsModal = ({
             </TopContainer>
 
             <BottomContainer>
-                <Button height="30px" width="fit-content" variant="tertiary" padding="0 10px">
+                <Button
+                    height="30px"
+                    width="fit-content"
+                    variant="tertiary"
+                    padding="0 10px"
+                    onClick={close}
+                >
                     <Typography
                         tag="p"
                         fontSize={{ xs: "fs75" }}
@@ -170,7 +176,13 @@ export const ChartOptionsModal = ({
                     </Typography>
                 </Button>
 
-                <Button height="30px" width="100px" variant="primary" padding="0 10px">
+                <Button
+                    height="30px"
+                    width="100px"
+                    variant="primary"
+                    padding="0 10px"
+                    onClick={handleConfirmChanges}
+                >
                     <Typography
                         tag="p"
                         fontSize={{ xs: "fs75" }}

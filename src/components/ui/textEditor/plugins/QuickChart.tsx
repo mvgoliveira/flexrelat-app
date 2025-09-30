@@ -71,7 +71,9 @@ const ChartContent = styled.div`
     position: relative;
 `;
 
-const QuickChartComponent = ({ node }: any) => {
+const QuickChartComponent = ({ node, updateAttributes }: any) => {
+    const id = node.attrs.id;
+
     const [opened, { open, close }] = useDisclosure(false);
     const [decodedData, setDecodedData] = useState<ChartData | null>(null);
     const [chartData, setChartData] = useState<string>("");
@@ -86,6 +88,7 @@ const QuickChartComponent = ({ node }: any) => {
     const handleChangeChartData = (newData: ChartData) => {
         const encoded = encodeURIComponent(JSON.stringify(newData));
         setChartData(encoded);
+        updateAttributes({ chartData: encoded });
     };
 
     useEffect(() => {
@@ -110,6 +113,7 @@ const QuickChartComponent = ({ node }: any) => {
             )}
 
             <ChartContainer
+                id={id}
                 contentEditable={false}
                 suppressContentEditableWarning={true}
                 onClick={handleOpenChartOptions}
@@ -129,15 +133,23 @@ const QuickChartComponent = ({ node }: any) => {
 
 export const QuickChart = Node.create({
     name: "quickChart",
-
     group: "block",
-
     atom: true,
 
     addAttributes() {
         return {
             chartData: {
                 default: null,
+            },
+            id: {
+                default: null,
+                parseHTML: (element: any) => element.getAttribute("data-id"),
+                renderHTML: (attributes: any) => {
+                    if (!attributes.id) return {};
+                    return {
+                        "data-id": attributes.id,
+                    };
+                },
             },
         };
     },
@@ -151,6 +163,7 @@ export const QuickChart = Node.create({
 
                     return {
                         chartData: chartData || null,
+                        id: element.getAttribute("data-id") || null,
                     };
                 },
             },

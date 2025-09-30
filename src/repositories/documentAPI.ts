@@ -237,3 +237,15 @@ export const updateDocumentTitle = async (
         title: title,
     };
 };
+
+export const updateDocumentContent = async (
+    documentId: string,
+    content: string
+): Promise<{ id: string; content: string }> => {
+    console.log("[TEST] Updating document content");
+
+    return {
+        id: documentId,
+        content: content,
+    };
+};
