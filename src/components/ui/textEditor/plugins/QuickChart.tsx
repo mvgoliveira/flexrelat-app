@@ -5,7 +5,7 @@ import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export type ChartData = {
     type: string;
@@ -19,14 +19,37 @@ export type ChartData = {
             borderWidth?: number;
             lineTension?: number;
             showLine?: boolean;
+            fill?: boolean;
         }>;
     };
-    options?: object;
+    options?: {
+        title: {
+            display: boolean;
+            text: string;
+        };
+        legend: {
+            position?: "top" | "left" | "bottom" | "right";
+            labels: {
+                usePointStyle: boolean;
+                boxWidth: number;
+            };
+        };
+        scales: {
+            xAxes: Array<{
+                scaleLabel: {
+                    display: boolean;
+                    labelString: string;
+                };
+            }>;
+            yAxes: Array<{
+                scaleLabel: {
+                    display: boolean;
+                    labelString: string;
+                };
+            }>;
+        };
+    };
 };
-
-interface IChartAttributes {
-    chartData: string;
-}
 
 const ChartContainer = styled(NodeViewWrapper)`
     width: 100%;
@@ -49,22 +72,41 @@ const ChartContent = styled.div`
 `;
 
 const QuickChartComponent = ({ node }: any) => {
-    const { chartData }: IChartAttributes = node.attrs;
     const [opened, { open, close }] = useDisclosure(false);
     const [decodedData, setDecodedData] = useState<ChartData | null>(null);
+    const [chartData, setChartData] = useState<string>("");
 
     const handleOpenChartOptions = () => {
         const decoded = decodeURIComponent(chartData);
         const config = JSON.parse(decoded);
         setDecodedData(config);
-        console.log(config);
         open();
     };
+
+    const handleChangeChartData = (newData: ChartData) => {
+        const encoded = encodeURIComponent(JSON.stringify(newData));
+        setChartData(encoded);
+    };
+
+    useEffect(() => {
+        if (node.attrs.chartData) {
+            setChartData(node.attrs.chartData);
+        }
+
+        return () => {
+            setChartData("");
+        };
+    }, [node.attrs.chartData]);
 
     return (
         <>
             {decodedData && (
-                <ChartOptionsModal isOpen={opened} close={close} metadata={decodedData} />
+                <ChartOptionsModal
+                    isOpen={opened}
+                    close={close}
+                    metadata={decodedData}
+                    changeChartData={handleChangeChartData}
+                />
             )}
 
             <ChartContainer

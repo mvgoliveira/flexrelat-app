@@ -19,6 +19,7 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
                     showLine: true,
                     lineTension: 0,
                     borderWidth: 2,
+                    fill: false,
                     borderColor: "blue",
                     data: [
                         {
@@ -42,9 +43,9 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
                 {
                     label: "Data 2",
                     showLine: true,
-                    fill: false,
                     lineTension: 0,
                     borderWidth: 2,
+                    fill: false,
                     borderColor: "red",
                     data: [
                         {
@@ -68,7 +69,12 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
             ],
         },
         options: {
+            title: {
+                display: true,
+                text: "Gráfico de qualquer coisa",
+            },
             legend: {
+                position: "top",
                 labels: {
                     usePointStyle: false,
                     boxWidth: 13,
@@ -77,22 +83,31 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
             scales: {
                 xAxes: [
                     {
-                        gridLines: {
-                            // zeroLineWidth: 1,
-                            // zeroLineColor: "black",
+                        type: "linear",
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Eixo X",
                         },
                         ticks: {
-                            fontColor: "black",
+                            major: {
+                                enabled: false,
+                            },
                         },
                     },
                 ],
                 yAxes: [
                     {
-                        gridLines: {
-                            zeroLineColor: "black",
+                        type: "linear",
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Eixo Y",
                         },
                         ticks: {
-                            fontColor: "black",
+                            major: {
+                                enabled: false,
+                            },
                         },
                     },
                 ],

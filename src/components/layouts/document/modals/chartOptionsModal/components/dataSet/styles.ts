@@ -24,7 +24,7 @@ export const Header = styled.div<{ isOpen: boolean }>`
 
 export const Container = styled.div<{ isOpen: boolean }>`
     display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
-    height: 246px;
+    height: 168px;
     overflow-x: hidden;
     overflow-y: auto;
     background: ${({ theme }) => theme.colors.gray10};

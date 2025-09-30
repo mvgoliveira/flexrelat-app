@@ -10,10 +10,11 @@ import { Container, Header, Root } from "./styles";
 
 interface IDataSetProps {
     name: string;
-    data: string[][];
+    data: Array<Array<string | number>>;
+    changeData: (data: Array<Array<string | number>>) => void;
 }
 
-export const DataSet = ({ name }: IDataSetProps): ReactElement => {
+export const DataSet = ({ name, data, changeData }: IDataSetProps): ReactElement => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const spreadsheet = useRef(null);
 
@@ -60,6 +61,12 @@ export const DataSet = ({ name }: IDataSetProps): ReactElement => {
         About: "Sobre",
     });
 
+    const handleChangeData = (worksheet: any) => {
+        const updatedData = worksheet.getData() as Array<Array<string | number>>;
+        const filteredNewData = updatedData.filter(row => !row.some(cell => cell === ""));
+        changeData(filteredNewData);
+    };
+
     return (
         <Root>
             <Header onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
@@ -85,8 +92,13 @@ export const DataSet = ({ name }: IDataSetProps): ReactElement => {
             </Header>
 
             <Container isOpen={isOpen}>
-                <Spreadsheet key="dataSet" ref={spreadsheet} contextMenu={contextMenu}>
-                    <Worksheet minDimensions={[2, 50]} columns={columns} />
+                <Spreadsheet
+                    key="dataSet"
+                    ref={spreadsheet}
+                    contextMenu={contextMenu}
+                    onchange={handleChangeData}
+                >
+                    <Worksheet minDimensions={[2, 20]} columns={columns} data={data} />
                 </Spreadsheet>
             </Container>
         </Root>
