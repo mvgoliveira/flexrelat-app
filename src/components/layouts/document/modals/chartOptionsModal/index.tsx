@@ -8,6 +8,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { TbBrush, TbChartBubble, TbDatabase } from "react-icons/tb";
 
 import { DataConfiguration } from "./components/dataConfiguration";
+import { StylesConfiguration } from "./components/stylesConfiguration";
 import {
     BottomContainer,
     ChartContainer,
@@ -34,43 +35,6 @@ export const ChartOptionsModal = ({
 }: IChartOptionsModalProps): ReactElement => {
     const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("data");
     const [decodedData, setDecodedData] = useState<ChartData | null>(null);
-
-    const handleChangeDataSet = (index: number, data: Array<Array<string | number>>) => {
-        if (decodedData) {
-            const newData = { ...decodedData };
-            if (newData.data && newData.data.datasets && newData.data.datasets[index]) {
-                newData.data.datasets[index].data = data.map(point => ({
-                    x: point[0],
-                    y: point[1],
-                }));
-                setDecodedData(newData);
-            }
-        }
-    };
-
-    const handleChangeScaleLabel = (option: "x" | "y", value: string) => {
-        if (decodedData) {
-            const newData = { ...decodedData };
-            if (newData.options && newData.options.scales) {
-                if (option === "x") {
-                    newData.options.scales.xAxes[0].scaleLabel.labelString = value;
-                } else {
-                    newData.options.scales.yAxes[0].scaleLabel.labelString = value;
-                }
-                setDecodedData(newData);
-            }
-        }
-    };
-
-    const handleChangeTitle = (value: string) => {
-        if (decodedData) {
-            const newData = { ...decodedData };
-            if (newData.options && newData.options.title) {
-                newData.options.title.text = value;
-                setDecodedData(newData);
-            }
-        }
-    };
 
     const handleConfirmChanges = () => {
         if (decodedData) {
@@ -137,9 +101,14 @@ export const ChartOptionsModal = ({
                         {activeTab === "data" && (
                             <DataConfiguration
                                 metadata={metadata}
-                                changeDataSet={handleChangeDataSet}
-                                changeScaleLabel={handleChangeScaleLabel}
-                                changeTitle={handleChangeTitle}
+                                changeChartData={changeChartData}
+                            />
+                        )}
+
+                        {activeTab === "style" && (
+                            <StylesConfiguration
+                                metadata={metadata}
+                                changeChartData={changeChartData}
                             />
                         )}
                     </ConfigurationContent>

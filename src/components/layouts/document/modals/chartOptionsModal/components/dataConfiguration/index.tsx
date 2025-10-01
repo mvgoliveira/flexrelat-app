@@ -11,16 +11,12 @@ import { Separator } from "./styles";
 
 interface IDataConfigurationProps {
     metadata: ChartData;
-    changeDataSet: (index: number, data: Array<Array<string | number>>) => void;
-    changeScaleLabel: (option: "x" | "y", value: string) => void;
-    changeTitle: (value: string) => void;
+    changeChartData: (newData: ChartData) => void;
 }
 
 export const DataConfiguration = ({
     metadata,
-    changeDataSet,
-    changeScaleLabel,
-    changeTitle,
+    changeChartData,
 }: IDataConfigurationProps): ReactElement => {
     const [chartTitle, setChartTitle] = useState<string>("");
     const [xAxisLabel, setXAxisLabel] = useState<string>("");
@@ -28,6 +24,52 @@ export const DataConfiguration = ({
     const [dataSets, setDataSets] = useState<
         Array<{ name: string; data: Array<Array<string | number>> }>
     >([]);
+
+    const handleChangeDataSet = (index: number, data: Array<Array<string | number>>) => {
+        if (metadata) {
+            setDataSets(prev =>
+                prev.map((ds, idx) => (idx === index ? { ...ds, data: data } : ds))
+            );
+
+            const newData = { ...metadata };
+            if (newData.data && newData.data.datasets && newData.data.datasets[index]) {
+                newData.data.datasets[index].data = data.map(point => ({
+                    x: point[0],
+                    y: point[1],
+                }));
+            }
+
+            changeChartData(newData);
+        }
+    };
+
+    const handleChangeScaleLabel = (option: "x" | "y", value: string) => {
+        if (metadata) {
+            const newData = { ...metadata };
+            if (newData.options && newData.options.scales) {
+                if (option === "x") {
+                    setXAxisLabel(value);
+                    newData.options.scales.xAxes[0].scaleLabel.labelString = value;
+                } else {
+                    setYAxisLabel(value);
+                    newData.options.scales.yAxes[0].scaleLabel.labelString = value;
+                }
+            }
+            changeChartData(newData);
+        }
+    };
+
+    const handleChangeTitle = (value: string) => {
+        setChartTitle(value);
+
+        if (metadata) {
+            const newData = { ...metadata };
+            if (newData.options && newData.options.title) {
+                newData.options.title.text = value;
+            }
+            changeChartData(newData);
+        }
+    };
 
     useEffect(() => {
         if (metadata) {
@@ -53,8 +95,7 @@ export const DataConfiguration = ({
                 placeholder="Insira o título do gráfico"
                 value={chartTitle}
                 onChange={e => {
-                    setChartTitle(e.target.value);
-                    changeTitle(e.target.value);
+                    handleChangeTitle(e.target.value);
                 }}
             />
 
@@ -63,8 +104,7 @@ export const DataConfiguration = ({
                 placeholder="Insira o rótulo do eixo-x"
                 value={xAxisLabel}
                 onChange={e => {
-                    changeScaleLabel("x", e.target.value);
-                    setXAxisLabel(e.target.value);
+                    handleChangeScaleLabel("x", e.target.value);
                 }}
             />
 
@@ -73,8 +113,7 @@ export const DataConfiguration = ({
                 placeholder="Insira o rótulo do eixo-y"
                 value={yAxisLabel}
                 onChange={e => {
-                    changeScaleLabel("y", e.target.value);
-                    setYAxisLabel(e.target.value);
+                    handleChangeScaleLabel("y", e.target.value);
                 }}
             />
 
@@ -86,10 +125,12 @@ export const DataConfiguration = ({
                         name={dataset.name}
                         key={`dataSet-${index}`}
                         data={dataset.data}
-                        changeData={newData => changeDataSet(index, newData)}
+                        changeData={newData => handleChangeDataSet(index, newData)}
                     />
                 ))}
             </div>
+
+            <Separator />
 
             <Button height="30px" variant="secondary" padding="0 10px" onClick={() => {}}>
                 <TbDatabase size={12} color={Theme.colors.gray100} />
