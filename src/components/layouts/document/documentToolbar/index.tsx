@@ -117,6 +117,7 @@ export const DocumentToolbar = ({
                 <Toolbar.Group padding="0 5px" className="FontSelector">
                     <Toolbar.Item>
                         <Selector
+                            label="FONTES"
                             value={fontFamily}
                             onValueChange={value => onChangeFontFamily(value as FontFamilies)}
                             options={[

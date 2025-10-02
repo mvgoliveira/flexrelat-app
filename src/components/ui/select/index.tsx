@@ -46,7 +46,7 @@ interface IContentProps extends IReactChildren {
 }
 
 const Content = ({ children, width = 250 }: IReactChildren & IContentProps): ReactElement => (
-    <StyledContent width={width} position="popper" align="start" sideOffset={5}>
+    <StyledContent width={width} position="popper" align="start" sideOffset={7} alignOffset={-3}>
         <StyledViewport>{children}</StyledViewport>
     </StyledContent>
 );
@@ -86,13 +86,13 @@ Item.displayName = "SelectItem";
 Select.Item = Item;
 
 type GroupPropTypes = {
-    label: string;
+    label?: string;
     children: ReactNode | ReactNode[];
 };
 
 const Group = ({ label, children }: GroupPropTypes) => (
     <SelectGroup>
-        <StyledLabel>{label}</StyledLabel>
+        {label && <StyledLabel>{label}</StyledLabel>}
         {children}
     </SelectGroup>
 );

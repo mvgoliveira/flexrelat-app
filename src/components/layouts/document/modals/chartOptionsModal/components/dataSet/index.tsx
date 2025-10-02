@@ -1,7 +1,7 @@
 import { Typography } from "@/components/features/typography";
 import { Theme } from "@/themes";
 import { jspreadsheet, Spreadsheet, Worksheet } from "@jspreadsheet-ce/react";
-import { ReactElement, useRef, useState } from "react";
+import { ReactElement, useCallback, useRef, useState, type KeyboardEvent } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import "jspreadsheet-ce/dist/jspreadsheet.css";
 import "jsuites/dist/jsuites.css";
@@ -17,6 +17,7 @@ interface IDataSetProps {
 export const DataSet = ({ name, data, changeData }: IDataSetProps): ReactElement => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const spreadsheet = useRef(null);
+    const worksheetRef = useRef<any>(null);
 
     const contextMenu = () => {
         return false;
@@ -39,6 +40,10 @@ export const DataSet = ({ name, data, changeData }: IDataSetProps): ReactElement
         "Rename this worksheet": "Renomear worksheet",
         "Delete this worksheet": "Apagar worksheet",
         "Are you sure?": "Tem certeza?",
+        "Are you sure to delete the selected rows?":
+            "Tem certeza que deseja apagar as linhas selecionadas?",
+        "Are you sure to delete the selected columns?":
+            "Tem certeza que deseja apagar as colunas selecionadas?",
         "Rename this cell": "Renomear essa celula",
         Cut: "Cortar",
         Copy: "Copy",
@@ -67,6 +72,37 @@ export const DataSet = ({ name, data, changeData }: IDataSetProps): ReactElement
         changeData(filteredNewData);
     };
 
+    // Captura a instância do worksheet quando a planilha carrega
+    const handleLoad = useCallback((worksheet: any) => {
+        worksheetRef.current = worksheet;
+    }, []);
+
+    // Intercepta Delete/Backspace para deletar linha/coluna sem window.confirm
+    const handleKeyDownCapture = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+        const ws = worksheetRef.current.worksheets[0];
+
+        if (!ws) return;
+
+        const isDelete = e.key === "Delete" || e.key === "Backspace";
+        if (!isDelete) return;
+
+        if (ws.selectedRow !== false) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            ws.deleteRow();
+            ws.insertRow();
+            return;
+        }
+
+        // Se um cabeçalho de coluna estiver selecionado
+        if (ws.selectedHeader !== false) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
+    }, []);
+
     return (
         <Root>
             <Header onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
@@ -92,14 +128,17 @@ export const DataSet = ({ name, data, changeData }: IDataSetProps): ReactElement
             </Header>
 
             <Container isOpen={isOpen}>
-                <Spreadsheet
-                    key="dataSet"
-                    ref={spreadsheet}
-                    contextMenu={contextMenu}
-                    onchange={handleChangeData}
-                >
-                    <Worksheet minDimensions={[2, 20]} columns={columns} data={data} />
-                </Spreadsheet>
+                <div onKeyDownCapture={handleKeyDownCapture}>
+                    <Spreadsheet
+                        key="dataSet"
+                        ref={spreadsheet}
+                        contextMenu={contextMenu}
+                        onchange={handleChangeData}
+                        onload={handleLoad}
+                    >
+                        <Worksheet minDimensions={[2, 20]} columns={columns} data={data} />
+                    </Spreadsheet>
+                </div>
             </Container>
         </Root>
     );

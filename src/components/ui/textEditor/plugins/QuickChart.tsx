@@ -20,6 +20,16 @@ export type ChartData = {
             lineTension?: number;
             showLine?: boolean;
             fill?: boolean;
+            datalabels?: {
+                display: boolean;
+                color: string;
+                backgroundColor: string;
+                borderColor: string;
+                borderWidth: number;
+                borderRadius: number;
+                anchor: string;
+                align: string;
+            };
         }>;
     };
     options?: {
@@ -28,6 +38,7 @@ export type ChartData = {
             text: string;
         };
         legend: {
+            display?: boolean;
             position?: "top" | "left" | "bottom" | "right";
             labels: {
                 usePointStyle: boolean;

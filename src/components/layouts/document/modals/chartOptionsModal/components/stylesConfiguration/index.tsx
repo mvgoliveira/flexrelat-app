@@ -1,9 +1,20 @@
 import { Typography } from "@/components/features/typography";
 import { Switch } from "@/components/ui/switch";
 import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
+import { Theme } from "@/themes";
 import { ReactElement, useEffect, useState } from "react";
+import {
+    TbBoxAlignBottom,
+    TbBoxAlignBottomFilled,
+    TbBoxAlignLeft,
+    TbBoxAlignLeftFilled,
+    TbBoxAlignRight,
+    TbBoxAlignRightFilled,
+    TbBoxAlignTop,
+    TbBoxAlignTopFilled,
+} from "react-icons/tb";
 
-import { Separator, SwitchContainer } from "./styles";
+import { Separator, InlineContainer, StyledButton } from "./styles";
 
 interface IStylesConfigurationProps {
     metadata: ChartData;
@@ -17,6 +28,9 @@ export const StylesConfiguration = ({
     const [fillState, setFillState] = useState<boolean>(false);
     const [showLinesState, setShowLinesState] = useState<boolean>(true);
     const [smoothCurvesState, setSmoothCurvesState] = useState<boolean>(false);
+    const [legendPosition, setLegendPosition] = useState<"top" | "left" | "bottom" | "right">(
+        "top"
+    );
 
     const handleChangeFill = (value: boolean) => {
         setFillState(value);
@@ -68,17 +82,52 @@ export const StylesConfiguration = ({
         }
     };
 
+    const handleChangeLegendPosition = (position: "top" | "left" | "bottom" | "right") => {
+        setLegendPosition(position);
+
+        if (metadata && metadata.options) {
+            const newData = { ...metadata };
+
+            if (!newData.options) return;
+
+            newData.options = {
+                ...newData.options,
+                legend: {
+                    display: true,
+                    position: position,
+                    labels: {
+                        usePointStyle: false,
+                        boxWidth: 13,
+                    },
+                },
+            };
+
+            changeChartData(newData);
+        }
+    };
+
     useEffect(() => {
-        if (metadata && metadata.data && metadata.data.datasets && metadata.data.datasets[0]) {
+        if (metadata) {
             setFillState(!!metadata.data.datasets[0].fill);
-        } else {
-            setFillState(false);
+
+            setShowLinesState(
+                metadata.data.datasets[0].showLine !== undefined
+                    ? metadata.data.datasets[0].showLine
+                    : true
+            );
+            setSmoothCurvesState(
+                !!(
+                    metadata.data.datasets[0].lineTension &&
+                    metadata.data.datasets[0].lineTension > 0
+                )
+            );
+            setLegendPosition(metadata.options?.legend?.position || "top");
         }
     }, [metadata]);
 
     return (
         <>
-            <SwitchContainer>
+            <InlineContainer>
                 <Typography
                     tag="p"
                     fontSize={{ xs: "fs75" }}
@@ -94,9 +143,9 @@ export const StylesConfiguration = ({
                     checked={fillState}
                     onClick={() => handleChangeFill(!fillState)}
                 />
-            </SwitchContainer>
+            </InlineContainer>
 
-            <SwitchContainer>
+            <InlineContainer>
                 <Typography
                     tag="p"
                     fontSize={{ xs: "fs75" }}
@@ -112,9 +161,9 @@ export const StylesConfiguration = ({
                     checked={showLinesState}
                     onClick={() => handleChangeShowLines(!showLinesState)}
                 />
-            </SwitchContainer>
+            </InlineContainer>
 
-            <SwitchContainer>
+            <InlineContainer>
                 <Typography
                     tag="p"
                     fontSize={{ xs: "fs75" }}
@@ -130,9 +179,67 @@ export const StylesConfiguration = ({
                     checked={smoothCurvesState}
                     onClick={() => handleChangeSmoothCurves(!smoothCurvesState)}
                 />
-            </SwitchContainer>
+            </InlineContainer>
 
             <Separator />
+
+            <InlineContainer>
+                <Typography
+                    tag="p"
+                    fontSize={{ xs: "fs75" }}
+                    color="black"
+                    fontWeight="regular"
+                    textAlign="left"
+                >
+                    Posição da Legenda
+                </Typography>
+
+                <div style={{ display: "flex", gap: "0px" }}>
+                    <StyledButton
+                        active={legendPosition === "left"}
+                        onClick={() => handleChangeLegendPosition("left")}
+                    >
+                        {legendPosition === "left" ? (
+                            <TbBoxAlignLeftFilled size={15} color={Theme.colors.black} />
+                        ) : (
+                            <TbBoxAlignLeft size={15} color={Theme.colors.gray70} />
+                        )}
+                    </StyledButton>
+
+                    <StyledButton
+                        active={legendPosition === "top"}
+                        onClick={() => handleChangeLegendPosition("top")}
+                    >
+                        {legendPosition === "top" ? (
+                            <TbBoxAlignTopFilled size={15} color={Theme.colors.black} />
+                        ) : (
+                            <TbBoxAlignTop size={15} color={Theme.colors.gray70} />
+                        )}
+                    </StyledButton>
+
+                    <StyledButton
+                        active={legendPosition === "bottom"}
+                        onClick={() => handleChangeLegendPosition("bottom")}
+                    >
+                        {legendPosition === "bottom" ? (
+                            <TbBoxAlignBottomFilled size={15} color={Theme.colors.black} />
+                        ) : (
+                            <TbBoxAlignBottom size={15} color={Theme.colors.gray70} />
+                        )}
+                    </StyledButton>
+
+                    <StyledButton
+                        active={legendPosition === "right"}
+                        onClick={() => handleChangeLegendPosition("right")}
+                    >
+                        {legendPosition === "right" ? (
+                            <TbBoxAlignRightFilled size={15} color={Theme.colors.black} />
+                        ) : (
+                            <TbBoxAlignRight size={15} color={Theme.colors.gray70} />
+                        )}
+                    </StyledButton>
+                </div>
+            </InlineContainer>
         </>
     );
 };

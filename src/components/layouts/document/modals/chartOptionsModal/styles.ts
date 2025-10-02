@@ -17,7 +17,7 @@ export const ConfigurationContainer = styled.div`
 export const TabsContainer = styled.div`
     display: flex;
     width: 100%;
-    background: ${({ theme }) => theme.colors.gray10};
+    background: ${({ theme }) => theme.colors.gray20};
     height: 30px;
     border-bottom: 1px solid ${props => props.theme.colors.gray40};
 `;

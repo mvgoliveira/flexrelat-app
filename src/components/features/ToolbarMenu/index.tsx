@@ -18,7 +18,7 @@ const Trigger = ({ children }: IReactChildren): ReactElement => (
 ToolbarMenu.Trigger = Trigger;
 
 const Content = ({ children }: IReactChildren): ReactElement => (
-    <Popover.Content align="end" sideOffset={4} hasCloseButton={false} hasArrow={false}>
+    <Popover.Content align="end" sideOffset={7} hasCloseButton={false} hasArrow={false}>
         <Container>{children}</Container>
     </Popover.Content>
 );

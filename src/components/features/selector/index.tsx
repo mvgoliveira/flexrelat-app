@@ -13,6 +13,7 @@ interface ISelectorProps {
         key: string;
         value: string;
     }[];
+    label?: string;
     value: string;
     onValueChange: (value: string) => void;
     open?: boolean;
@@ -24,6 +25,7 @@ interface ISelectorProps {
 export const Selector = ({
     options,
     value,
+    label,
     onValueChange,
     open,
     setOpen,
@@ -59,7 +61,7 @@ export const Selector = ({
                 </Select.Trigger>
 
                 <Select.Content width={triggerWidth}>
-                    <Select.Group label="FONTES">
+                    <Select.Group label={label}>
                         {options.map(option => (
                             <Select.Item
                                 key={`progress-${option.key}`}

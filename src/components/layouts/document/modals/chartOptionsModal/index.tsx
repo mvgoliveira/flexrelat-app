@@ -8,6 +8,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { TbBrush, TbChartBubble, TbDatabase } from "react-icons/tb";
 
 import { DataConfiguration } from "./components/dataConfiguration";
+import { GeneralConfiguration } from "./components/generalConfiguration";
 import { StylesConfiguration } from "./components/stylesConfiguration";
 import {
     BottomContainer,
@@ -98,17 +99,24 @@ export const ChartOptionsModal = ({
                     </TabsContainer>
 
                     <ConfigurationContent>
+                        {activeTab === "general" && (
+                            <GeneralConfiguration
+                                metadata={metadata}
+                                changeChartData={setDecodedData}
+                            />
+                        )}
+
                         {activeTab === "data" && (
                             <DataConfiguration
                                 metadata={metadata}
-                                changeChartData={changeChartData}
+                                changeChartData={setDecodedData}
                             />
                         )}
 
                         {activeTab === "style" && (
                             <StylesConfiguration
                                 metadata={metadata}
-                                changeChartData={changeChartData}
+                                changeChartData={setDecodedData}
                             />
                         )}
                     </ConfigurationContent>

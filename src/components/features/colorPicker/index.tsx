@@ -41,7 +41,8 @@ export const ColorPicker = ({
     return (
         <Popover>
             <Popover.Trigger>{children}</Popover.Trigger>
-            <Popover.Content hasCloseButton={false} hasArrow={false}>
+
+            <Popover.Content hasCloseButton={false} hasArrow={false} sideOffset={7} align="center">
                 <Container>
                     <PresetContainer>
                         {presetColors.map((presetColor, idx) => (

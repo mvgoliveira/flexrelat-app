@@ -5,7 +5,6 @@ export const Container = styled.div`
     flex-direction: column;
     background: ${({ theme }) => theme.colors.white};
     border: 1px solid ${({ theme }) => theme.colors.gray40};
-    border-radius: 4px;
     padding: 8px;
     gap: 8px;
     width: 200px;
