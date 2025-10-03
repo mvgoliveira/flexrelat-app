@@ -93,12 +93,8 @@ export const StylesConfiguration = ({
             newData.options = {
                 ...newData.options,
                 legend: {
-                    display: true,
+                    ...newData.options.legend,
                     position: position,
-                    labels: {
-                        usePointStyle: false,
-                        boxWidth: 13,
-                    },
                 },
             };
 

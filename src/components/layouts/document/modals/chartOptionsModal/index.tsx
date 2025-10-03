@@ -99,23 +99,23 @@ export const ChartOptionsModal = ({
                     </TabsContainer>
 
                     <ConfigurationContent>
-                        {activeTab === "general" && (
+                        {decodedData && activeTab === "general" && (
                             <GeneralConfiguration
-                                metadata={metadata}
+                                metadata={decodedData}
                                 changeChartData={setDecodedData}
                             />
                         )}
 
-                        {activeTab === "data" && (
+                        {decodedData && activeTab === "data" && (
                             <DataConfiguration
-                                metadata={metadata}
+                                metadata={decodedData}
                                 changeChartData={setDecodedData}
                             />
                         )}
 
-                        {activeTab === "style" && (
+                        {decodedData && activeTab === "style" && (
                             <StylesConfiguration
-                                metadata={metadata}
+                                metadata={decodedData}
                                 changeChartData={setDecodedData}
                             />
                         )}

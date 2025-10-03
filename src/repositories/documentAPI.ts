@@ -74,6 +74,7 @@ export const getDocumentByDocumentId = async (documentId: string): Promise<Docum
                 text: "Gráfico de qualquer coisa",
             },
             legend: {
+                display: true,
                 position: "top",
                 labels: {
                     usePointStyle: false,

@@ -53,17 +53,12 @@ export const GeneralConfiguration = ({
                 ...newData.options,
                 legend: legendValue
                     ? {
+                          ...metadata.options.legend,
                           display: true,
-                          position: "top",
-                          labels: {
-                              usePointStyle: false,
-                              boxWidth: 13,
-                          },
                       }
                     : {
+                          ...metadata.options.legend,
                           display: false,
-                          position: "top",
-                          labels: { usePointStyle: false, boxWidth: 13 },
                       },
             };
 
@@ -74,7 +69,7 @@ export const GeneralConfiguration = ({
     useEffect(() => {
         if (metadata) {
             setDataLabelsState(metadata.data.datasets[0]?.datalabels?.display ? true : false);
-
+            console.log(metadata.options?.legend);
             setLegendState(metadata.options?.legend.display ? true : false);
         }
     }, [metadata]);
