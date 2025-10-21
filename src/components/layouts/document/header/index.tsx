@@ -23,6 +23,7 @@ import {
     MdOutlineFileDownload,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
+import { VscDebugConsole } from "react-icons/vsc";
 
 import { ButtonsContainer, RightContainer, Root, TitleContainer, TitleContent } from "./styles";
 
@@ -140,7 +141,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         URL.revokeObjectURL(url);
     };
 
-    const handleDownloadDOCX = async () => {
+    const handleDownloadPDFCanvas = async () => {
         const htmlContent = getHtmlContent();
 
         // Replace quick-chart with img
@@ -267,6 +268,34 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         };
 
         html2pdf().set(opt).from(finalHtml).save();
+    };
+
+    const handleDownloadDOCX = async () => {};
+
+    const handleDebugConsole = async () => {
+        const htmlContent = getHtmlContent();
+
+        // Replace quick-chart with img
+        const filteredHtml = htmlContent.replaceAll(
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData) => {
+                try {
+                    // const decoded = decodeURIComponent(chartData);
+                    // console.log(JSON.parse(decoded));
+                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    return `
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+                            <img src="${url}" style="width: 375pt;" />
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("Erro ao processar chartdata:", e);
+                    return "";
+                }
+            }
+        );
+
+        console.log(filteredHtml);
     };
 
     useEffect(() => {
@@ -457,10 +486,24 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                             />
 
                             <Menu.Item
+                                text="Download em PDF Canvas"
+                                onClick={handleDownloadPDFCanvas}
+                                iconPosition="left"
+                                icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
+                            />
+
+                            <Menu.Item
                                 text="Download em DOCX"
                                 onClick={handleDownloadDOCX}
                                 iconPosition="left"
                                 icon={<AiOutlineFileWord size={12} color={Theme.colors.black} />}
+                            />
+
+                            <Menu.Item
+                                text="Depuração"
+                                onClick={handleDebugConsole}
+                                iconPosition="left"
+                                icon={<VscDebugConsole size={12} color={Theme.colors.black} />}
                             />
                         </Menu.Content>
                     </Menu>
