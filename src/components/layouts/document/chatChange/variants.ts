@@ -1,4 +1,4 @@
-import { ChangesType, StatusType } from "@/repositories/changesApi";
+import { ChangesType, StatusType } from "@/repositories/changesAPI";
 import { Theme } from "@/themes";
 
 type BadgeStyles = {

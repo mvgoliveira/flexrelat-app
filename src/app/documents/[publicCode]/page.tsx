@@ -6,6 +6,7 @@ import { Header } from "@/components/layouts/document/header";
 import { Layout } from "@/components/layouts/document/layout";
 import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeader";
 import { useDocumentContext } from "@/context/documentContext";
+import withSession from "@/hoc/withSession";
 import { ReactElement, useState } from "react";
 import { MdOutlineAutoAwesomeMosaic } from "react-icons/md";
 import { RiRobot2Line } from "react-icons/ri";
@@ -29,7 +30,7 @@ const rightTabs: TabHeaderType<RightTabsValue>[] = [
     },
 ];
 
-export default function Dashboard(): ReactElement {
+function Dashboard(): ReactElement {
     const { getDocumentStatus, documentData } = useDocumentContext();
     const [activeLeftTab, setActiveLeftTab] = useState<LeftTabsValue>("components");
     const [activeRightTab, setActiveRightTab] = useState<RightTabsValue>("ai");
@@ -81,3 +82,5 @@ export default function Dashboard(): ReactElement {
         </Layout>
     );
 }
+
+export default withSession(Dashboard);

@@ -1,6 +1,6 @@
 import { Typography } from "@/components/features/typography";
 import { useDocumentContext } from "@/context/documentContext";
-import { getChange } from "@/repositories/changesApi";
+import { getChange } from "@/repositories/changesAPI";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
 import { DOMParser, Node } from "@tiptap/pm/model";

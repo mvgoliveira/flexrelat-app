@@ -1,10 +1,10 @@
-import { AiChange, updateAiChangeStatus } from "@/repositories/changesApi";
+import { AiChange, updateAiChangeStatus } from "@/repositories/changesAPI";
 import {
     DocumentData,
     getDocumentByPublicCode,
     updateDocumentContent,
 } from "@/repositories/documentAPI";
-import { getMessagesByChatId, Message } from "@/repositories/messageApi";
+import { getMessagesByChatId, Message } from "@/repositories/messageAPI";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/core";
 import { useParams } from "next/navigation";

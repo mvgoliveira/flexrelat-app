@@ -1,5 +1,10 @@
+"use client";
+
+import withSession from "@/hoc/withSession";
 import { ReactElement } from "react";
 
-export default function Home(): ReactElement {
+function Home(): ReactElement {
     return <main></main>;
 }
+
+export default withSession(Home);

@@ -30,7 +30,7 @@ export const Input = ({ placeholder, value, onChange, label }: IInputProps): Rea
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
-                    aria-label="TESTE"
+                    aria-label={label}
                 />
             </div>
         </Root>

@@ -1,6 +1,6 @@
 import { Typography } from "@/components/features/typography";
 import { useDocumentContext } from "@/context/documentContext";
-import { AiChange } from "@/repositories/changesApi";
+import { AiChange } from "@/repositories/changesAPI";
 import { Theme } from "@/themes";
 import { ReactElement } from "react";
 import { MdDoneAll } from "react-icons/md";
