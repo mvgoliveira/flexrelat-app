@@ -1,11 +1,6 @@
 import { Typography } from "@/components/features/typography";
 import { useDocumentContext } from "@/context/documentContext";
-import {
-    getImproveText,
-    getLessText,
-    getMoreText,
-    getOrthographyFixed,
-} from "@/repositories/changesApi";
+import { getChange } from "@/repositories/changesApi";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
 import { DOMParser, Node } from "@tiptap/pm/model";
@@ -72,16 +67,22 @@ export const TextBubbleMenu = ({
 
             switch (type) {
                 case "more":
-                    html = await getMoreText(selectedContent.html);
+                    html = await getChange(
+                        `Deixe esse texto mais longo, mas não muito, sem alterar o tipo do elemento html: ${selectedContent.html}`
+                    );
                     break;
                 case "less":
-                    html = await getLessText(selectedContent.html);
+                    html = await getChange(
+                        `Encurte esse texto, mas não muito: ${selectedContent.html}`
+                    );
                     break;
                 case "fix":
-                    html = await getOrthographyFixed(selectedContent.html);
+                    html = await getChange(
+                        `Corrija a ortografia desse texto: ${selectedContent.html}`
+                    );
                     break;
                 case "improve":
-                    html = await getImproveText(selectedContent.html);
+                    html = await getChange(`Melhore esse texto: ${selectedContent.html}`);
                     break;
                 default:
                     throw new Error("Invalid command type");

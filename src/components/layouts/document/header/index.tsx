@@ -116,8 +116,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
             (match, chartData) => {
                 try {
-                    // const decoded = decodeURIComponent(chartData);
-                    // console.log(JSON.parse(decoded));
                     const url = `https://quickchart.io/chart?c=${chartData}`;
                     return `
                         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
@@ -280,8 +278,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
             (match, chartData) => {
                 try {
-                    // const decoded = decodeURIComponent(chartData);
-                    // console.log(JSON.parse(decoded));
                     const url = `https://quickchart.io/chart?c=${chartData}`;
                     return `
                         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">

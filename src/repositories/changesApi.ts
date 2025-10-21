@@ -71,22 +71,7 @@ export const updateAiChangeStatus = async (
     };
 };
 
-export const getMoreText = async (content: string): Promise<string> => {
-    const { data } = await client.post(`${PREFIX}/more-text`, { content });
-    return data.data;
-};
-
-export const getLessText = async (content: string): Promise<string> => {
-    const { data } = await client.post(`${PREFIX}/less-text`, { content });
-    return data.data;
-};
-
-export const getOrthographyFixed = async (content: string): Promise<string> => {
-    const { data } = await client.post(`${PREFIX}/fix-orthography`, { content });
-    return data.data;
-};
-
-export const getImproveText = async (content: string): Promise<string> => {
-    const { data } = await client.post(`${PREFIX}/improve-text`, { content });
+export const getChange = async (prompt: string): Promise<string> => {
+    const { data } = await client.post(`${PREFIX}/request-change`, { prompt });
     return data.data;
 };
