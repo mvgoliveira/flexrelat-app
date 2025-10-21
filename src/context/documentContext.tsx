@@ -1,7 +1,7 @@
 import { AiChange, updateAiChangeStatus } from "@/repositories/changesApi";
 import {
     DocumentData,
-    getDocumentByDocumentId,
+    getDocumentByPublicCode,
     updateDocumentContent,
 } from "@/repositories/documentAPI";
 import { getMessagesByChatId, Message } from "@/repositories/messageApi";
@@ -27,7 +27,7 @@ type DocumentContextType = {
     selectedChanges: AiChange[];
     updateSelectedChange: (change: AiChange) => void;
     documentData: DocumentData | undefined;
-    documentStatus: Status;
+    getDocumentStatus: Status;
     approveChange: (change: AiChange) => void;
     rejectChange: (change: AiChange) => void;
     loadingComponentId: string;
@@ -44,25 +44,27 @@ const DocumentContext = createContext<DocumentContextType | null>(null);
 
 export function DocumentProvider({ children }: { children: ReactNode }): React.ReactElement {
     const [editor, setEditor] = useState<Editor | null>(null);
-    const { documentId } = useParams();
+    const { publicCode } = useParams();
     const [changes, setChanges] = useState<AiChange[]>([]);
     const [selectedChanges, setSelectedChanges] = useState<AiChange[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const [loadingComponentId, setLoadingComponentId] = useState<string>("");
 
-    const { status: messagesStatus, refetch: refetchMessages } = useQuery({
-        queryKey: ["get_ai_messages", documentId],
-        queryFn: async (): Promise<Message[]> => {
-            const response: Message[] = await getMessagesByChatId(documentId as string, "document");
-            setMessages(response);
+    const { status: getDocumentStatus, data: documentData } = useQuery({
+        queryKey: ["get_document_data", publicCode],
+        queryFn: async (): Promise<DocumentData> => {
+            const response: DocumentData = await getDocumentByPublicCode(publicCode as string);
             return response;
         },
     });
 
-    const { status: documentStatus, data: documentData } = useQuery({
-        queryKey: ["get_document_data", documentId],
-        queryFn: async (): Promise<DocumentData> => {
-            const response: DocumentData = await getDocumentByDocumentId(documentId as string);
+    const { status: messagesStatus, refetch: refetchMessages } = useQuery({
+        queryKey: ["get_ai_messages", documentData?.id],
+        queryFn: async (): Promise<Message[]> => {
+            if (!documentData) return [];
+
+            const response: Message[] = await getMessagesByChatId(documentData.id, "document");
+            setMessages(response);
             return response;
         },
     });
@@ -74,7 +76,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             documentData.content != newContent &&
             documentData.content !== ""
         ) {
-            updateDocumentContent(documentId as string, newContent);
+            updateDocumentContent(publicCode as string, newContent);
         }
     };
 
@@ -206,7 +208,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 messagesStatus,
                 selectedChanges,
                 documentData,
-                documentStatus,
+                getDocumentStatus,
                 updateSelectedChange,
                 approveChange,
                 rejectChange,

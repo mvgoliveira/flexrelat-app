@@ -8,6 +8,7 @@ export const getFormattedDate = (timestamp: string): string => {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
+        timeZone: "America/Sao_Paulo", // Ajusta para o fuso horário brasileiro
     };
 
     return date.toLocaleString("pt-BR", options);
@@ -24,26 +25,17 @@ export const getElapsedTime = (selectedTimestamp: string): string => {
         const hours = Math.floor(minutesDiff / 60);
 
         if (hours >= 24) {
-            const day = String(selectedDate.getDate()).padStart(2, "0");
-            const monthNames = [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ];
-            const month = monthNames[selectedDate.getMonth()];
-            const year = selectedDate.getFullYear();
-            const hour = String(selectedDate.getHours()).padStart(2, "0");
-            const minute = String(selectedDate.getMinutes()).padStart(2, "0");
-            return `${day} ${month} ${year} - ${hour}:${minute}`;
+            // Usa toLocaleString para formatar a data no fuso horário brasileiro
+            const options: Intl.DateTimeFormatOptions = {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+                timeZone: "America/Sao_Paulo",
+            };
+            return selectedDate.toLocaleString("pt-BR", options).replace(",", " -");
         }
 
         return `${hours} hora${hours > 1 ? "s" : ""} atrás`;

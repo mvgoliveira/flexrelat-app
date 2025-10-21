@@ -30,13 +30,13 @@ const rightTabs: TabHeaderType<RightTabsValue>[] = [
 ];
 
 export default function Dashboard(): ReactElement {
-    const { documentStatus, documentData } = useDocumentContext();
+    const { getDocumentStatus, documentData } = useDocumentContext();
     const [activeLeftTab, setActiveLeftTab] = useState<LeftTabsValue>("components");
     const [activeRightTab, setActiveRightTab] = useState<RightTabsValue>("ai");
     const [saveStatus, setSaveStatus] = useState<"pending" | "success" | "error">("success");
 
-    if (documentStatus === "pending") return <></>;
-    if (documentStatus === "error") return <></>;
+    if (getDocumentStatus === "pending") return <></>;
+    if (getDocumentStatus === "error") return <></>;
 
     return (
         <Layout>
@@ -46,7 +46,7 @@ export default function Dashboard(): ReactElement {
                         metadata={{
                             id: documentData.id,
                             title: documentData.name,
-                            createdAt: documentData.created_at,
+                            createdAt: documentData.createdAt,
                             saveStatus: saveStatus,
                             onChangeStatus: setSaveStatus,
                         }}

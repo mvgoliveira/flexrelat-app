@@ -8,7 +8,6 @@ import { updateDocumentTitle } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
 import { pdf } from "@react-pdf/renderer";
-import html2pdf from "html2pdf.js";
 import _ from "lodash";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
@@ -140,6 +139,8 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     };
 
     const handleDownloadPDFCanvas = async () => {
+        const html2pdf = (await import("html2pdf.js")).default;
+
         const htmlContent = getHtmlContent();
 
         // Replace quick-chart with img
@@ -272,26 +273,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
     const handleDebugConsole = async () => {
         const htmlContent = getHtmlContent();
-
-        // Replace quick-chart with img
-        const filteredHtml = htmlContent.replaceAll(
-            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
-            (match, chartData) => {
-                try {
-                    const url = `https://quickchart.io/chart?c=${chartData}`;
-                    return `
-                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
-                            <img src="${url}" style="width: 375pt;" />
-                        </div>
-                    `;
-                } catch (e) {
-                    console.error("Erro ao processar chartdata:", e);
-                    return "";
-                }
-            }
-        );
-
-        console.log(filteredHtml);
+        console.log(htmlContent);
     };
 
     useEffect(() => {
