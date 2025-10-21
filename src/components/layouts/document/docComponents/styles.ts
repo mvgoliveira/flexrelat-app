@@ -6,7 +6,7 @@ export const Root = styled.div`
     width: 100%;
     height: 100%;
     overflow: hidden;
-    padding: 20px;
+    padding: 20px 5px 20px 20px;
     gap: 20px;
 `;
 

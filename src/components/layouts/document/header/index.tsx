@@ -1,12 +1,14 @@
 import { Button } from "@/components/features/button";
-import { Menu } from "@/components/features/Menu";
+import { DocumentDownload } from "@/components/features/documentDownload";
+import { Menu } from "@/components/features/menu";
 import { Typography } from "@/components/features/typography";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useDocumentContext } from "@/context/documentContext";
 import { updateDocumentTitle } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
-import { Document, Page, StyleSheet, pdf } from "@react-pdf/renderer";
+import { pdf } from "@react-pdf/renderer";
+import html2pdf from "html2pdf.js";
 import _ from "lodash";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
@@ -21,181 +23,9 @@ import {
     MdOutlineFileDownload,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
-import Html from "react-pdf-html";
+import { VscDebugConsole } from "react-icons/vsc";
 
 import { ButtonsContainer, RightContainer, Root, TitleContainer, TitleContent } from "./styles";
-
-const styles = StyleSheet.create({
-    body: {
-        paddingTop: "3cm",
-        paddingRight: "2cm",
-        paddingBottom: "2cm",
-        paddingLeft: "3cm",
-    },
-});
-
-const stylesheet = {
-    "> p": {
-        marginBottom: 9,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-        fontWeight: "normal",
-        minHeight: 17.21,
-    },
-    h1: {
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-        counterIncrement: "h1",
-        counterReset: "h2",
-    },
-    h2: {
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-        counterIncrement: "h2",
-        counterReset: "h3",
-    },
-    h3: {
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-        counterIncrement: "h3",
-    },
-    h4: {
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-    },
-    h5: {
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-    },
-    h6: {
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-    },
-    "h1::before": {
-        content: `counter(h1) ". "`,
-    },
-    "h2::before": {
-        content: `counter(h1) "." counter(h2) ". "`,
-    },
-    "h3::before": {
-        content: `counter(h1) "." counter(h2) "." counter(h3) ". "`,
-    },
-    table: {
-        borderCollapse: "collapse",
-        overflow: "hidden",
-        tableLayout: "fixed",
-        marginBottom: 14,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        wordBreak: "break-word",
-        hyphens: "auto",
-    },
-    "table td": {
-        borderRight: "1px solid #000",
-        borderBottom: "1px solid #000",
-        boxSizing: "border-box",
-        padding: 6.6,
-        position: "relative",
-        verticalAlign: "center",
-    },
-    "table th": {
-        borderRight: "1px solid #000",
-        borderBottom: "1px solid #000",
-        borderTop: "1px solid #000",
-        boxSizing: "border-box",
-        padding: 6.6,
-        position: "relative",
-        verticalAlign: "center",
-        fontWeight: "bold",
-    },
-    "table td:first-of-type": {
-        borderLeft: "1px solid #000",
-    },
-    "table th:first-of-type": {
-        borderLeft: "1px solid #000",
-    },
-    ul: {
-        marginTop: 0,
-        marginBottom: 12,
-        paddingLeft: 22,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-        gap: 10,
-    },
-    ol: {
-        marginTop: 0,
-        marginBottom: 12,
-        paddingLeft: 22,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-    },
-    li: {
-        paddingLeft: 10,
-        textAlign: "start",
-        fontFamily: "Times-Roman",
-        fontSize: 12,
-        lineHeight: 1.5,
-        wordBreak: "break-word",
-        hyphens: "auto",
-    },
-};
-
-interface IMyDocProps {
-    html: string;
-}
-
-export const MyDoc = ({ html }: IMyDocProps): ReactElement => (
-    <Document>
-        <Page size="A4" style={styles.body}>
-            <Html resetStyles stylesheet={stylesheet}>
-                {html}
-            </Html>
-        </Page>
-    </Document>
-);
 
 interface IHeaderProps {
     metadata: {
@@ -279,10 +109,28 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
 
         // Remove inline style min-width
-        filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
+        filteredHtml = filteredHtml.replaceAll(/style="[^"]*min-width:[^;"]*;?"/g, "");
 
-        const blob = await pdf(<MyDoc html={filteredHtml} />).toBlob();
-        const url = URL.createObjectURL(blob);
+        // Replace quick-chart with img
+        filteredHtml = filteredHtml.replaceAll(
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData) => {
+                try {
+                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    return `
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+                            <img src="${url}" style="width: 375pt;" />
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("Erro ao processar chartdata:", e);
+                    return "";
+                }
+            }
+        );
+
+        const pdfBlob = await pdf(<DocumentDownload html={filteredHtml} />).toBlob();
+        const url = URL.createObjectURL(pdfBlob);
         const link = document.createElement("a");
         link.href = url;
         const currentTitle = title || "Relatório sem título";
@@ -291,40 +139,159 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         URL.revokeObjectURL(url);
     };
 
-    const handleDownloadDOCX = async () => {
+    const handleDownloadPDFCanvas = async () => {
         const htmlContent = getHtmlContent();
 
-        // Remove all id
-        let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
-
-        // Remove p inside table but keep the content
-        const doc = new DOMParser().parseFromString(filteredHtml, "text/html");
-        const tables = doc.querySelectorAll("table");
-        tables.forEach(table => {
-            table.querySelectorAll("p").forEach(p => {
-                if (p.parentElement?.tagName === "TD" || p.parentElement?.tagName === "TH") {
-                    // Replace <p> with its children (move content up)
-                    while (p.firstChild) {
-                        p.parentElement.insertBefore(p.firstChild, p);
-                    }
-                    p.remove();
+        // Replace quick-chart with img
+        const filteredHtml = htmlContent.replaceAll(
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData) => {
+                try {
+                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    return `
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+                            <img src="${url}" style="width: 500px; height: 300px;" />
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("Erro ao processar chartdata:", e);
+                    return "";
                 }
-            });
-        });
+            }
+        );
 
-        // Convert to string
-        filteredHtml = doc.documentElement.outerHTML;
+        const styles = `
+            <style>
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6,
+                p {
+                    margin-bottom: 12px;
+                    text-align: start;
+                    font-family: "Times New Roman, serif";
+                    font-size: 16px;
+                    line-height: 1.5;
+                    word-wrap: break-word;
+                }
 
-        // Remains just body content
-        filteredHtml = filteredHtml.replace(/<body[^>]*>([\s\S]*)<\/body>/, "$1");
-        filteredHtml = filteredHtml.replace(/<html[^>]*>([\s\S]*)<\/html>/, "$1");
-        filteredHtml = filteredHtml.replace(/<head[^>]*>([\s\S]*)<\/head>/, "$1");
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6 {
+                    font-weight: bold;
+                }
 
-        // Remove colgroup
-        filteredHtml = filteredHtml.replace(/<colgroup[^>]*>[\s\S]*?<\/colgroup>/g, "");
+                p:empty {
+                    margin-bottom: 12px;
+                    min-height: 24px;
+                    width: 100%;
+                }
 
-        // Remove inline style min-width
-        filteredHtml = filteredHtml.replace(/style="[^"]*min-width:[^;"]*;?"/g, "");
+                table {
+                    border-collapse: collapse;
+                    overflow: hidden;
+                    table-layout: fixed;
+                    width: 100%;
+                    margin-bottom: 12px;
+                    page-break-inside: auto;
+                }
+
+                table p {
+                    margin-bottom: 0;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+
+                table tr:last-of-type { margin-bottom: 12px; }
+
+                td, th {
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    box-sizing: border-box;
+                    padding: 6px;
+                    position: relative;
+                }
+
+                table td:first-of-type,
+                table th:first-of-type {
+                    border-left: 1px solid black;
+                }
+
+                table th {
+                    font-weight: bold;
+                    text-align: start;
+                    border-top: 1px solid black;
+                }
+
+                table th p {
+                    text-align: start;
+                }
+
+                ul {
+                    list-style-type: disc;
+                    padding-left: 40px;
+                }
+
+                ol {
+                    list-style-type: decimal;
+                    padding-left: 40px;
+                }
+            </style>
+        `;
+
+        const finalHtml = `
+            <html>
+                <head>${styles}</head>
+                <body>${filteredHtml}</body>
+            </html>
+        `;
+
+        console.log(finalHtml);
+
+        const opt = {
+            margin: [85.039, 85.039, 56.693, 56.693],
+            filename: `${title || "Relatório sem título"}.pdf`,
+            image: { type: "webp", quality: 0.98 },
+            html2canvas: { scale: 2, dpi: 300, letterRendering: true, useCORS: true },
+            jsPDF: { unit: "pt", format: "a4", orientation: "portrait", compress: true },
+            pagebreak: { mode: ["css"], avoid: ["img", "h1", "h2", "h3", "h4", "h5", "h6"] },
+        };
+
+        html2pdf().set(opt).from(finalHtml).save();
+    };
+
+    const handleDownloadDOCX = async () => {};
+
+    const handleDebugConsole = async () => {
+        const htmlContent = getHtmlContent();
+
+        // Replace quick-chart with img
+        const filteredHtml = htmlContent.replaceAll(
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData) => {
+                try {
+                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    return `
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+                            <img src="${url}" style="width: 375pt;" />
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("Erro ao processar chartdata:", e);
+                    return "";
+                }
+            }
+        );
+
+        console.log(filteredHtml);
     };
 
     useEffect(() => {
@@ -515,10 +482,24 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                             />
 
                             <Menu.Item
+                                text="Download em PDF Canvas"
+                                onClick={handleDownloadPDFCanvas}
+                                iconPosition="left"
+                                icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
+                            />
+
+                            <Menu.Item
                                 text="Download em DOCX"
                                 onClick={handleDownloadDOCX}
                                 iconPosition="left"
                                 icon={<AiOutlineFileWord size={12} color={Theme.colors.black} />}
+                            />
+
+                            <Menu.Item
+                                text="Depuração"
+                                onClick={handleDebugConsole}
+                                iconPosition="left"
+                                icon={<VscDebugConsole size={12} color={Theme.colors.black} />}
                             />
                         </Menu.Content>
                     </Menu>

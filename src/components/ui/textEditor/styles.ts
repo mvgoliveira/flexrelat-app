@@ -13,12 +13,12 @@ interface IRootProps {
 }
 
 const loadingSkeleton = keyframes`
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
 `;
 
 export const Root = styled.div<IRootProps>`
@@ -62,22 +62,6 @@ export const Root = styled.div<IRootProps>`
         margin-left: ${({ marginLeft }) => `${-marginLeft}px`} !important;
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p {
-        margin-bottom: 9pt;
-        text-align: start;
-        font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
-        font-size: 12pt;
-        line-height: 1.5;
-        word-break: break-word;
-        hyphens: auto;
-    }
-
     .error {
         border-bottom: 1px solid ${({ theme }) => theme.colors.red50};
     }
@@ -87,8 +71,23 @@ export const Root = styled.div<IRootProps>`
     h3,
     h4,
     h5,
+    h6,
+    p {
+        margin-bottom: 12px;
+        text-align: start;
+        font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
+        font-size: 12pt;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
     h6 {
-        line-height: 150%;
+        font-weight: ${({ theme }) => theme.fontWeight.bold};
     }
 
     h1 {
@@ -137,8 +136,6 @@ export const Root = styled.div<IRootProps>`
         font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
         font-size: 12pt;
         line-height: 1.5 !important;
-        word-break: break-word !important;
-        hyphens: auto !important;
     }
 
     table {
@@ -172,7 +169,6 @@ export const Root = styled.div<IRootProps>`
             box-sizing: border-box;
             padding: 6px;
             position: relative;
-            vertical-align: top;
 
             > * {
                 margin-bottom: 0;
@@ -198,23 +194,12 @@ export const Root = styled.div<IRootProps>`
         list-style-type: disc;
         padding-left: 40px;
         gap: 12px;
-        margin-bottom: 12pt;
     }
 
     ol {
         list-style-type: decimal;
         padding-left: 40px;
         gap: 12px;
-        margin-bottom: 12pt;
-    }
-
-    code {
-        background: ${({ theme }) => theme.colors.gray30};
-        border: 1.5px solid ${({ theme }) => theme.colors.gray50};
-        padding: 2px 4px;
-        border-radius: 4px;
-        font-size: ${({ theme }) => theme.fontSize.fs75};
-        font-family: monospace;
     }
 
     .multi-selected {

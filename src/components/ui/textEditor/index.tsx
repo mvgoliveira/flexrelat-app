@@ -26,10 +26,10 @@ import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { PreventEditExtension } from "./plugins/PreventEdit";
+import { QuickChart } from "./plugins/QuickChart";
 import { Root } from "./styles";
 
 interface ITextEditorProps {
-    onChange?: (text: string) => void;
     zoom?: number;
     marginRight?: number;
     marginLeft?: number;
@@ -40,7 +40,6 @@ interface ITextEditorProps {
 }
 
 const TextEditor = ({
-    onChange,
     marginTop = 113.39,
     marginRight = 75.59,
     marginBottom = 75.59,
@@ -49,8 +48,15 @@ const TextEditor = ({
     pageHeight = 1123,
     zoom = 100,
 }: ITextEditorProps): ReactElement => {
-    const { documentData, selectedChanges, changes, clearChange, loadingComponentId, setEditor } =
-        useDocumentContext();
+    const {
+        documentData,
+        selectedChanges,
+        changes,
+        clearChange,
+        loadingComponentId,
+        setEditor,
+        handleChangeDocumentContent,
+    } = useDocumentContext();
 
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
@@ -114,6 +120,7 @@ const TextEditor = ({
                 "codeBlock",
                 "image",
                 "numberedHeading",
+                "quickChart",
             ],
             generateID: () => randomUUID(),
         }),
@@ -126,6 +133,7 @@ const TextEditor = ({
         FontSize,
         Color,
         BackgroundColor,
+        QuickChart,
     ];
 
     const currentEditor = useEditor({
@@ -134,8 +142,7 @@ const TextEditor = ({
         autofocus: false,
         content: ``,
         onUpdate: ({ editor }) => {
-            const value = editor.getText();
-            if (onChange) onChange(value.replace(/\n\n/g, "\n"));
+            if (handleChangeDocumentContent) handleChangeDocumentContent(editor.getHTML());
         },
     });
 
@@ -266,7 +273,7 @@ const TextEditor = ({
                 pageWidth={pageWidth}
                 pageHeight={pageHeight}
             >
-                <EditorContent editor={currentEditor} />
+                <EditorContent id="print" editor={currentEditor} />
             </Root>
         </>
     );

@@ -1,5 +1,9 @@
 import { AiChange, updateAiChangeStatus } from "@/repositories/changesApi";
-import { DocumentData, getDocumentByDocumentId } from "@/repositories/documentAPI";
+import {
+    DocumentData,
+    getDocumentByDocumentId,
+    updateDocumentContent,
+} from "@/repositories/documentAPI";
 import { getMessagesByChatId, Message } from "@/repositories/messageApi";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/core";
@@ -33,6 +37,7 @@ type DocumentContextType = {
     setEditor: Dispatch<SetStateAction<Editor | null>>;
     getHtmlContent: () => string;
     refetchMessages: () => void;
+    handleChangeDocumentContent: (newContent: string) => void;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -61,6 +66,17 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             return response;
         },
     });
+
+    const handleChangeDocumentContent = (newContent: string): void => {
+        if (
+            documentData?.content &&
+            newContent &&
+            documentData.content != newContent &&
+            documentData.content !== ""
+        ) {
+            updateDocumentContent(documentId as string, newContent);
+        }
+    };
 
     const updateSelectedChange = (change: AiChange): void => {
         if (change) {
@@ -201,6 +217,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 setEditor,
                 getHtmlContent,
                 refetchMessages,
+                handleChangeDocumentContent,
             }}
         >
             {children}

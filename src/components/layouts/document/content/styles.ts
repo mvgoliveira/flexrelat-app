@@ -36,6 +36,7 @@ export const FloatContainer = styled.div`
     gap: 5px;
     width: fit-content;
     height: fit-content;
+    z-index: 99;
 `;
 
 export const PageContainer = styled.div`
@@ -47,6 +48,5 @@ export const PageContainer = styled.div`
         background: ${theme.colors.white};
         border: 1px solid ${theme.colors.gray40};
         border-radius: 6px;
-        z-index: 999;
     `};
 `;

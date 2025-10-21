@@ -15,7 +15,6 @@ export const TriggerButton = styled.button`
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s ease;
-        z-index: 999;
 
         &:hover {
             background: ${theme.colors.white};
