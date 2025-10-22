@@ -1,4 +1,4 @@
-import { ComponentLoading } from "@/repositories/changesApi";
+import { ComponentLoading } from "@/repositories/changesAPI";
 import { Editor } from "@tiptap/core";
 import { ReactElement, useEffect } from "react";
 

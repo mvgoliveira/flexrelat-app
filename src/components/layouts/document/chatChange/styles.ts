@@ -1,4 +1,4 @@
-import { ChangesType, StatusType } from "@/repositories/changesApi";
+import { ChangesType, StatusType } from "@/repositories/changesAPI";
 import styled from "@emotion/styled";
 
 import { CHANGES_BADGE_VARIANTS, CHANGES_COLOR_VARIANTS } from "./variants";

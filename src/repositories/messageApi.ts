@@ -1,4 +1,4 @@
-import { AiChange } from "./changesApi";
+import { AiChange } from "./changesAPI";
 
 export type Message = {
     id: string;

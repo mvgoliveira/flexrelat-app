@@ -9,6 +9,17 @@ export const Root = styled.div`
     background: ${({ theme }) => theme.colors.gray10};
 `;
 
+export const SecondaryRoot = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    background: ${({ theme }) => theme.colors.gray10};
+`;
+
 export const StyledHeader = styled.header`
     grid-column: 1 / -1;
     grid-row: 1;

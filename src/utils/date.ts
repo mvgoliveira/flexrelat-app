@@ -1,41 +1,30 @@
+import dayjs from "dayjs";
+import dayJsLocale from "dayjs/locale/pt-br";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 export const getFormattedDate = (timestamp: string): string => {
-    const date = new Date(timestamp);
-
-    const options: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-        timeZone: "America/Sao_Paulo", // Ajusta para o fuso horário brasileiro
-    };
-
-    return date.toLocaleString("pt-BR", options);
+    const selectedDate = dayjs(timestamp).tz(dayjs.tz.guess());
+    const formatted = selectedDate.locale(dayJsLocale).format("DD MMMM YYYY - HH:mm");
+    return formatted.replace(
+        /(\d{2} )(\w)/,
+        (_, day, firstLetter) => day + firstLetter.toUpperCase()
+    );
 };
 
-export const getElapsedTime = (selectedTimestamp: string): string => {
-    const now = new Date();
-    const selectedDate = new Date(selectedTimestamp);
-
-    const diffMs = now.getTime() - selectedDate.getTime();
-    const minutesDiff = Math.floor(diffMs / (1000 * 60));
+export const getElapsedTime = (timestamp: string): string => {
+    const now = dayjs().tz(dayjs.tz.guess());
+    const selectedDate = dayjs(timestamp).tz(dayjs.tz.guess());
+    const minutesDiff = selectedDate.diff(now, "minutes");
 
     if (minutesDiff >= 60) {
         const hours = Math.floor(minutesDiff / 60);
 
         if (hours >= 24) {
-            // Usa toLocaleString para formatar a data no fuso horário brasileiro
-            const options: Intl.DateTimeFormatOptions = {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-                timeZone: "America/Sao_Paulo",
-            };
-            return selectedDate.toLocaleString("pt-BR", options).replace(",", " -");
+            return selectedDate.locale(dayJsLocale).format("DD MMM YYYY - HH:mm");
         }
 
         return `${hours} hora${hours > 1 ? "s" : ""} atrás`;

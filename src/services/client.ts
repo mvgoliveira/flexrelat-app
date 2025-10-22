@@ -12,6 +12,7 @@ const getAPIHostByHostname = (): string => {
 
 const client = axios.create({
     baseURL: getAPIHostByHostname(),
+    withCredentials: true,
 });
 
 export { client };

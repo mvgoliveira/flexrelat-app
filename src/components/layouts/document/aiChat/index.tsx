@@ -5,7 +5,7 @@ import { toastError } from "@/components/features/toast";
 import { Typography } from "@/components/features/typography";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import { useDocumentContext } from "@/context/documentContext";
-import { sendMessage } from "@/repositories/messageApi";
+import { sendMessage } from "@/repositories/messageAPI";
 import { Theme } from "@/themes";
 import { useElementSize } from "@mantine/hooks";
 import { ReactElement, useRef, useState } from "react";
