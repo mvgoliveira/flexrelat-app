@@ -52,6 +52,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
     const { status: getDocumentStatus, data: documentData } = useQuery({
         queryKey: ["get_document_data", publicCode],
+        retry: false,
         queryFn: async (): Promise<DocumentData> => {
             const response: DocumentData = await getDocumentByPublicCode(publicCode as string);
             return response;
@@ -60,6 +61,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
     const { status: messagesStatus, refetch: refetchMessages } = useQuery({
         queryKey: ["get_ai_messages", documentData?.id],
+        retry: false,
         queryFn: async (): Promise<Message[]> => {
             if (!documentData) return [];
 

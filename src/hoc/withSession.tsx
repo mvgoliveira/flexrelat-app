@@ -36,6 +36,7 @@ const withSession = <P extends object>(WrappedComponent: ComponentType<P>): Comp
                         justifyContent: "center",
                         width: "100vw",
                         height: "100vh",
+                        background: "#f6f6f6",
                     }}
                 >
                     <Spinner />

@@ -1,10 +1,21 @@
 import { IReactChildren } from "@/types/core";
 import { ReactElement } from "react";
 
-import { Root, StyledContent, StyledHeader, StyledLeftNavbar, StyledRightNavbar } from "./styles";
+import {
+    Root,
+    SecondaryRoot,
+    StyledContent,
+    StyledHeader,
+    StyledLeftNavbar,
+    StyledRightNavbar,
+} from "./styles";
 
 const Layout = ({ children }: IReactChildren): ReactElement => {
     return <Root>{children}</Root>;
+};
+
+const SecondaryLayout = ({ children }: IReactChildren): ReactElement => {
+    return <SecondaryRoot>{children}</SecondaryRoot>;
 };
 
 const Header = ({ children }: IReactChildren): ReactElement => {
@@ -27,4 +38,4 @@ const RightNavBar = ({ children }: IReactChildren): ReactElement => {
 };
 Layout.RightNavBar = RightNavBar;
 
-export { Layout };
+export { Layout, SecondaryLayout };
