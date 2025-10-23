@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 export const Root = styled.div`
     display: grid;
-    grid-template-rows: 40px 1fr;
+    grid-template-rows: 40px 1fr 25px;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -23,6 +23,16 @@ export const DocumentRoot = styled.div`
     justify-content: flex-start;
     padding: 10px;
     overflow: hidden;
+`;
+
+export const DocumentFooter = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    background: ${({ theme }) => theme.colors.white};
+    border-top: 1px solid ${({ theme }) => theme.colors.gray30};
+    padding: 0 10px;
 `;
 
 export const FloatContainer = styled.div`

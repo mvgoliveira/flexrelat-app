@@ -1,18 +1,16 @@
 "use client";
 
-import { Button } from "@/components/features/button";
 import { Typography } from "@/components/features/typography";
 import { Theme } from "@/themes";
 import styled from "@emotion/styled";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-// Mock data
 const mockDocuments = [
     {
         id: "1",
-        publicCode: "doc-abc123",
-        title: "Relatório de Vendas Q1 2025",
+        publicCode: "SKXERH0C",
+        title: "Relatório sem título",
         description: "Análise completa das vendas do primeiro trimestre",
         createdAt: "2025-01-15",
         updatedAt: "2025-03-20",
@@ -25,35 +23,11 @@ const mockDocuments = [
         createdAt: "2025-02-01",
         updatedAt: "2025-02-28",
     },
-    {
-        id: "3",
-        publicCode: "doc-ghi789",
-        title: "Análise de Mercado",
-        description: "Estudo sobre tendências e oportunidades de mercado",
-        createdAt: "2025-03-10",
-        updatedAt: "2025-03-15",
-    },
-    {
-        id: "4",
-        publicCode: "doc-jkl012",
-        title: "Relatório Financeiro Anual",
-        description: "Demonstrações financeiras e análise de resultados",
-        createdAt: "2024-12-20",
-        updatedAt: "2025-01-05",
-    },
-    {
-        id: "5",
-        publicCode: "doc-mno345",
-        title: "Proposta de Projeto",
-        description: "Proposta detalhada para implementação de novo sistema",
-        createdAt: "2025-03-25",
-        updatedAt: "2025-04-10",
-    },
 ];
 
 const Container = styled.div`
     min-height: 100vh;
-    background-color: ${Theme.colors.gray90};
+    background-color: ${Theme.colors.gray10};
     padding: 2rem;
 `;
 
@@ -66,20 +40,20 @@ const DocumentsList = styled.div`
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    gap: 1rem;
+    gap: 10px;
 `;
 
 const DocumentCard = styled.div`
-    background-color: ${Theme.colors.gray80};
-    border: 1px solid ${Theme.colors.gray70};
+    background-color: ${Theme.colors.white};
+    border: 1px solid ${Theme.colors.gray40};
     border-radius: 8px;
     padding: 1.5rem;
     transition: all 0.2s ease;
     cursor: pointer;
 
     &:hover {
-        background-color: ${Theme.colors.gray70};
-        border-color: ${Theme.colors.purple40};
+        background-color: ${Theme.colors.gray20};
+        border-color: ${Theme.colors.gray70};
         transform: translateY(-2px);
     }
 `;
@@ -120,29 +94,19 @@ export default function DocumentsPage(): React.ReactElement {
             <Header>
                 <Typography
                     tag="h1"
-                    color="white"
+                    color="black"
                     fontWeight="bold"
                     fontSize={{
-                        xs: "fs400",
-                        sm: "fs400",
-                        md: "fs500",
-                        lg: "fs500",
-                        xl: "fs500",
-                        xxl: "fs500",
+                        xs: "fs300",
                     }}
                 >
                     Documentos
                 </Typography>
                 <Typography
                     tag="p"
-                    color="gray50"
+                    color="gray80"
                     fontSize={{
                         xs: "fs100",
-                        sm: "fs100",
-                        md: "fs200",
-                        lg: "fs200",
-                        xl: "fs200",
-                        xxl: "fs200",
                     }}
                 >
                     Gerencie e acesse seus documentos
@@ -156,149 +120,91 @@ export default function DocumentsPage(): React.ReactElement {
                             <DocumentInfo>
                                 <Typography
                                     tag="h3"
-                                    color="white"
+                                    color="black"
                                     fontWeight="semibold"
                                     fontSize={{
-                                        xs: "fs200",
-                                        sm: "fs200",
-                                        md: "fs300",
-                                        lg: "fs300",
-                                        xl: "fs300",
-                                        xxl: "fs300",
+                                        xs: "fs100",
                                     }}
                                 >
                                     {doc.title}
                                 </Typography>
+
                                 <Typography
                                     tag="p"
-                                    color="gray50"
+                                    color="gray70"
                                     fontSize={{
                                         xs: "fs75",
-                                        sm: "fs75",
-                                        md: "fs100",
-                                        lg: "fs100",
-                                        xl: "fs100",
-                                        xxl: "fs100",
                                     }}
                                 >
                                     {doc.description}
                                 </Typography>
                             </DocumentInfo>
-                            <Button
-                                variant="primary"
-                                height="40px"
-                                width="120px"
-                                onClick={e => {
-                                    e.stopPropagation();
-                                    handleDocumentClick(doc.publicCode);
-                                }}
-                            >
-                                <Typography
-                                    color="white"
-                                    fontWeight="medium"
-                                    fontSize={{
-                                        xs: "fs75",
-                                        sm: "fs75",
-                                        md: "fs100",
-                                        lg: "fs100",
-                                        xl: "fs100",
-                                        xxl: "fs100",
-                                    }}
-                                >
-                                    Abrir
-                                </Typography>
-                            </Button>
                         </DocumentHeader>
 
                         <DocumentMeta>
                             <MetaItem>
                                 <Typography
                                     tag="span"
-                                    color="gray60"
+                                    color="gray80"
                                     fontSize={{
-                                        xs: "fs50",
-                                        sm: "fs50",
-                                        md: "fs75",
-                                        lg: "fs75",
-                                        xl: "fs75",
-                                        xxl: "fs75",
+                                        xs: "fs75",
                                     }}
                                 >
                                     Criado em
                                 </Typography>
+
                                 <Typography
                                     tag="span"
-                                    color="gray40"
+                                    color="gray80"
                                     fontWeight="medium"
                                     fontSize={{
                                         xs: "fs75",
-                                        sm: "fs75",
-                                        md: "fs75",
-                                        lg: "fs75",
-                                        xl: "fs75",
-                                        xxl: "fs75",
                                     }}
                                 >
                                     {new Date(doc.createdAt).toLocaleDateString("pt-BR")}
                                 </Typography>
                             </MetaItem>
+
                             <MetaItem>
                                 <Typography
                                     tag="span"
-                                    color="gray60"
+                                    color="gray80"
                                     fontSize={{
-                                        xs: "fs50",
-                                        sm: "fs50",
-                                        md: "fs75",
-                                        lg: "fs75",
-                                        xl: "fs75",
-                                        xxl: "fs75",
+                                        xs: "fs75",
                                     }}
                                 >
                                     Atualizado em
                                 </Typography>
+
                                 <Typography
                                     tag="span"
-                                    color="gray40"
+                                    color="gray80"
                                     fontWeight="medium"
                                     fontSize={{
                                         xs: "fs75",
-                                        sm: "fs75",
-                                        md: "fs75",
-                                        lg: "fs75",
-                                        xl: "fs75",
-                                        xxl: "fs75",
                                     }}
                                 >
                                     {new Date(doc.updatedAt).toLocaleDateString("pt-BR")}
                                 </Typography>
                             </MetaItem>
+
                             <MetaItem>
                                 <Typography
                                     tag="span"
-                                    color="gray60"
+                                    color="gray80"
                                     fontSize={{
-                                        xs: "fs50",
-                                        sm: "fs50",
-                                        md: "fs75",
-                                        lg: "fs75",
-                                        xl: "fs75",
-                                        xxl: "fs75",
+                                        xs: "fs75",
                                     }}
                                 >
                                     Código
                                 </Typography>
+
                                 <Typography
                                     tag="span"
-                                    color="purple40"
+                                    color="gray80"
                                     fontWeight="medium"
                                     fontSize={{
                                         xs: "fs75",
-                                        sm: "fs75",
-                                        md: "fs75",
-                                        lg: "fs75",
-                                        xl: "fs75",
-                                        xxl: "fs75",
                                     }}
                                 >
                                     {doc.publicCode}

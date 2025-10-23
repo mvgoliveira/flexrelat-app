@@ -41,7 +41,7 @@ function Document(): ReactElement {
 
     if (getDocumentStatus === "pending") return <></>;
 
-    if (getDocumentStatus === "error")
+    if (getDocumentStatus === "error") {
         return (
             <SecondaryLayout>
                 <div
@@ -78,6 +78,7 @@ function Document(): ReactElement {
                 </Link>
             </SecondaryLayout>
         );
+    }
 
     return (
         <Layout>

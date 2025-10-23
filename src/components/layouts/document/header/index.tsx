@@ -9,6 +9,7 @@ import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
 import { pdf } from "@react-pdf/renderer";
 import _ from "lodash";
+import { useRouter } from "next/navigation";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
 import {
@@ -37,6 +38,8 @@ interface IHeaderProps {
 }
 
 export const Header = ({ metadata }: IHeaderProps): ReactElement => {
+    const router = useRouter();
+
     const titleRef = useRef<HTMLHeadingElement>(null);
     const [title, setTitle] = useState<string>(metadata.title);
 
@@ -49,14 +52,18 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     metadata.onChangeStatus("pending");
                     await new Promise(resolve => setTimeout(resolve, 2000));
 
+                    if (newTitle === title) {
+                        return;
+                    }
+
                     const response = await updateDocumentTitle(metadata.id, newTitle);
 
                     metadata.onChangeStatus("success");
 
                     if (titleRef && titleRef.current && newTitle !== "Relatório sem título") {
-                        titleRef.current.textContent = response.title;
+                        titleRef.current.textContent = response.name;
                         titleRef.current.style.color = Theme.colors.gray100;
-                        setTitle(response.title);
+                        setTitle(response.name);
                     } else if (newTitle === "Relatório sem título") {
                         setTitle("");
                     }
@@ -276,6 +283,10 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         console.log(htmlContent);
     };
 
+    const handleBackToDocuments = (): void => {
+        router.push(`/documents`);
+    };
+
     useEffect(() => {
         if (metadata.title) {
             setTitle(metadata.title);
@@ -290,7 +301,12 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     return (
         <Root>
             <TitleContainer>
-                <Button width="25px" height="25px" variant="secondary">
+                <Button
+                    width="25px"
+                    height="25px"
+                    variant="secondary"
+                    onClick={handleBackToDocuments}
+                >
                     <div
                         style={{
                             display: "flex",

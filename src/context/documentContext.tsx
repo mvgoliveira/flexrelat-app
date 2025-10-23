@@ -37,7 +37,7 @@ type DocumentContextType = {
     setEditor: Dispatch<SetStateAction<Editor | null>>;
     getHtmlContent: () => string;
     refetchMessages: () => void;
-    handleChangeDocumentContent: (newContent: string) => void;
+    handleChangeDocumentContent: (newContent: string) => Promise<void>;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -71,14 +71,14 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
         },
     });
 
-    const handleChangeDocumentContent = (newContent: string): void => {
+    const handleChangeDocumentContent = async (newContent: string): Promise<void> => {
         if (
             documentData?.content &&
             newContent &&
             documentData.content != newContent &&
             documentData.content !== ""
         ) {
-            updateDocumentContent(publicCode as string, newContent);
+            await updateDocumentContent(documentData.id, newContent);
         }
     };
 

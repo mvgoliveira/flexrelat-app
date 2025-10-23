@@ -2,11 +2,21 @@ import { Typography } from "@/components/features/typography";
 import ZoomButton from "@/components/features/zoomButton";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import TextEditor from "@/components/ui/textEditor";
+import { Tooltip } from "@/components/ui/tooltip";
 import { useDocumentContext } from "@/context/documentContext";
+import { Theme } from "@/themes";
 import { ReactElement, useEffect, useRef, useState } from "react";
+import { MdOutlineCloudDone, MdOutlineCloudOff, MdOutlineCloudUpload } from "react-icons/md";
 
 import { DocumentToolbar } from "../documentToolbar";
-import { DocumentHeader, DocumentRoot, FloatContainer, PageContainer, Root } from "./styles";
+import {
+    DocumentFooter,
+    DocumentHeader,
+    DocumentRoot,
+    FloatContainer,
+    PageContainer,
+    Root,
+} from "./styles";
 
 export type FontFamilies = "times-new-roman" | "arial";
 
@@ -26,6 +36,8 @@ export const DocumentContent = (): ReactElement => {
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
     const documentRootRef = useRef<HTMLDivElement>(null);
+
+    const [saveStatus, setSaveStatus] = useState<"pending" | "success" | "error">("success");
 
     const [boldActive, setBoldActive] = useState<boolean>(false);
     const [italicActive, setItalicActive] = useState<boolean>(false);
@@ -217,6 +229,7 @@ export const DocumentContent = (): ReactElement => {
             <ScrollArea ref={scrollAreaRef}>
                 <DocumentRoot className="DocumentRoot" ref={documentRootRef}>
                     <TextEditor
+                        updateSaveStatus={setSaveStatus}
                         pageWidth={pageWidth}
                         pageHeight={pageHeight}
                         marginLeft={marginLeft}
@@ -248,6 +261,61 @@ export const DocumentContent = (): ReactElement => {
                     </PageContainer>
                 </FloatContainer>
             </ScrollArea>
+
+            <DocumentFooter>
+                {saveStatus === "success" && (
+                    <Tooltip>
+                        <Tooltip.Trigger>
+                            <MdOutlineCloudDone size={12} color={Theme.colors.black} />
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>Todas as alterações foram salvas</Tooltip.Content>
+                    </Tooltip>
+                )}
+
+                {saveStatus === "pending" && (
+                    <Tooltip>
+                        <Tooltip.Trigger>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "5px",
+                                }}
+                            >
+                                <MdOutlineCloudUpload size={12} color={Theme.colors.black} />
+
+                                <Typography
+                                    tag="p"
+                                    fontSize={{ xs: "fs50" }}
+                                    color="black"
+                                    fontWeight="medium"
+                                    textAlign="left"
+                                >
+                                    Salvando...
+                                </Typography>
+                            </div>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>Salvando alterações...</Tooltip.Content>
+                    </Tooltip>
+                )}
+
+                {saveStatus === "error" && (
+                    <Tooltip>
+                        <Tooltip.Trigger>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "5px",
+                                }}
+                            >
+                                <MdOutlineCloudOff size={12} color={Theme.colors.red70} />
+                            </div>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>Erro ao salvar as alterações</Tooltip.Content>
+                    </Tooltip>
+                )}
+            </DocumentFooter>
         </Root>
     );
 };
