@@ -36,3 +36,25 @@ export const getElapsedTime = (timestamp: string): string => {
 
     return `${minutesDiff} minuto${minutesDiff !== 1 ? "s" : ""} atrás`;
 };
+
+export const getShortElapsedTime = (timestamp: string): string => {
+    const now = dayjs().tz(dayjs.tz.guess());
+    const selectedDate = dayjs(timestamp).tz(dayjs.tz.guess());
+    const minutesDiff = -selectedDate.diff(now, "minutes");
+
+    if (minutesDiff >= 60) {
+        const hours = Math.floor(minutesDiff / 60);
+
+        if (hours >= 24) {
+            return selectedDate.locale(dayJsLocale).format("DD MMM YYYY");
+        }
+
+        return `Há ${hours} hora${hours > 1 ? "s" : ""}`;
+    }
+
+    if (minutesDiff < 1) {
+        return "Agora mesmo";
+    }
+
+    return `Há ${minutesDiff} minuto${minutesDiff !== 1 ? "s" : ""}`;
+};

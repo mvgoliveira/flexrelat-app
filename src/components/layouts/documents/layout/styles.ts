@@ -2,11 +2,10 @@ import styled from "@emotion/styled";
 
 export const Root = styled.div`
     display: grid;
-    grid-template-rows: 60px 1fr;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 280px 1fr;
     height: 100vh;
     max-height: 100vh;
-    background: ${({ theme }) => theme.colors.gray10};
+    background: ${({ theme }) => theme.colors.white};
 `;
 
 export const SecondaryRoot = styled.div`
@@ -20,43 +19,42 @@ export const SecondaryRoot = styled.div`
     background: ${({ theme }) => theme.colors.gray10};
 `;
 
-export const StyledHeader = styled.header`
-    grid-column: 1 / -1;
-    grid-row: 1;
-    display: flex;
-    height: 100%;
-    width: 100%;
-    background-color: ${({ theme }) => theme.colors.white};
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
-`;
-
-export const StyledContent = styled.article`
-    grid-row: 2 / -1;
+export const StyledNavbar = styled.article`
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
-    overflow: hidden;
-`;
-
-export const StyledLeftNavbar = styled.article`
-    grid-row: 2 / -1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 300px;
     background-color: ${({ theme }) => theme.colors.white};
     border-right: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;
 `;
 
-export const StyledRightNavbar = styled.article`
-    grid-row: 2 / -1;
-    display: flex;
+export const StyledContent = styled.article`
+    display: grid;
+    grid-template-rows: 50px 1fr;
     flex-direction: column;
     height: 100%;
-    width: 300px;
+    width: 100%;
+    overflow: auto;
+`;
+
+export const StyledContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+`;
+
+export const StyledHeader = styled.header`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
     background-color: ${({ theme }) => theme.colors.white};
-    border-left: 1px solid ${({ theme }) => theme.colors.gray30};
-    overflow: hidden;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
+    align-items: center;
+    padding: 0 20px;
 `;

@@ -87,6 +87,7 @@ export const Theme = {
         fs50: "0.625rem", // 10px
         fs75: "0.75rem", // 12px
         fs100: "0.938rem", // 15px
+        fs150: "1rem", // 16px
         fs200: "1.188rem", // 19px
         fs300: "1.438rem", // 23px
         fs400: "1.813rem", // 29px

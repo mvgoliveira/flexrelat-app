@@ -4,38 +4,38 @@ import { ReactElement } from "react";
 import {
     Root,
     SecondaryRoot,
+    StyledContainer,
     StyledContent,
     StyledHeader,
-    StyledLeftNavbar,
-    StyledRightNavbar,
+    StyledNavbar,
 } from "./styles";
-
-const Layout = ({ children }: IReactChildren): ReactElement => {
-    return <Root>{children}</Root>;
-};
 
 const SecondaryLayout = ({ children }: IReactChildren): ReactElement => {
     return <SecondaryRoot>{children}</SecondaryRoot>;
 };
 
-const Header = ({ children }: IReactChildren): ReactElement => {
-    return <StyledHeader className="no-print">{children}</StyledHeader>;
+const Layout = ({ children }: IReactChildren): ReactElement => {
+    return <Root>{children}</Root>;
 };
-Layout.Header = Header;
+
+const NavBar = ({ children }: IReactChildren): ReactElement => {
+    return <StyledNavbar className="no-print">{children}</StyledNavbar>;
+};
+Layout.NavBar = NavBar;
 
 const Content = ({ children }: IReactChildren): ReactElement => {
     return <StyledContent>{children}</StyledContent>;
 };
 Layout.Content = Content;
 
-const LeftNavBar = ({ children }: IReactChildren): ReactElement => {
-    return <StyledLeftNavbar className="no-print">{children}</StyledLeftNavbar>;
+const Container = ({ children }: IReactChildren): ReactElement => {
+    return <StyledContainer>{children}</StyledContainer>;
 };
-Layout.LeftNavBar = LeftNavBar;
+Content.Container = Container;
 
-const RightNavBar = ({ children }: IReactChildren): ReactElement => {
-    return <StyledRightNavbar className="no-print">{children}</StyledRightNavbar>;
+const Header = ({ children }: IReactChildren): ReactElement => {
+    return <StyledHeader className="no-print">{children}</StyledHeader>;
 };
-Layout.RightNavBar = RightNavBar;
+Content.Header = Header;
 
 export { Layout, SecondaryLayout };

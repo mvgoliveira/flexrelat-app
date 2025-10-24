@@ -166,7 +166,6 @@ const TextEditor = ({
 
     const saveNow = useCallback(async () => {
         if (!currentEditor) return;
-
         try {
             updateSaveStatus("pending");
             await handleChangeDocumentContent(currentEditor.getHTML());

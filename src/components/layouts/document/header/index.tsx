@@ -30,7 +30,7 @@ import { ButtonsContainer, RightContainer, Root, TitleContainer, TitleContent } 
 interface IHeaderProps {
     metadata: {
         id: string;
-        title: string;
+        title: string | null;
         createdAt: string;
         saveStatus: "pending" | "success" | "error";
         onChangeStatus: (status: "pending" | "success" | "error") => void;
@@ -41,7 +41,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     const router = useRouter();
 
     const titleRef = useRef<HTMLHeadingElement>(null);
-    const [title, setTitle] = useState<string>(metadata.title);
+    const [title, setTitle] = useState<string>(metadata.title || "Relatório sem título");
 
     const { getHtmlContent } = useDocumentContext();
 

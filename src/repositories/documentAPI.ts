@@ -4,7 +4,7 @@ const PREFIX = "/documents";
 
 export type DocumentData = {
     id: string;
-    name: string;
+    name: string | null;
     isPublic: boolean;
     publicCode: string;
     content: string;
@@ -14,6 +14,26 @@ export type DocumentData = {
 
 export const getDocumentByPublicCode = async (publicCode: string): Promise<DocumentData> => {
     const { data } = await client.get<DocumentData>(`${PREFIX}/public/${publicCode}`);
+    return data;
+};
+
+export type DocumentDataWithUser = {
+    id: string;
+    name: string | null;
+    isPublic: boolean;
+    publicCode: string;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+        id: string;
+        username: string;
+        email: string;
+    };
+};
+
+export const getOwnDocuments = async (): Promise<DocumentDataWithUser[]> => {
+    const { data } = await client.get<DocumentDataWithUser[]>(`${PREFIX}/user`);
     return data;
 };
 
