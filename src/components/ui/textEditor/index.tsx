@@ -16,7 +16,8 @@ import UniqueID from "@tiptap/extension-unique-id";
 import { Focus, UndoRedo } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
+import _ from "lodash";
+import { ReactElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import ShortUniqueId from "short-unique-id";
 
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
@@ -37,6 +38,7 @@ interface ITextEditorProps {
     marginBottom?: number;
     pageWidth?: number;
     pageHeight?: number;
+    updateSaveStatus: (status: "pending" | "success" | "error") => void;
 }
 
 const TextEditor = ({
@@ -47,6 +49,7 @@ const TextEditor = ({
     pageWidth = 794,
     pageHeight = 1123,
     zoom = 100,
+    updateSaveStatus,
 }: ITextEditorProps): ReactElement => {
     const {
         documentData,
@@ -61,6 +64,21 @@ const TextEditor = ({
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
     const alreadyLoaded = useRef(false);
+
+    const saveTitle = useMemo(
+        () =>
+            _.debounce(async (newContent: string) => {
+                try {
+                    updateSaveStatus("pending");
+
+                    await handleChangeDocumentContent(newContent);
+                    updateSaveStatus("success");
+                } catch (error) {
+                    updateSaveStatus("error");
+                }
+            }, 1000),
+        [handleChangeDocumentContent, updateSaveStatus]
+    );
 
     const extensions = [
         Indent,
@@ -142,13 +160,41 @@ const TextEditor = ({
         autofocus: false,
         content: ``,
         onUpdate: ({ editor }) => {
-            if (handleChangeDocumentContent) handleChangeDocumentContent(editor.getHTML());
+            saveTitle(editor.getHTML());
         },
     });
+
+    const saveNow = useCallback(async () => {
+        if (!currentEditor) return;
+        try {
+            updateSaveStatus("pending");
+            await handleChangeDocumentContent(currentEditor.getHTML());
+            updateSaveStatus("success");
+        } catch (error) {
+            updateSaveStatus("error");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentEditor]);
 
     useEffect(() => {
         setEditor(currentEditor);
     }, [currentEditor, setEditor]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            // Check for Command+S (Mac) or Ctrl+S (Windows/Linux)
+            if ((event.metaKey || event.ctrlKey) && event.key === "s") {
+                event.preventDefault();
+                saveNow();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [saveNow]);
 
     useEffect(() => {
         if (!currentEditor) return;
@@ -167,7 +213,6 @@ const TextEditor = ({
     useEffect(() => {
         if (!currentEditor) return;
 
-        // Clear all AI changes from the editor
         if (selectedChanges && selectedChanges.length === 0) {
             currentEditor.state.doc.descendants((node, pos) => {
                 const nodeClass = node.attrs?.class;

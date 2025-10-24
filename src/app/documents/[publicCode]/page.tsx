@@ -41,7 +41,7 @@ function Document(): ReactElement {
 
     if (getDocumentStatus === "pending") return <></>;
 
-    if (getDocumentStatus === "error")
+    if (getDocumentStatus === "error") {
         return (
             <SecondaryLayout>
                 <div
@@ -78,6 +78,7 @@ function Document(): ReactElement {
                 </Link>
             </SecondaryLayout>
         );
+    }
 
     return (
         <Layout>
@@ -106,7 +107,7 @@ function Document(): ReactElement {
             </Layout.LeftNavBar>
 
             <Layout.Content>
-                <DocumentContent />
+                <DocumentContent setSaveStatus={setSaveStatus} />
             </Layout.Content>
 
             <Layout.RightNavBar>

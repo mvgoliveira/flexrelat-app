@@ -69,7 +69,6 @@ export const GeneralConfiguration = ({
     useEffect(() => {
         if (metadata) {
             setDataLabelsState(metadata.data.datasets[0]?.datalabels?.display ? true : false);
-            console.log(metadata.options?.legend);
             setLegendState(metadata.options?.legend.display ? true : false);
         }
     }, [metadata]);

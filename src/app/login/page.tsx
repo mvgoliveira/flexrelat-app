@@ -35,8 +35,7 @@ export default function LoginPage(): ReactElement {
         setIsLoading(true);
 
         try {
-            const response = await login(email, password);
-            console.log(response);
+            await login(email, password);
             const redirectUrl = localStorage.getItem("redirectUrl");
             router.push(redirectUrl || "/");
         } catch (error) {

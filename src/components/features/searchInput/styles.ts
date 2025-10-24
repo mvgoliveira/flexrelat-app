@@ -21,7 +21,7 @@ export const StyledInput = styled.input`
     color: ${({ theme }) => theme.colors.black};
 
     &::placeholder {
-        color: ${({ theme }) => theme.colors.gray70};
+        color: ${({ theme }) => theme.colors.gray60};
     }
 `;
 

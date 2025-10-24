@@ -14,8 +14,29 @@ const Trigger = ({ children }: IReactChildren): ReactElement => (
 );
 Menu.Trigger = Trigger;
 
-const Content = ({ children }: IReactChildren): ReactElement => (
-    <Popover.Content align="end" sideOffset={4} hasCloseButton={false} hasArrow={false}>
+interface IContentProps extends IReactChildren {
+    sideOffset?: number;
+    alignOffset?: number;
+    hasCloseButton?: boolean;
+    hasArrow?: boolean;
+    align?: "start" | "center" | "end";
+}
+
+const Content = ({
+    children,
+    sideOffset = 4,
+    alignOffset = 4,
+    hasCloseButton = false,
+    hasArrow = false,
+    align = "end",
+}: IContentProps): ReactElement => (
+    <Popover.Content
+        sideOffset={sideOffset}
+        alignOffset={alignOffset}
+        hasCloseButton={hasCloseButton}
+        hasArrow={hasArrow}
+        align={align}
+    >
         <Container>{children}</Container>
     </Popover.Content>
 );

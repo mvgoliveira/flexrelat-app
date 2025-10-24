@@ -107,32 +107,24 @@ export const TextBubbleMenu = ({
     useEffect(() => {
         if (!editor || !changeId || !newNode) return;
 
-        const handler = () => {
-            const element = editor.view.dom.querySelector(`[data-id="${changeId}"]`);
+        const element = editor.view.dom.querySelector(`[data-id="${changeId}"]`);
 
-            if (element) {
-                const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
-                const node = editor.state.doc.nodeAt(pos);
+        if (element) {
+            const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
+            const node = editor.state.doc.nodeAt(pos);
 
-                if (node) {
-                    editor.commands.command(({ tr, dispatch }) => {
-                        tr.replaceWith(pos, pos + node.nodeSize, newNode);
-                        if (dispatch) dispatch(tr);
-                        return true;
-                    });
+            if (node) {
+                editor.commands.command(({ tr, dispatch }) => {
+                    tr.replaceWith(pos, pos + node.nodeSize, newNode);
+                    if (dispatch) dispatch(tr);
+                    return true;
+                });
 
-                    updateLoadingComponentId("");
-                    setChangeId("");
-                    setNewNode(null);
-                }
+                updateLoadingComponentId("");
+                setChangeId("");
+                setNewNode(null);
             }
-        };
-
-        editor.on("transaction", handler);
-        handler();
-        return () => {
-            editor.off("transaction", handler);
-        };
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor, changeId, newNode]);
 

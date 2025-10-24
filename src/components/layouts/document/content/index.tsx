@@ -10,7 +10,11 @@ import { DocumentHeader, DocumentRoot, FloatContainer, PageContainer, Root } fro
 
 export type FontFamilies = "times-new-roman" | "arial";
 
-export const DocumentContent = (): ReactElement => {
+interface IDocumentContentProps {
+    setSaveStatus: (status: "pending" | "success" | "error") => void;
+}
+
+export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): ReactElement => {
     const { editor } = useDocumentContext();
 
     const [zoom, setZoom] = useState<number>(83);
@@ -217,6 +221,7 @@ export const DocumentContent = (): ReactElement => {
             <ScrollArea ref={scrollAreaRef}>
                 <DocumentRoot className="DocumentRoot" ref={documentRootRef}>
                     <TextEditor
+                        updateSaveStatus={setSaveStatus}
                         pageWidth={pageWidth}
                         pageHeight={pageHeight}
                         marginLeft={marginLeft}

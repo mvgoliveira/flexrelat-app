@@ -4,7 +4,7 @@ const PREFIX = "/documents";
 
 export type DocumentData = {
     id: string;
-    name: string;
+    name: string | null;
     isPublic: boolean;
     publicCode: string;
     content: string;
@@ -17,29 +17,51 @@ export const getDocumentByPublicCode = async (publicCode: string): Promise<Docum
     return data;
 };
 
-interface IUpdateDocumentTitleResponse {
+export type DocumentDataWithUser = {
     id: string;
-    title: string;
-}
+    name: string | null;
+    isPublic: boolean;
+    publicCode: string;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+        id: string;
+        username: string;
+        email: string;
+    };
+};
+
+export const getOwnDocuments = async (): Promise<DocumentDataWithUser[]> => {
+    const { data } = await client.get<DocumentDataWithUser[]>(`${PREFIX}/user`);
+    return data;
+};
+
+export type UpdateDocumentData = {
+    id: string;
+    name: string;
+    content: string;
+    updatedAt: string;
+};
 
 export const updateDocumentTitle = async (
     documentId: string,
     title: string
-): Promise<IUpdateDocumentTitleResponse> => {
-    return {
-        id: documentId,
-        title: title,
-    };
+): Promise<UpdateDocumentData> => {
+    const { data } = await client.patch<UpdateDocumentData>(`${PREFIX}/${documentId}`, {
+        name: title,
+    });
+
+    return data;
 };
 
 export const updateDocumentContent = async (
     documentId: string,
     content: string
-): Promise<{ id: string; content: string }> => {
-    console.log("[TEST] Updating document content");
+): Promise<UpdateDocumentData> => {
+    const { data } = await client.patch<UpdateDocumentData>(`${PREFIX}/${documentId}`, {
+        content,
+    });
 
-    return {
-        id: documentId,
-        content: content,
-    };
+    return data;
 };

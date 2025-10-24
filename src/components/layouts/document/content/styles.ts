@@ -25,6 +25,16 @@ export const DocumentRoot = styled.div`
     overflow: hidden;
 `;
 
+export const DocumentFooter = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    background: ${({ theme }) => theme.colors.white};
+    border-top: 1px solid ${({ theme }) => theme.colors.gray30};
+    padding: 0 10px;
+`;
+
 export const FloatContainer = styled.div`
     position: absolute;
     bottom: 20px;

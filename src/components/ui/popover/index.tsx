@@ -30,6 +30,7 @@ Popover.Trigger = Trigger;
 
 interface IContentProps extends IReactChildren {
     sideOffset?: number;
+    alignOffset?: number;
     hasCloseButton?: boolean;
     hasArrow?: boolean;
     align?: "start" | "center" | "end";
@@ -37,6 +38,7 @@ interface IContentProps extends IReactChildren {
 
 const Content = ({
     sideOffset = 5,
+    alignOffset = 0,
     children,
     hasCloseButton = true,
     hasArrow = true,
@@ -44,7 +46,12 @@ const Content = ({
 }: IContentProps): ReactElement => {
     return (
         <RadixPortal>
-            <StyledContent sideOffset={sideOffset} align={align} side="bottom">
+            <StyledContent
+                sideOffset={sideOffset}
+                alignOffset={alignOffset}
+                align={align}
+                side="bottom"
+            >
                 {hasCloseButton && <RadixClose />}
                 {hasArrow && <RadixArrow />}
                 {children}
