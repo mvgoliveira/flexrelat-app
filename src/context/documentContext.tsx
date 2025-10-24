@@ -4,7 +4,7 @@ import {
     getDocumentByPublicCode,
     updateDocumentContent,
 } from "@/repositories/documentAPI";
-import { getMessagesByChatId, Message } from "@/repositories/messageAPI";
+import { getMessagesByRelatedId, Message } from "@/repositories/messageAPI";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/core";
 import { useParams } from "next/navigation";
@@ -36,8 +36,8 @@ type DocumentContextType = {
     editor: Editor | null;
     setEditor: Dispatch<SetStateAction<Editor | null>>;
     getHtmlContent: () => string;
-    refetchMessages: () => void;
     handleChangeDocumentContent: (newContent: string) => Promise<void>;
+    setMessages: Dispatch<SetStateAction<Message[]>>;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -59,13 +59,13 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
         },
     });
 
-    const { status: messagesStatus, refetch: refetchMessages } = useQuery({
+    const { status: messagesStatus } = useQuery({
         queryKey: ["get_ai_messages", documentData?.id],
         retry: false,
         queryFn: async (): Promise<Message[]> => {
             if (!documentData) return [];
 
-            const response: Message[] = await getMessagesByChatId(documentData.id, "document");
+            const response: Message[] = await getMessagesByRelatedId(documentData.id, "documents");
             setMessages(response);
             return response;
         },
@@ -96,6 +96,24 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
         }
     };
 
+    const clearChange = (change: AiChange): void => {
+        setSelectedChanges(prevState =>
+            prevState.filter(prevChange => prevChange.id !== change.id)
+        );
+
+        setMessages(prevMessages =>
+            prevMessages.map(message => {
+                if (message.id === change.message_id) {
+                    return {
+                        ...message,
+                        changes: message.changes.filter(c => c.id !== change.id),
+                    };
+                }
+                return message;
+            })
+        );
+    };
+
     const approveChange = async (change: AiChange): Promise<void> => {
         if (!editor) return;
 
@@ -103,7 +121,27 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             prevState.filter(prevChange => prevChange.id !== change.id)
         );
 
-        const newAiChange = await updateAiChangeStatus(change.id, "approved");
+        const oldMessages = messages;
+
+        setMessages(prevMessages =>
+            prevMessages.map(message => {
+                if (message.id === change.message_id) {
+                    return {
+                        ...message,
+                        changes: message.changes.map(c =>
+                            c.id === change.id ? { ...c, status: "approved" } : c
+                        ),
+                    };
+                }
+                return message;
+            })
+        );
+
+        setChanges(prevChanges =>
+            prevChanges.map(prevChange =>
+                prevChange.id === change.id ? { ...prevChange, status: "approved" } : prevChange
+            )
+        );
 
         const element = editor.view.dom.querySelector(`[data-id="${change.old_content.id}"]`);
 
@@ -123,43 +161,15 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                             to: pos + node.nodeSize,
                         })
                         .run();
+
+                    try {
+                        await updateAiChangeStatus(change.id, "approved");
+                    } catch (error) {
+                        setMessages(oldMessages);
+                    }
                 }
             }
         }
-
-        setChanges(prevChanges =>
-            prevChanges.map(prevChange => (prevChange.id === change.id ? newAiChange : prevChange))
-        );
-
-        setMessages(prevMessages =>
-            prevMessages.map(message => {
-                if (message.id === change.message_id) {
-                    return {
-                        ...message,
-                        changes: message.changes.map(c => (c.id === change.id ? newAiChange : c)),
-                    };
-                }
-                return message;
-            })
-        );
-    };
-
-    const clearChange = (change: AiChange): void => {
-        setSelectedChanges(prevState =>
-            prevState.filter(prevChange => prevChange.id !== change.id)
-        );
-
-        setMessages(prevMessages =>
-            prevMessages.map(message => {
-                if (message.id === change.message_id) {
-                    return {
-                        ...message,
-                        changes: message.changes.filter(c => c.id !== change.id),
-                    };
-                }
-                return message;
-            })
-        );
     };
 
     const rejectChange = async (change: AiChange): Promise<void> => {
@@ -167,19 +177,27 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             prevState.filter(prevChange => prevChange.id !== change.id)
         );
 
-        const newAiChange = await updateAiChangeStatus(change.id, "rejected");
+        const oldMessages = messages;
 
         setMessages(prevMessages =>
             prevMessages.map(message => {
                 if (message.id === change.message_id) {
                     return {
                         ...message,
-                        changes: message.changes.map(c => (c.id === change.id ? newAiChange : c)),
+                        changes: message.changes.map(c =>
+                            c.id === change.id ? { ...c, status: "rejected" } : c
+                        ),
                     };
                 }
                 return message;
             })
         );
+
+        try {
+            await updateAiChangeStatus(change.id, "rejected");
+        } catch (error) {
+            setMessages(oldMessages);
+        }
     };
 
     const updateLoadingComponentId = (componentId: string): void => {
@@ -195,6 +213,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     useEffect(() => {
         if (messages) {
             const allChanges = messages.flatMap(message => message.changes);
+
             if (allChanges !== changes) {
                 setChanges(allChanges);
             }
@@ -220,8 +239,8 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 editor,
                 setEditor,
                 getHtmlContent,
-                refetchMessages,
                 handleChangeDocumentContent,
+                setMessages,
             }}
         >
             {children}

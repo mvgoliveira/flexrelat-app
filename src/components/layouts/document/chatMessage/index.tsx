@@ -16,15 +16,20 @@ export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
     return (
         <Root>
             <ProfileContainer
-                style={{ flexDirection: metadata.sender_id !== "flexbot" ? "row-reverse" : "row" }}
+                style={{
+                    flexDirection:
+                        metadata.sender_id !== "00000000-0000-0000-0000-000000000000"
+                            ? "row-reverse"
+                            : "row",
+                }}
             >
-                {metadata.sender_id !== "flexbot" && (
+                {metadata.sender_id !== "00000000-0000-0000-0000-000000000000" && (
                     <ProfilePicture>
                         <MdPerson size={12} color={Theme.colors.white} />
                     </ProfilePicture>
                 )}
 
-                {metadata.sender_id === "flexbot" && (
+                {metadata.sender_id === "00000000-0000-0000-0000-000000000000" && (
                     <MdAutoAwesome size={12} color={Theme.colors.black} />
                 )}
 
@@ -35,7 +40,9 @@ export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
                     fontWeight="bold"
                     textAlign="center"
                 >
-                    {metadata.sender_id !== "flexbot" ? "Você" : "FlexBot"}
+                    {metadata.sender_id !== "00000000-0000-0000-0000-000000000000"
+                        ? "Você"
+                        : "FlexBot"}
                 </Typography>
 
                 <Typography
@@ -54,7 +61,9 @@ export const ChatMessage = ({ metadata }: IChatMessageProps): ReactElement => {
                 fontSize={{ xs: "fs75" }}
                 color="black"
                 fontWeight="regular"
-                textAlign={metadata.sender_id !== "flexbot" ? "right" : "left"}
+                textAlign={
+                    metadata.sender_id !== "00000000-0000-0000-0000-000000000000" ? "right" : "left"
+                }
             >
                 {metadata.text}
             </Typography>

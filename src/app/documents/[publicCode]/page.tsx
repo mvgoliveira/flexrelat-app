@@ -107,7 +107,7 @@ function Document(): ReactElement {
             </Layout.LeftNavBar>
 
             <Layout.Content>
-                <DocumentContent />
+                <DocumentContent setSaveStatus={setSaveStatus} />
             </Layout.Content>
 
             <Layout.RightNavBar>

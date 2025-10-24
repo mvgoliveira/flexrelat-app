@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 export const Root = styled.div`
     display: grid;
-    grid-template-rows: 40px 1fr 25px;
+    grid-template-rows: 40px 1fr;
     width: 100%;
     height: 100%;
     overflow: hidden;

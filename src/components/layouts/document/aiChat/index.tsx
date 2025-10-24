@@ -37,17 +37,17 @@ export const AiChat = (): ReactElement => {
     const {
         messagesStatus,
         messages,
+        setMessages,
         changes,
         approveChange,
         rejectChange,
         documentData,
-        refetchMessages,
     } = useDocumentContext();
 
     const { ref: changesHeaderRef, height: changesHeaderHeight } = useElementSize();
 
     const [chatMessage, setChatMessage] = useState("");
-    const [aiIsLoading, setAiIsLoading] = useState(true);
+    const [aiIsLoading, setAiIsLoading] = useState(false);
 
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -107,8 +107,19 @@ export const AiChat = (): ReactElement => {
     const handleSendMessage = async () => {
         if (chatMessage.trim().length > 0 && documentData) {
             try {
-                await sendMessage(documentData.id, "document", chatMessage.trim());
-                refetchMessages();
+                setMessages(prevMessages => [
+                    ...prevMessages,
+                    {
+                        id: "temp-id-" + Date.now(),
+                        sender_id: "current-user-id",
+                        related_id: documentData.id,
+                        related_type: "document",
+                        text: chatMessage.trim(),
+                        created_at: new Date().toISOString(),
+                        changes: [],
+                    },
+                ]);
+
                 setChatMessage("");
 
                 setTimeout(() => {
@@ -123,9 +134,20 @@ export const AiChat = (): ReactElement => {
                         });
                     }
                 }, 200);
+
+                setAiIsLoading(true);
+
+                const aiResponse = await sendMessage(
+                    documentData.id,
+                    "documents",
+                    chatMessage.trim()
+                );
+
+                setMessages(prevMessages => [...prevMessages, aiResponse]);
+                setAiIsLoading(false);
             } catch (error) {
                 console.error("Error sending message:", error);
-
+                setAiIsLoading(false);
                 toastError();
             }
         }
@@ -298,7 +320,7 @@ export const AiChat = (): ReactElement => {
                     </ScrollArea>
                 </StyledSplitterPanel>
 
-                <StyledSplitterPanel min={80} max={300} defaultSize={150}>
+                <StyledSplitterPanel min={80} max={300} defaultSize={110}>
                     <MessageInputContainer>
                         <InputContainer>
                             <StyledTextArea

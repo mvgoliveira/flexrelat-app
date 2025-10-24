@@ -4,7 +4,6 @@ const PREFIX = "/changes";
 
 type Content = {
     id: string;
-    type: "text" | "heading" | "image" | "chart" | "table" | "bulletList" | "numberedList";
     html: string;
 };
 
@@ -30,48 +29,15 @@ export const updateAiChangeStatus = async (
     changeId: string,
     status: "approved" | "rejected"
 ): Promise<AiChange> => {
-    console.log(`Updating change status for ID: ${changeId} to ${status}`);
-
-    if (status === "approved") {
-        return {
-            id: changeId,
-            message_id: "4f4f4f4f-4f4f-5f5f-6f6f-7f7f7f7f7f7",
-            status: status,
-            type: "update",
-            text: "Alteração de título aprovada.",
-            old_content: {
-                id: "62e714dae9",
-                type: "text",
-                html: `<h4 data-id='62e714dae9' class='change-remove'><span style="font-size: 18pt">Resumo</span></h4>`,
-            },
-            new_content: {
-                id: "",
-                type: "text",
-                html: `<h4 style="text-align: center"><span style="font-size: 18pt">Resumo Geral do Relatório</span></h4>`,
-            },
-        };
-    }
-
-    return {
+    const { data } = await client.patch<AiChange>(`${PREFIX}/update-status`, {
         id: changeId,
-        message_id: "4f4f4f4f-4f4f-5f5f-6f6f-7f7f7f7f7f7",
-        status: status,
-        type: "update",
-        text: "Alteração de título reprovada.",
-        old_content: {
-            id: "62e714dae9",
-            type: "text",
-            html: `<h4 data-id='62e714dae9' class='change-remove'><span style="font-size: 18pt">Resumo</span></h4>`,
-        },
-        new_content: {
-            id: "",
-            type: "text",
-            html: `<h4 style="text-align: center"><span style="font-size: 18pt">Resumo Geral do Relatório</span></h4>`,
-        },
-    };
+        status,
+    });
+
+    return data;
 };
 
 export const getChange = async (prompt: string): Promise<string> => {
     const { data } = await client.post(`${PREFIX}/request-change`, { prompt });
-    return data.data;
+    return data;
 };

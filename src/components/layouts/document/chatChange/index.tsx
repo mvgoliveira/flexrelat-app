@@ -97,6 +97,7 @@ export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
                 {metadata.status !== "pending" && (
                     <div style={{ display: "flex", width: "100%", height: 5 }}></div>
                 )}
+
                 <div
                     style={{
                         display: metadata.status === "pending" ? "flex" : "none",

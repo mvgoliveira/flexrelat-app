@@ -54,6 +54,23 @@ export const AiChangesBubbleMenu = ({
                 }
 
                 if (aiChange.type === "update") {
+                    const targetElement = document.querySelector(
+                        `[data-id="${aiChange.old_content.id}"]`
+                    );
+
+                    if (targetElement) {
+                        const scrollTarget =
+                            elementTypeName === "table"
+                                ? targetElement.parentElement
+                                : targetElement;
+
+                        scrollTarget?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                            inline: "center",
+                        });
+                    }
+
                     editor
                         .chain()
                         .setNodeSelection(pos)
@@ -65,16 +82,20 @@ export const AiChangesBubbleMenu = ({
                     editor
                         .chain()
                         .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
+                        .run();
+
+                    editor
+                        .chain()
+                        .setNodeSelection(pos + node.nodeSize)
                         .updateAttributes(elementTypeName, {
                             class: "change-add",
                         })
-                        .setNodeSelection(pos + node.nodeSize)
                         .run();
 
                     setSelectedChanges([
                         {
                             from: pos,
-                            to: pos + node.nodeSize,
+                            to: pos + node.nodeSize + 1,
                             type: "remove",
                         },
                         {

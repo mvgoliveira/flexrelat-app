@@ -262,8 +262,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             </html>
         `;
 
-        console.log(finalHtml);
-
         const opt = {
             margin: [85.039, 85.039, 56.693, 56.693],
             filename: `${title || "Relatório sem título"}.pdf`,
