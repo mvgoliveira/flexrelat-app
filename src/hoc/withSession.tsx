@@ -1,5 +1,6 @@
 import { Spinner } from "@/components/features/loading/spinner";
-import { client } from "@/services/client";
+import { useUserContext } from "@/context/userContext";
+import { getAuthenticatedUser } from "@/repositories/userAPI";
 import React, { useEffect, useState, ComponentType, ReactElement } from "react";
 
 const redirectToLogin = (): void => {
@@ -11,12 +12,15 @@ const redirectToLogin = (): void => {
 
 const withSession = <P extends object>(WrappedComponent: ComponentType<P>): ComponentType<P> => {
     const WithSession = (props: P): ReactElement => {
+        const { setAuthenticatedUser } = useUserContext();
+
         const [loading, setLoading] = useState(true);
 
         useEffect(() => {
             const run = async () => {
                 try {
-                    await client.get("/users/me");
+                    const user = await getAuthenticatedUser();
+                    setAuthenticatedUser(user);
                     localStorage.removeItem("redirectUrl");
                     setLoading(false);
                 } catch {

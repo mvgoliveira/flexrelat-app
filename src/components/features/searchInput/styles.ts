@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 
-export const Root = styled.div`
+export const Root = styled.div<{
+    hasShadow: boolean;
+}>`
     display: flex;
     align-items: center;
     width: 100%;
@@ -9,6 +11,8 @@ export const Root = styled.div`
     gap: 10px;
     border: 1px solid ${({ theme }) => theme.colors.gray60};
     padding: 0 0 0 10px;
+
+    box-shadow: ${({ hasShadow }) => (hasShadow ? "0px 1px 1px rgba(0, 0, 0, 0.1)" : "none")};
 `;
 
 export const StyledInput = styled.input`

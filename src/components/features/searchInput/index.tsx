@@ -6,11 +6,15 @@ import { Root, StyledIcon, StyledInput } from "./styles";
 
 interface ISearchInputProps {
     placeholder?: string;
+    hasShadow?: boolean;
 }
 
-export const SearchInput = ({ placeholder = "Buscar" }: ISearchInputProps): ReactElement => {
+export const SearchInput = ({
+    placeholder = "Buscar",
+    hasShadow = false,
+}: ISearchInputProps): ReactElement => {
     return (
-        <Root>
+        <Root hasShadow={hasShadow}>
             <StyledIcon>
                 <MdSearch size={14} color={Theme.colors.gray70} />
             </StyledIcon>

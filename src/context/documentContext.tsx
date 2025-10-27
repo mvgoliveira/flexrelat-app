@@ -5,6 +5,7 @@ import {
     updateDocumentContent,
 } from "@/repositories/documentAPI";
 import { getMessagesByRelatedId, Message } from "@/repositories/messageAPI";
+import { User } from "@/repositories/userAPI";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/core";
 import { useParams } from "next/navigation";
@@ -38,11 +39,15 @@ type DocumentContextType = {
     getHtmlContent: () => string;
     handleChangeDocumentContent: (newContent: string) => Promise<void>;
     setMessages: Dispatch<SetStateAction<Message[]>>;
+    authenticatedUser: User | null;
+    setAuthenticatedUser: Dispatch<SetStateAction<User | null>>;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
 
 export function DocumentProvider({ children }: { children: ReactNode }): React.ReactElement {
+    const [authenticatedUser, setAuthenticatedUser] = useState<User | null>(null);
+
     const [editor, setEditor] = useState<Editor | null>(null);
     const { publicCode } = useParams();
     const [changes, setChanges] = useState<AiChange[]>([]);
@@ -241,6 +246,8 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 getHtmlContent,
                 handleChangeDocumentContent,
                 setMessages,
+                authenticatedUser,
+                setAuthenticatedUser,
             }}
         >
             {children}

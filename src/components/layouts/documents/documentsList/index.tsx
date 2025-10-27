@@ -1,7 +1,7 @@
 import { Button } from "@/components/features/button";
 import { Menu } from "@/components/features/menu";
 import { Typography } from "@/components/features/typography";
-import { DocumentDataWithUser, getOwnDocuments } from "@/repositories/documentAPI";
+import { deleteDocument, DocumentDataWithUser, getOwnDocuments } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
 import { getShortElapsedTime } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
@@ -55,9 +55,18 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
         refetchInterval: 5 * 60 * 1000,
     });
 
-    const handleDeleteDocument = () => {
-        console.log("Delete Document clicked");
-        // Add delete logic here
+    const handleDeleteDocument = async (documentId: string) => {
+        const oldDocumentsData = orderedDocuments;
+
+        try {
+            setOrderedDocuments(prevDocuments =>
+                prevDocuments.filter(document => document.id !== documentId)
+            );
+
+            await deleteDocument(documentId);
+        } catch (error) {
+            setOrderedDocuments(oldDocumentsData);
+        }
     };
 
     const handleEditDocument = () => {
@@ -84,7 +93,6 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
         updateURL(field, newOrder);
     };
 
-    // Recuperar ordenação da URL ao carregar
     useEffect(() => {
         const sortBy = searchParams.get("sortBy") as "name" | "createdAt" | "updatedAt" | null;
         const sortOrder = searchParams.get("sortOrder") as "asc" | "desc" | null;
@@ -98,7 +106,6 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
         }
     }, [searchParams]);
 
-    // Ordenar documentos quando houver mudanças
     useEffect(() => {
         if (!documents) {
             setOrderedDocuments([]);
@@ -131,7 +138,7 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
 
     return (
         <Root>
-            <Typography tag="h2" fontSize={{ xs: "fs75" }} color="black" fontWeight="semibold">
+            <Typography tag="h2" fontSize={{ xs: "fs100" }} color="black" fontWeight="medium">
                 Arquivos pessoais
             </Typography>
 
@@ -375,7 +382,7 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
                                                     <Menu.Item
                                                         text="Excluir Documento"
                                                         onClick={e => {
-                                                            handleDeleteDocument();
+                                                            handleDeleteDocument(document.id);
                                                             e.stopPropagation();
                                                         }}
                                                         iconPosition="left"

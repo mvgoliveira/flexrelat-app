@@ -7,6 +7,7 @@ interface IButtonProps {
     height: string;
     width: string;
     padding: string;
+    hasShadow: boolean;
 }
 
 export const StyledButton = styled.button<IButtonProps>`
@@ -23,6 +24,7 @@ export const StyledButton = styled.button<IButtonProps>`
     border: 1px solid ${({ theme, variant }) => theme.colors[VARIANTS_STYLES[variant].$borderColor]};
     gap: 5px;
     padding: ${({ padding }) => padding};
+    box-shadow: ${({ hasShadow }) => (hasShadow ? "0px 1px 1px rgba(0, 0, 0, 0.1)" : "none")};
 
     &:hover {
         background: ${({ theme, variant }) => theme.colors[VARIANTS_STYLES[variant].$hoverBgColor]};

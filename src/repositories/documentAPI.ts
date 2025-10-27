@@ -17,6 +17,11 @@ export const getDocumentByPublicCode = async (publicCode: string): Promise<Docum
     return data;
 };
 
+export const createDocument = async (): Promise<DocumentData> => {
+    const { data } = await client.post<DocumentData>(`${PREFIX}`);
+    return data;
+};
+
 export type DocumentDataWithUser = {
     id: string;
     name: string | null;
@@ -64,4 +69,8 @@ export const updateDocumentContent = async (
     });
 
     return data;
+};
+
+export const deleteDocument = async (documentId: string): Promise<void> => {
+    await client.delete(`${PREFIX}/${documentId}`);
 };
