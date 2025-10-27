@@ -9,6 +9,7 @@ interface IButtonProps {
     height?: string;
     width?: string;
     padding?: string;
+    hasShadow?: boolean;
 }
 
 export const Button = ({
@@ -17,6 +18,7 @@ export const Button = ({
     width = "100%",
     padding = "0",
     children,
+    hasShadow = false,
     ...props
 }: IButtonProps & ButtonHTMLAttributes<HTMLButtonElement> & IReactChildren): ReactElement => {
     return (
@@ -26,6 +28,7 @@ export const Button = ({
                 height={height}
                 width={width}
                 variant={variant}
+                hasShadow={hasShadow}
                 {...props}
             >
                 {children}

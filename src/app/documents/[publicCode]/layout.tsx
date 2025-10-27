@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import DocumentWrapProviders from "./doc-wrap-providers";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function DocumentLayout({
     children,
 }: Readonly<{
-    children: React.ReactNode;
+    children: ReactNode;
 }>): ReactElement {
     return <DocumentWrapProviders>{children}</DocumentWrapProviders>;
 }
