@@ -23,7 +23,14 @@ import ShortUniqueId from "short-unique-id";
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
 import { LoadingFloating } from "./components/LoadingFloating";
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
-import { PaginationPlus, TableCellPlus, TableHeaderPlus, TablePlus, TableRowPlus } from "./plugins";
+import {
+    DropcursorZoom,
+    PaginationPlus,
+    TableCellPlus,
+    TableHeaderPlus,
+    TablePlus,
+    TableRowPlus,
+} from "./plugins";
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { PreventEditExtension } from "./plugins/PreventEdit";
@@ -64,6 +71,12 @@ const TextEditor = ({
     const { randomUUID } = new ShortUniqueId({ length: 10 });
 
     const alreadyLoaded = useRef(false);
+    const zoomRef = useRef(zoom);
+
+    // Atualizar a ref quando o zoom mudar
+    useEffect(() => {
+        zoomRef.current = zoom;
+    }, [zoom]);
 
     const saveTitle = useMemo(
         () =>
@@ -86,6 +99,14 @@ const TextEditor = ({
         StarterKit.configure({
             dropcursor: false,
             undoRedo: false,
+        }),
+        DropcursorZoom.configure({
+            color: Theme.colors.blue50,
+            height: 2,
+            zoom: zoom,
+            zoomRef: zoomRef,
+            marginLeft: marginLeft,
+            marginRight: marginRight,
         }),
         TextAlign.configure({
             types: [
@@ -162,6 +183,64 @@ const TextEditor = ({
         onUpdate: ({ editor }) => {
             saveTitle(editor.getHTML());
         },
+        editorProps: {
+            handleDrop: (view, event) => {
+                const variable = event.dataTransfer?.getData("variable");
+
+                if (!variable) {
+                    return false;
+                }
+
+                event.preventDefault();
+
+                const editorElement = view.dom;
+                const editorRect = editorElement.getBoundingClientRect();
+
+                const zoomFactor = zoom / 100;
+                const relativeX = (event.clientX - editorRect.left) / zoomFactor;
+                const relativeY = (event.clientY - editorRect.top) / zoomFactor;
+
+                const adjustedX = relativeX + editorRect.left;
+                const adjustedY = relativeY + editorRect.top;
+
+                const coords = view.posAtCoords({
+                    left: adjustedX,
+                    top: adjustedY,
+                });
+
+                if (!coords) {
+                    return true;
+                }
+
+                const $pos = view.state.doc.resolve(coords.pos);
+                let targetPos = coords.pos;
+
+                for (let d = $pos.depth; d > 0; d--) {
+                    const node = $pos.node(d);
+                    if (node.isBlock) {
+                        const nodeStart = $pos.start(d);
+                        const nodeMid = nodeStart + Math.floor(node.nodeSize / 2);
+
+                        if (coords.pos < nodeMid) {
+                            targetPos = $pos.before(d);
+                        } else {
+                            targetPos = $pos.after(d);
+                        }
+                        break;
+                    }
+                }
+
+                // Criar um novo parágrafo com o texto da variável
+                const newNode = view.state.schema.nodes.paragraph.create(
+                    null,
+                    view.state.schema.text(variable)
+                );
+
+                view.dispatch(view.state.tr.insert(targetPos, newNode));
+
+                return true;
+            },
+        },
     });
 
     const saveNow = useCallback(async () => {
@@ -182,7 +261,6 @@ const TextEditor = ({
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            // Check for Command+S (Mac) or Ctrl+S (Windows/Linux)
             if ((event.metaKey || event.ctrlKey) && event.key === "s") {
                 event.preventDefault();
                 saveNow();

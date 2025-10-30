@@ -37,11 +37,15 @@ interface IElementProps {
     icon: ReactNode;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Element = ({ value, name, icon }: IElementProps): ReactElement => {
     return (
         <ElementContainer>
-            <ElementIconContainer>{icon}</ElementIconContainer>
+            <ElementIconContainer
+                draggable
+                onDragStart={e => e.dataTransfer.setData("variable", value)}
+            >
+                {icon}
+            </ElementIconContainer>
             <Typography
                 tag="span"
                 fontSize={{ xs: "fs50" }}
