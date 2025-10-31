@@ -63,7 +63,7 @@ export const IconElementText = ({ size = 24, color }: ISVGsDynamicColorAndSize):
                 width="40"
                 height="4"
                 rx="2"
-                fill={Theme.colors[color || "gray10"]}
+                fill={Theme.colors[color ? "blue40" : "gray10"]}
             />
         </svg>
     );
@@ -95,7 +95,7 @@ export const IconElementCitation = ({
                 width="40"
                 height="4"
                 rx="2"
-                fill={Theme.colors[color || "gray10"]}
+                fill={Theme.colors[color ? "blue40" : "gray10"]}
             />
         </svg>
     );
