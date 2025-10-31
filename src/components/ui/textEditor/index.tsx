@@ -22,6 +22,7 @@ import ShortUniqueId from "short-unique-id";
 
 import { AiChangesBubbleMenu } from "./components/AiChangesBubbleMenu";
 import { LoadingFloating } from "./components/LoadingFloating";
+import { TableBubbleMenu } from "./components/TableBubbleMenu";
 import { TextBubbleMenu } from "./components/TextBubbleMenu";
 import {
     DropcursorZoom,
@@ -33,6 +34,7 @@ import {
 } from "./plugins";
 import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
+import { Placeholder } from "./plugins/Placeholder";
 import { PreventEditExtension } from "./plugins/PreventEdit";
 import { QuickChart } from "./plugins/QuickChart";
 import { Root } from "./styles";
@@ -173,6 +175,7 @@ const TextEditor = ({
         Color,
         BackgroundColor,
         QuickChart,
+        Placeholder,
     ];
 
     const currentEditor = useEditor({
@@ -221,13 +224,39 @@ const TextEditor = ({
                     }
                 }
 
-                // Criar um novo parágrafo com o texto da variável
-                const newNode = view.state.schema.nodes.paragraph.create(
-                    null,
-                    view.state.schema.text(variable)
-                );
+                if (variable === "text" || variable === "title") {
+                    const newNode = view.state.schema.nodes.placeholder.create({
+                        type: variable,
+                        id: randomUUID(),
+                    });
+                    view.dispatch(view.state.tr.insert(targetPos, newNode));
+                    return true;
+                }
 
-                view.dispatch(view.state.tr.insert(targetPos, newNode));
+                if (variable === "separator") {
+                    const newNode = view.state.schema.nodes.horizontalRule.create();
+                    view.dispatch(view.state.tr.insert(targetPos, newNode));
+                    return true;
+                }
+
+                if (variable === "sheet") {
+                    const { schema } = view.state;
+                    const headerCell1 = schema.nodes.tableHeader.createAndFill();
+                    const headerCell2 = schema.nodes.tableHeader.createAndFill();
+                    const cell1 = schema.nodes.tableCell.createAndFill();
+                    const cell2 = schema.nodes.tableCell.createAndFill();
+
+                    if (!headerCell1 || !headerCell2 || !cell1 || !cell2) return true;
+
+                    const headerRow = schema.nodes.tableRow.create(null, [
+                        headerCell1,
+                        headerCell2,
+                    ]);
+                    const row = schema.nodes.tableRow.create(null, [cell1, cell2]);
+                    const table = schema.nodes.table.create(null, [headerRow, row]);
+                    view.dispatch(view.state.tr.insert(targetPos, table));
+                    return true;
+                }
 
                 return true;
             },
@@ -362,6 +391,14 @@ const TextEditor = ({
                         "blockquote",
                         "table",
                     ]}
+                />
+            )}
+
+            {currentEditor && (
+                <TableBubbleMenu
+                    editor={currentEditor}
+                    blockClasses={["change-loading", "change-remove", "change-add"]}
+                    types={["table"]}
                 />
             )}
 

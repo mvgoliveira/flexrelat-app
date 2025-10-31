@@ -81,6 +81,10 @@ export const Root = styled.div<IRootProps>`
         word-wrap: break-word;
     }
 
+    hr {
+        margin-bottom: 12px;
+    }
+
     h1,
     h2,
     h3,

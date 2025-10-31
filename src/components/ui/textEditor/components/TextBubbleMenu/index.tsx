@@ -12,7 +12,7 @@ import { MdAutoAwesome } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbPencilMinus, TbPencilPlus } from "react-icons/tb";
 
-import { ControlledBubbleMenu } from "../../plugins/BubbleMenu";
+import { BubbleMenu } from "../../plugins/BubbleMenu";
 import { RemovedButton, BubbleActionsContainer, StyledButton, Root } from "./styles";
 
 export type SelectedContent = {
@@ -129,7 +129,7 @@ export const TextBubbleMenu = ({
     }, [editor, changeId, newNode]);
 
     return (
-        <ControlledBubbleMenu
+        <BubbleMenu
             editor={editor}
             onChangeSelectedContent={setSelectedContent}
             selectedContent={selectedContent}
@@ -209,6 +209,6 @@ export const TextBubbleMenu = ({
                     </RemovedButton>
                 </motion.div>
             </Root>
-        </ControlledBubbleMenu>
+        </BubbleMenu>
     );
 };

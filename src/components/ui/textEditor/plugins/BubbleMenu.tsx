@@ -26,9 +26,22 @@ type Props = {
     onChangePrevSelection: Dispatch<SetStateAction<Selection | null>>;
     blockClasses: string[];
     types: string[];
+    placement?:
+        | "top"
+        | "bottom"
+        | "left"
+        | "right"
+        | "top-start"
+        | "top-end"
+        | "bottom-start"
+        | "bottom-end"
+        | "right-start"
+        | "right-end"
+        | "left-start"
+        | "left-end";
 };
 
-export const ControlledBubbleMenu = ({
+export const BubbleMenu = ({
     editor,
     open = true,
     children,
@@ -38,6 +51,7 @@ export const ControlledBubbleMenu = ({
     onChangePrevSelection,
     blockClasses,
     types,
+    placement = "top-end",
 }: Props): ReactElement => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -52,7 +66,7 @@ export const ControlledBubbleMenu = ({
         strategy: "absolute",
         transform: false,
         whileElementsMounted: autoUpdate,
-        placement: "top-end",
+        placement: placement,
         middleware: [
             offset({ mainAxis: 10, alignmentAxis: -6 }),
             flip({
@@ -103,6 +117,12 @@ export const ControlledBubbleMenu = ({
 
     useLayoutEffect(() => {
         const handler = (e: MouseEvent) => {
+            if (e.button !== 0 || !e.metaKey) {
+                onChangePrevSelection(null);
+                setIsOpen(false);
+                return;
+            }
+
             const posInfo = view.posAtCoords({ left: e.clientX, top: e.clientY });
             if (!posInfo) return;
 
@@ -139,12 +159,6 @@ export const ControlledBubbleMenu = ({
             if (!sel) return;
 
             if (sel.content().content.size > 2) {
-                if (e.button !== 0 || !e.metaKey) {
-                    onChangePrevSelection(null);
-                    setIsOpen(false);
-                    return;
-                }
-
                 onChangePrevSelection(sel);
 
                 if (
