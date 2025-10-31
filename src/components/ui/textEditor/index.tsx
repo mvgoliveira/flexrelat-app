@@ -193,19 +193,10 @@ const TextEditor = ({
 
                 event.preventDefault();
 
-                const editorElement = view.dom;
-                const editorRect = editorElement.getBoundingClientRect();
-
-                const zoomFactor = zoom / 100;
-                const relativeX = (event.clientX - editorRect.left) / zoomFactor;
-                const relativeY = (event.clientY - editorRect.top) / zoomFactor;
-
-                const adjustedX = relativeX + editorRect.left;
-                const adjustedY = relativeY + editorRect.top;
-
+                // Com CSS zoom, o navegador já ajusta as coordenadas automaticamente
                 const coords = view.posAtCoords({
-                    left: adjustedX,
-                    top: adjustedY,
+                    left: event.clientX,
+                    top: event.clientY,
                 });
 
                 if (!coords) {

@@ -27,7 +27,7 @@ export const DropcursorZoom = Extension.create<IDropcursorZoomOptions>({
 
     addProseMirrorPlugins() {
         const pluginKey = new PluginKey("dropcursorZoom");
-        const { color, height, zoomRef, marginLeft = 0, marginRight = 0 } = this.options;
+        const { color, height, marginLeft = 0, marginRight = 0 } = this.options;
 
         return [
             new Plugin({
@@ -70,22 +70,11 @@ export const DropcursorZoom = Extension.create<IDropcursorZoomOptions>({
                     },
                     handleDOMEvents: {
                         dragover: (view, event) => {
-                            // Usar zoomRef se disponível, caso contrário usar this.options.zoom
-                            const currentZoom = zoomRef?.current ?? this.options.zoom;
-                            const zoomFactor = currentZoom / 100;
-
-                            const editorElement = view.dom;
-                            const editorRect = editorElement.getBoundingClientRect();
-
-                            // Coordenadas ajustadas para o zoom
-                            const relativeX = (event.clientX - editorRect.left) / zoomFactor;
-                            const relativeY = (event.clientY - editorRect.top) / zoomFactor;
-                            const adjustedX = relativeX + editorRect.left;
-                            const adjustedY = relativeY + editorRect.top;
-
+                            // Com CSS zoom, o navegador já ajusta as coordenadas automaticamente
+                            // então podemos usar as coordenadas do evento diretamente
                             const coords = view.posAtCoords({
-                                left: adjustedX,
-                                top: adjustedY,
+                                left: event.clientX,
+                                top: event.clientY,
                             });
 
                             if (!coords) {
