@@ -35,9 +35,10 @@ interface IElementProps {
     value: string;
     name: string;
     icon: ReactNode;
+    coloredIcon: ReactNode;
 }
 
-const Element = ({ value, name, icon }: IElementProps): ReactElement => {
+const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElement => {
     return (
         <ElementContainer>
             <ElementIconContainer
@@ -45,9 +46,11 @@ const Element = ({ value, name, icon }: IElementProps): ReactElement => {
                 onDragStart={e => e.dataTransfer.setData("variable", value)}
             >
                 {icon}
+                {coloredIcon}
             </ElementIconContainer>
+
             <Typography
-                tag="span"
+                tag="p"
                 fontSize={{ xs: "fs50" }}
                 color="gray90"
                 textAlign="center"
@@ -111,27 +114,83 @@ const elementsGroups: IElementsGroupProps[] = [
     {
         name: "Elementos Base",
         elements: [
-            { value: "title", name: "Título", icon: <IconElementTitle size={20} /> },
-            { value: "text", name: "Texto", icon: <IconElementText size={20} /> },
-            { value: "citation", name: "Citação", icon: <IconElementCitation size={20} /> },
-            { value: "separator", name: "Separador", icon: <IconElementSeparator size={40} /> },
+            {
+                value: "title",
+                name: "Título",
+                icon: <IconElementTitle size={20} />,
+                coloredIcon: <IconElementTitle size={20} color="blue50" />,
+            },
+            {
+                value: "text",
+                name: "Texto",
+                icon: <IconElementText size={20} />,
+                coloredIcon: <IconElementText size={20} color="blue50" />,
+            },
+            {
+                value: "citation",
+                name: "Citação",
+                icon: <IconElementCitation size={20} />,
+                coloredIcon: <IconElementCitation size={20} color="blue50" />,
+            },
+            {
+                value: "separator",
+                name: "Separador",
+                icon: <IconElementSeparator size={40} />,
+                coloredIcon: <IconElementSeparator size={40} color="blue50" />,
+            },
             {
                 value: "geometric",
                 name: "Formas Geométricas",
                 icon: <IconElementGeometric size={40} />,
+                coloredIcon: <IconElementGeometric size={40} color="blue50" />,
             },
-            { value: "image", name: "Imagem", icon: <IconElementImage size={25} /> },
-            { value: "sheet", name: "Tabela", icon: <IconElementTable size={35} /> },
-            { value: "code", name: "Código", icon: <IconElementCode size={35} /> },
-            { value: "math", name: "Matemática", icon: <IconElementMath size={35} /> },
+            {
+                value: "image",
+                name: "Imagem",
+                icon: <IconElementImage size={25} />,
+                coloredIcon: <IconElementImage size={25} color="blue50" />,
+            },
+            {
+                value: "sheet",
+                name: "Tabela",
+                icon: <IconElementTable size={35} />,
+                coloredIcon: <IconElementTable size={35} color="blue50" />,
+            },
+            {
+                value: "code",
+                name: "Código",
+                icon: <IconElementCode size={35} />,
+                coloredIcon: <IconElementCode size={35} color="blue50" />,
+            },
+            {
+                value: "math",
+                name: "Matemática",
+                icon: <IconElementMath size={35} />,
+                coloredIcon: <IconElementMath size={35} color="blue50" />,
+            },
         ],
     },
     {
         name: "Gráficos",
         elements: [
-            { value: "lineGraph", name: "Linha", icon: <IconElementLineGraph size={35} /> },
-            { value: "barGraph", name: "Barras", icon: <IconElementBarGraph size={35} /> },
-            { value: "sectorGraph", name: "Setores", icon: <IconElementPieChart size={35} /> },
+            {
+                value: "lineGraph",
+                name: "Linha",
+                icon: <IconElementLineGraph size={35} />,
+                coloredIcon: <IconElementLineGraph size={35} color="blue50" />,
+            },
+            {
+                value: "barGraph",
+                name: "Barras",
+                icon: <IconElementBarGraph size={35} />,
+                coloredIcon: <IconElementBarGraph size={35} color="blue50" />,
+            },
+            {
+                value: "sectorGraph",
+                name: "Setores",
+                icon: <IconElementPieChart size={35} />,
+                coloredIcon: <IconElementPieChart size={35} color="blue50" />,
+            },
         ],
     },
 ];

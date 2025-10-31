@@ -43,7 +43,6 @@ export const DropcursorZoom = Extension.create<IDropcursorZoomOptions>({
                                 return DecorationSet.empty;
                             }
 
-                            // Criar linha horizontal que se estende pelas margens
                             const line = document.createElement("div");
                             line.className = "ProseMirror-dropcursor-line";
                             line.style.cssText = `
@@ -70,8 +69,6 @@ export const DropcursorZoom = Extension.create<IDropcursorZoomOptions>({
                     },
                     handleDOMEvents: {
                         dragover: (view, event) => {
-                            // Com CSS zoom, o navegador já ajusta as coordenadas automaticamente
-                            // então podemos usar as coordenadas do evento diretamente
                             const coords = view.posAtCoords({
                                 left: event.clientX,
                                 top: event.clientY,
@@ -84,19 +81,15 @@ export const DropcursorZoom = Extension.create<IDropcursorZoomOptions>({
                                 return false;
                             }
 
-                            // Encontrar o nó de bloco mais próximo
                             const $pos = view.state.doc.resolve(coords.pos);
                             let targetPos = coords.pos;
 
-                            // Verificar se estamos em um nó de bloco
                             for (let d = $pos.depth; d > 0; d--) {
                                 const node = $pos.node(d);
                                 if (node.isBlock) {
                                     const nodeStart = $pos.start(d);
                                     const nodeMid = nodeStart + Math.floor(node.nodeSize / 2);
 
-                                    // Se estiver na metade superior do bloco, inserir antes
-                                    // Se estiver na metade inferior, inserir depois
                                     if (coords.pos < nodeMid) {
                                         targetPos = $pos.before(d);
                                     } else {
