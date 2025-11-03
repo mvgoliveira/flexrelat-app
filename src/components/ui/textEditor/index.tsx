@@ -224,7 +224,7 @@ const TextEditor = ({
                     }
                 }
 
-                if (variable === "text" || variable === "title") {
+                if (variable === "text" || variable === "title" || variable === "citation") {
                     const newNode = view.state.schema.nodes.placeholder.create({
                         type: variable,
                         id: randomUUID(),

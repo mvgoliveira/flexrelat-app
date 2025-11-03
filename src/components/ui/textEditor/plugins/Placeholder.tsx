@@ -41,6 +41,26 @@ const TitleContent = styled(Content)`
     height: calc(18pt * 1.8);
 `;
 
+const CitationContent = styled(Content)`
+    font-size: 12pt;
+    height: calc(12pt * 1.8);
+    border-left: 4px solid ${props => props.theme.colors.gray40};
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    border-radius: 0;
+    padding-left: 16px;
+    gap: 8px;
+    font-style: italic;
+    background: ${props => props.theme.colors.gray10};
+`;
+
+const QuoteIcon = styled.span`
+    color: ${props => props.theme.colors.gray40};
+    font-size: 16pt;
+    line-height: 1;
+`;
+
 const PlaceholderComponent = ({ node, editor, getPos }: any) => {
     const id = node.attrs.id;
     const type = node.attrs.type;
@@ -83,6 +103,26 @@ const PlaceholderComponent = ({ node, editor, getPos }: any) => {
                     .setBold()
                     .run();
                 break;
+            case "citation":
+                editor
+                    .chain()
+                    .deleteRange({ from: pos, to: pos + node.nodeSize })
+                    .insertContentAt(pos, {
+                        type: "blockquote",
+                        content: [
+                            {
+                                type: "paragraph",
+                                content: [],
+                            },
+                        ],
+                    })
+                    .setTextSelection(pos + 2)
+                    .run();
+
+                setTimeout(() => {
+                    editor.commands.focus(pos + 2);
+                }, 0);
+                break;
             default:
                 return;
         }
@@ -100,6 +140,17 @@ const PlaceholderComponent = ({ node, editor, getPos }: any) => {
         return (
             <Container id={id} contentEditable={false} suppressContentEditableWarning={true}>
                 <TitleContent onClick={handleClick}>Escreva um título...</TitleContent>
+            </Container>
+        );
+    }
+
+    if (type === "citation") {
+        return (
+            <Container id={id} contentEditable={false} suppressContentEditableWarning={true}>
+                <CitationContent onClick={handleClick}>
+                    <QuoteIcon>&ldquo;</QuoteIcon>
+                    Escreva uma citação...
+                </CitationContent>
             </Container>
         );
     }

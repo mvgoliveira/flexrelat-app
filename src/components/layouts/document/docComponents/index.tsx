@@ -193,6 +193,29 @@ const elementsGroups: IElementsGroupProps[] = [
             },
         ],
     },
+    {
+        name: "Layout",
+        elements: [
+            {
+                value: "oneColumn",
+                name: "1 Coluna",
+                icon: <IconElementText size={20} />,
+                coloredIcon: <IconElementText size={20} color="blue50" />,
+            },
+            {
+                value: "twoColumns",
+                name: "2 Colunas",
+                icon: <IconElementText size={20} />,
+                coloredIcon: <IconElementText size={20} color="blue50" />,
+            },
+            {
+                value: "treeColumn",
+                name: "3 Colunas",
+                icon: <IconElementText size={20} />,
+                coloredIcon: <IconElementText size={20} color="blue50" />,
+            },
+        ],
+    },
 ];
 
 export const DocComponents = (): ReactElement => {

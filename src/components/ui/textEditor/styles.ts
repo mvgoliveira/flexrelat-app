@@ -206,6 +206,21 @@ export const Root = styled.div<IRootProps>`
         gap: 12px;
     }
 
+    blockquote {
+        border-left: 4px solid ${({ theme }) => theme.colors.gray40};
+        padding-left: 16px;
+        margin-left: 0;
+        margin-bottom: 12px;
+        font-style: italic;
+        background: ${({ theme }) => hexToRgba(theme.colors.gray10, 50)};
+        padding-top: 8px;
+        padding-bottom: 8px;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+
     .multi-selected {
         outline: 1px solid ${({ theme }) => hexToRgba(theme.colors.purple50, 80)};
         outline-offset: 5px;
