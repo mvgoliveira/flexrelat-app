@@ -25,7 +25,6 @@ export const ProfileSelector = (): ReactElement => {
     return (
         <Menu>
             <Menu.Trigger>
-                {/* <StyledTrigger> */}
                 <Button
                     height="31px"
                     width="fit-content"
@@ -54,10 +53,9 @@ export const ProfileSelector = (): ReactElement => {
 
                     <MdKeyboardArrowDown size={12} color={Theme.colors.black} />
                 </Button>
-                {/* </StyledTrigger> */}
             </Menu.Trigger>
 
-            <Menu.Content>
+            <Menu.Content alignOffset={0}>
                 <Menu.Item
                     text="Sair"
                     onClick={handleLogout}

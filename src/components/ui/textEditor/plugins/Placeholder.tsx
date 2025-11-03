@@ -55,10 +55,28 @@ const CitationContent = styled(Content)`
     background: ${props => props.theme.colors.gray10};
 `;
 
+const CodeContent = styled(Content)`
+    font-size: 11pt;
+    min-height: 11pt;
+    border: none;
+    background: ${props => props.theme.colors.gray90};
+    color: ${props => props.theme.colors.gray70};
+    font-family: monospace;
+    gap: 8px;
+    padding: 16px;
+`;
+
 const QuoteIcon = styled.span`
     color: ${props => props.theme.colors.gray40};
     font-size: 16pt;
     line-height: 1;
+`;
+
+const CodeIcon = styled.span`
+    color: ${props => props.theme.colors.gray70};
+    font-size: 10pt;
+    line-height: 1;
+    font-family: monospace;
 `;
 
 const PlaceholderComponent = ({ node, editor, getPos }: any) => {
@@ -123,6 +141,20 @@ const PlaceholderComponent = ({ node, editor, getPos }: any) => {
                     editor.commands.focus(pos + 2);
                 }, 0);
                 break;
+            case "code":
+                editor
+                    .chain()
+                    .deleteRange({ from: pos, to: pos + node.nodeSize })
+                    .insertContentAt(pos, {
+                        type: "codeBlock",
+                    })
+                    .setTextSelection(pos + 1)
+                    .run();
+
+                setTimeout(() => {
+                    editor.commands.focus(pos + 1);
+                }, 0);
+                break;
             default:
                 return;
         }
@@ -151,6 +183,17 @@ const PlaceholderComponent = ({ node, editor, getPos }: any) => {
                     <QuoteIcon>&ldquo;</QuoteIcon>
                     Escreva uma citação...
                 </CitationContent>
+            </Container>
+        );
+    }
+
+    if (type === "code") {
+        return (
+            <Container id={id} contentEditable={false} suppressContentEditableWarning={true}>
+                <CodeContent onClick={handleClick}>
+                    <CodeIcon>&lt;/&gt;</CodeIcon>
+                    Escreva código...
+                </CodeContent>
             </Container>
         );
     }

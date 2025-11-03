@@ -1407,6 +1407,11 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-code-block/-/extension-code-block-3.0.9.tgz#3a780f1e3518893790486bb5bcafa0cc8bb684f1"
   integrity sha512-H692k9sHIE3rR3S+BIknQXsLb8HSojk+7gQ5DV0hYajSzpJ02OUL4AnNlpMuSgZuaq+ljpN4sT8kCIzIE1kQxw==
 
+"@tiptap/extension-code-block@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-code-block/-/extension-code-block-3.10.1.tgz#4b3a03f0136b2ed54fabc61f447ef677c47449fe"
+  integrity sha512-Yy7XREi27aUE3S1NMihq0j4vM9rNLa3AQVHWFx1Ze2Jec2MUK7ef8WUkMs28cX76M+yB4P63Q2z8meH6HUAzyA==
+
 "@tiptap/extension-code@^3.0.9":
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-code/-/extension-code-3.0.9.tgz#f155de97f0c146803f4f1923483eacad11fcfc72"
@@ -1473,6 +1478,11 @@
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-list/-/extension-list-3.0.9.tgz#2dbe5e0a9283cfd074aa4aca512531c1b670afdb"
   integrity sha512-y5JQoFmVR+6FhDdEz2oFIMkURSRSDhCtsrlNWdUpSTGnTAa2WZT7nEhHcIMSGvYU3t0fkfLQ9yTMSaQZFa5GLA==
+
+"@tiptap/extension-mathematics@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-mathematics/-/extension-mathematics-3.10.1.tgz#b9e26f4caa10ecc638d856ad59add8c002823d8a"
+  integrity sha512-fFklbu2vvKqNZoGlkq31KpviAzVxt5P2E3LTdEQ4J+D4bJEGDS6zLRgWvujZEz66VmCT+J1UWYKXIOSgsUCWpw==
 
 "@tiptap/extension-ordered-list@^3.0.9":
   version "3.0.9"
@@ -2414,6 +2424,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+commander@^8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
+  integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
 
 compute-scroll-into-view@^3.0.2:
   version "3.1.1"
@@ -3876,6 +3891,13 @@ jsuites@^5.12.0, jsuites@^5.13.3:
     array.prototype.flat "^1.3.1"
     object.assign "^4.1.4"
     object.values "^1.1.6"
+
+katex@^0.16.25:
+  version "0.16.25"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.25.tgz#61699984277e3bdb3e89e0e446b83cd0a57d87db"
+  integrity sha512-woHRUZ/iF23GBP1dkDQMh1QBad9dmr8/PAwNA54VrSOVYgI12MAcE14TqnDdQOdzyEonGzMepYnqBMYdsoAr8Q==
+  dependencies:
+    commander "^8.3.0"
 
 keyv@^4.5.4:
   version "4.5.4"

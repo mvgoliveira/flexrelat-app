@@ -37,6 +37,48 @@ export const Root = styled.div<IRootProps>`
         &:focus {
             outline: none;
         }
+
+        .tiptap-mathematics-render {
+            padding: 0 0.25rem;
+
+            &--editable {
+                cursor: pointer;
+                transition: background 0.2s;
+
+                &:hover {
+                    background: #eee;
+                }
+            }
+        }
+
+        .tiptap-mathematics-render {
+            border-radius: 0.25rem;
+
+            &[data-type="inline-math"] {
+                display: inline-block;
+            }
+
+            &[data-type="block-math"] {
+                background: ${({ theme }) => theme.colors.gray10};
+                display: block;
+                margin: 1rem 0;
+                padding: 1rem;
+                text-align: center;
+
+                &:hover {
+                    background: ${({ theme }) => theme.colors.gray20};
+                }
+            }
+
+            &.inline-math-error,
+            &.block-math-error {
+                background: var(--red-light);
+                color: var(--red);
+                border: 1px solid var(--red-dark);
+                padding: 0.5rem;
+                border-radius: 0.25rem;
+            }
+        }
     }
 
     .rm-pagination-gap {
@@ -218,6 +260,24 @@ export const Root = styled.div<IRootProps>`
 
         p {
             margin-bottom: 0;
+        }
+    }
+
+    pre {
+        background: ${({ theme }) => theme.colors.gray90};
+        color: ${({ theme }) => theme.colors.gray10};
+        font-family: monospace;
+        padding: 16px;
+        border-radius: 4px;
+        margin-bottom: 12px;
+        overflow-x: auto;
+        line-height: 1.5;
+
+        code {
+            background: none;
+            color: inherit;
+            font-size: 11pt;
+            padding: 0;
         }
     }
 

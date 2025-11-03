@@ -1,9 +1,12 @@
 import { useDocumentContext } from "@/context/documentContext";
 import { Theme } from "@/themes";
 import { BulletList } from "@tiptap/extension-bullet-list";
+import CodeBlock from "@tiptap/extension-code-block";
 import { ListItem } from "@tiptap/extension-list-item";
+import MathExtension, { migrateMathStrings } from "@tiptap/extension-mathematics";
 import { OrderedList } from "@tiptap/extension-ordered-list";
 import TextAlign from "@tiptap/extension-text-align";
+import "katex/dist/katex.min.css";
 import {
     FontSize,
     TextStyle,
@@ -32,7 +35,6 @@ import {
     TablePlus,
     TableRowPlus,
 } from "./plugins";
-import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { Placeholder } from "./plugins/Placeholder";
 import { PreventEditExtension } from "./plugins/PreventEdit";
@@ -74,6 +76,7 @@ const TextEditor = ({
 
     const alreadyLoaded = useRef(false);
     const zoomRef = useRef(zoom);
+    const editorRef = useRef<ReturnType<typeof useEditor>>(null);
 
     // Atualizar a ref quando o zoom mudar
     useEffect(() => {
@@ -148,7 +151,52 @@ const TextEditor = ({
         BulletList,
         OrderedList,
         ListItem,
-        GlobalClass,
+        CodeBlock,
+        CodeBlock.configure({
+            enableTabIndentation: true,
+        }),
+        MathExtension.configure({
+            blockOptions: {
+                onClick: (node, pos) => {
+                    const newCalculation = prompt("Enter new calculation:", node.attrs.latex);
+                    if (newCalculation && editorRef.current) {
+                        editorRef.current
+                            ?.chain()
+                            .setNodeSelection(pos)
+                            .updateBlockMath({ latex: newCalculation })
+                            .focus()
+                            .run();
+
+                        // Forçar salvamento após atualização
+                        setTimeout(() => {
+                            if (editorRef.current) {
+                                saveTitle(editorRef.current.getHTML());
+                            }
+                        }, 100);
+                    }
+                },
+            },
+            inlineOptions: {
+                onClick: (node, pos) => {
+                    const newCalculation = prompt("Enter new calculation:", node.attrs.latex);
+                    if (newCalculation && editorRef.current) {
+                        editorRef.current
+                            ?.chain()
+                            .setNodeSelection(pos)
+                            .updateInlineMath({ latex: newCalculation })
+                            .focus()
+                            .run();
+
+                        // Forçar salvamento após atualização
+                        setTimeout(() => {
+                            if (editorRef.current) {
+                                saveTitle(editorRef.current.getHTML());
+                            }
+                        }, 100);
+                    }
+                },
+            },
+        }),
         UniqueID.configure({
             types: [
                 "heading",
@@ -162,6 +210,9 @@ const TextEditor = ({
                 "image",
                 "numberedHeading",
                 "quickChart",
+                "blockMath",
+                "inlineMath",
+                "placeholder",
             ],
             generateID: () => randomUUID(),
         }),
@@ -180,9 +231,14 @@ const TextEditor = ({
 
     const currentEditor = useEditor({
         extensions,
+        shouldRerenderOnTransaction: true,
         immediatelyRender: false,
         autofocus: false,
         content: ``,
+        onCreate: ({ editor }) => {
+            migrateMathStrings(editor);
+            editorRef.current = editor;
+        },
         onUpdate: ({ editor }) => {
             saveTitle(editor.getHTML());
         },
@@ -224,7 +280,12 @@ const TextEditor = ({
                     }
                 }
 
-                if (variable === "text" || variable === "title" || variable === "citation") {
+                if (
+                    variable === "text" ||
+                    variable === "title" ||
+                    variable === "citation" ||
+                    variable === "code"
+                ) {
                     const newNode = view.state.schema.nodes.placeholder.create({
                         type: variable,
                         id: randomUUID(),
@@ -258,6 +319,14 @@ const TextEditor = ({
                     return true;
                 }
 
+                if (variable === "math") {
+                    const newNode = view.state.schema.nodes.blockMath.create({
+                        latex: "E=mc^2",
+                    });
+                    view.dispatch(view.state.tr.insert(targetPos, newNode));
+                    return true;
+                }
+
                 return true;
             },
         },
@@ -277,6 +346,7 @@ const TextEditor = ({
 
     useEffect(() => {
         setEditor(currentEditor);
+        editorRef.current = currentEditor;
     }, [currentEditor, setEditor]);
 
     useEffect(() => {
