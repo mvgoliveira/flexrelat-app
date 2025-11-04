@@ -207,6 +207,10 @@ export const Root = styled.div<IRootProps>`
                 margin-bottom: 12px;
             }
 
+            &:first-of-type {
+                border-top: 1px solid ${({ theme }) => theme.colors.black};
+            }
+
             .selectedCell:after {
                 background: ${({ theme }) => hexToRgba(theme.colors.blue50, 10)};
                 content: "";
@@ -240,7 +244,6 @@ export const Root = styled.div<IRootProps>`
         th {
             font-weight: ${({ theme }) => theme.fontWeight.bold};
             text-align: center;
-            border-top: 1px solid ${({ theme }) => theme.colors.black};
 
             p {
                 text-align: start;

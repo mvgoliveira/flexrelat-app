@@ -330,14 +330,13 @@ const TextEditor = ({
 
                 if (variable === "line") {
                     const { schema } = view.state;
-                    const paragraph = schema.nodes.paragraph.createAndFill();
+                    const cell1 = schema.nodes.tableCell.createAndFill();
 
-                    if (!paragraph) return true;
+                    if (!cell1) return true;
 
-                    const layout = schema.nodes.layout.create({ type: "line", id: randomUUID() }, [
-                        paragraph,
-                    ]);
-                    view.dispatch(view.state.tr.insert(targetPos, layout));
+                    const row = schema.nodes.tableRow.create(null, [cell1]);
+                    const table = schema.nodes.table.create(null, [row]);
+                    view.dispatch(view.state.tr.insert(targetPos, table));
                     return true;
                 }
 

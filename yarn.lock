@@ -1499,10 +1499,25 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-strike/-/extension-strike-3.0.9.tgz#42d32bac5a3579987d8cb0c71b382e03553124ba"
   integrity sha512-2TBQ9P/FGe+/34ckfwP+eCdb4vbxDVZ5qD0piDIR9Ws5QI5IdtW90pNO4roxiPeRdVFrhTbFPEIuL0tg4NQRmg==
 
-"@tiptap/extension-table@^3.0.9":
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-table/-/extension-table-3.0.9.tgz#be1c77a99deba37d7f2cb41e672e4399e5b517f4"
-  integrity sha512-jygDvj9MIwMlzs2c+4MZwXCXI6sc7LcKgPFoJ93qiCn6CZrDwaX3XzxXi0VAg7MexsUi1nVaGZQk/gv+Pf3rKw==
+"@tiptap/extension-table-cell@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table-cell/-/extension-table-cell-3.10.1.tgz#11ad6df31451eb24ef0db0b0e44c71b5abb34401"
+  integrity sha512-v0Q286PuFv/TVSAM8qcUb6qZff/z+/rlse2CN/ipUyteQOo6o5yawtplokfKMlDdGp9gSRK4DV2pfTkh2Xq8dA==
+
+"@tiptap/extension-table-header@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table-header/-/extension-table-header-3.10.1.tgz#d458ae40372c972156db605ebc95e979f2908308"
+  integrity sha512-fKGUELF5iCMBt7wgRkV27uE3/rAUnqzDB3Tyk7WivAkU8TtJq468wawatM32CV/PmK0j0cdcUMR0rmQEiJrgVg==
+
+"@tiptap/extension-table-row@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table-row/-/extension-table-row-3.10.1.tgz#922e763ca8880faee1afce9410633d15b461ea84"
+  integrity sha512-kIrgawz7MfLU28LfGgSyUgw85R2ln8/JILhBJyjDEl5H83EXvsvOdCPiohUPy/3zsF42tfANzgxwcVLV3Pp9Ag==
+
+"@tiptap/extension-table@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table/-/extension-table-3.10.1.tgz#2fc125002432e0d07970b0742456288cb662804c"
+  integrity sha512-i18t1wfVHQjJIMlqIB0SCpP78bsoZDTFhhZBOLYDM0Q4KHY+zVkiZADkiY5zA8UFZiBuWC4eviqajCvq4XOvQw==
 
 "@tiptap/extension-text-align@^3.0.1":
   version "3.0.9"
@@ -1540,6 +1555,30 @@
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@tiptap/pm/-/pm-3.0.9.tgz#d83462a740bf34b5b3664fa608fe2e92dd9a0445"
   integrity sha512-cJdnpGyirRxwi6M4IkyapEK/jhcjFXdfX3uhJp/4uVH1dynNXalV0gE/YnH/yt55kzwvG9OUrwOQt+t1iXgNog==
+  dependencies:
+    prosemirror-changeset "^2.3.0"
+    prosemirror-collab "^1.3.1"
+    prosemirror-commands "^1.6.2"
+    prosemirror-dropcursor "^1.8.1"
+    prosemirror-gapcursor "^1.3.2"
+    prosemirror-history "^1.4.1"
+    prosemirror-inputrules "^1.4.0"
+    prosemirror-keymap "^1.2.2"
+    prosemirror-markdown "^1.13.1"
+    prosemirror-menu "^1.2.4"
+    prosemirror-model "^1.24.1"
+    prosemirror-schema-basic "^1.2.3"
+    prosemirror-schema-list "^1.5.0"
+    prosemirror-state "^1.4.3"
+    prosemirror-tables "^1.6.4"
+    prosemirror-trailing-node "^3.0.0"
+    prosemirror-transform "^1.10.2"
+    prosemirror-view "^1.38.1"
+
+"@tiptap/pm@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/pm/-/pm-3.10.1.tgz#61c0a7fff66847ce059d0f4394cc1562fc0677cb"
+  integrity sha512-LhTRI+bECLFqitWN821A7faVFVw5OitFGWn45LIIRc/1Jg3lkqsaqx3LcLN1sjXd+f/vfoeXLKSD6VJvv/B/nQ==
   dependencies:
     prosemirror-changeset "^2.3.0"
     prosemirror-collab "^1.3.1"

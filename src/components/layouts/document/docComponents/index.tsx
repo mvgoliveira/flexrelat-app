@@ -18,6 +18,7 @@ import {
 import { SearchInput } from "@/components/features/searchInput";
 import { Typography } from "@/components/features/typography";
 import { ScrollArea } from "@/components/ui/scrollArea";
+import { useDocumentContext } from "@/context/documentContext";
 import { Theme } from "@/themes";
 import { ReactElement, ReactNode, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
@@ -42,9 +43,74 @@ interface IElementProps {
 }
 
 const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElement => {
+    const { editor } = useDocumentContext();
+
+    const handleElementClick = (variable: string) => {
+        if (!editor) return;
+
+        const { state } = editor;
+        const { selection } = state;
+        const { from } = selection;
+
+        if (
+            variable === "text" ||
+            variable === "title" ||
+            variable === "citation" ||
+            variable === "code"
+        ) {
+            const newNode = state.schema.nodes.placeholder.create({
+                type: variable,
+            });
+            editor.chain().focus().insertContentAt(from, newNode.toJSON()).run();
+            return;
+        }
+
+        if (variable === "separator") {
+            editor.chain().focus().setHorizontalRule().run();
+            return;
+        }
+
+        if (variable === "sheet") {
+            const { schema } = state;
+            const headerCell1 = schema.nodes.tableHeader.createAndFill();
+            const headerCell2 = schema.nodes.tableHeader.createAndFill();
+            const cell1 = schema.nodes.tableCell.createAndFill();
+            const cell2 = schema.nodes.tableCell.createAndFill();
+
+            if (!headerCell1 || !headerCell2 || !cell1 || !cell2) return;
+
+            const headerRow = schema.nodes.tableRow.create(null, [headerCell1, headerCell2]);
+            const row = schema.nodes.tableRow.create(null, [cell1, cell2]);
+            const table = schema.nodes.table.create(null, [headerRow, row]);
+            editor.chain().focus().insertContentAt(from, table.toJSON()).run();
+            return;
+        }
+
+        if (variable === "math") {
+            const newNode = state.schema.nodes.blockMath.create({
+                latex: "E=mc^2",
+            });
+            editor.chain().focus().insertContentAt(from, newNode.toJSON()).run();
+            return;
+        }
+
+        if (variable === "line") {
+            const { schema } = state;
+            const cell1 = schema.nodes.tableCell.createAndFill();
+
+            if (!cell1) return;
+
+            const row = schema.nodes.tableRow.create(null, [cell1]);
+            const table = schema.nodes.table.create(null, [row]);
+            editor.chain().focus().insertContentAt(from, table.toJSON()).run();
+            return;
+        }
+    };
+
     return (
         <ElementContainer>
             <ElementIconContainer
+                onClick={() => handleElementClick(value)}
                 draggable
                 onDragStart={e => e.dataTransfer.setData("variable", value)}
             >
