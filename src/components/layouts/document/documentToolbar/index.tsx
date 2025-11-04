@@ -15,6 +15,7 @@ import {
     MdFormatAlignRight,
     MdFormatBold,
     MdFormatClear,
+    MdFormatColorFill,
     MdFormatColorText,
     MdFormatItalic,
     MdFormatListBulleted,
@@ -55,6 +56,8 @@ interface IDocumentToolbarProps {
     onChangeFontColor: (color: string) => void;
     highlightColor: string | null;
     onChangeHighlightColor: (color: string | null) => void;
+    backgroundColor: string;
+    onChangeBackgroundColor: (color: string) => void;
 }
 
 export const DocumentToolbar = ({
@@ -83,6 +86,8 @@ export const DocumentToolbar = ({
     onChangeFontColor,
     highlightColor,
     onChangeHighlightColor,
+    backgroundColor,
+    onChangeBackgroundColor,
 }: IDocumentToolbarProps): ReactElement => {
     const { width: windowWidth } = useWindowSize();
     const { editor } = useDocumentContext();
@@ -366,6 +371,19 @@ export const DocumentToolbar = ({
                                         </Toolbar.ItemButton>
                                     </Toolbar.Group>
                                 )}
+
+                                <Toolbar.Group className="TableColors Item">
+                                    <ColorPicker
+                                        presetColors={PRESET_FONT_COLORS}
+                                        currentColor={fontColor}
+                                        onChangeColor={onChangeBackgroundColor}
+                                    >
+                                        <Toolbar.ItemButton>
+                                            <MdFormatColorFill size={18} color="black" />
+                                            <ColorContainer color={backgroundColor || "white"} />
+                                        </Toolbar.ItemButton>
+                                    </ColorPicker>
+                                </Toolbar.Group>
                             </ToolbarMenu.Content>
                         </ToolbarMenu>
                     </Toolbar.Group>
