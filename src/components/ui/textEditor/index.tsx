@@ -213,6 +213,7 @@ const TextEditor = ({
                 "blockMath",
                 "inlineMath",
                 "placeholder",
+                "layout",
             ],
             generateID: () => randomUUID(),
         }),
@@ -324,6 +325,19 @@ const TextEditor = ({
                         latex: "E=mc^2",
                     });
                     view.dispatch(view.state.tr.insert(targetPos, newNode));
+                    return true;
+                }
+
+                if (variable === "line") {
+                    const { schema } = view.state;
+                    const paragraph = schema.nodes.paragraph.createAndFill();
+
+                    if (!paragraph) return true;
+
+                    const layout = schema.nodes.layout.create({ type: "line", id: randomUUID() }, [
+                        paragraph,
+                    ]);
+                    view.dispatch(view.state.tr.insert(targetPos, layout));
                     return true;
                 }
 
@@ -449,6 +463,14 @@ const TextEditor = ({
     return (
         <>
             {currentEditor && (
+                <TableBubbleMenu
+                    editor={currentEditor}
+                    blockClasses={["change-loading", "change-remove", "change-add"]}
+                    types={["table"]}
+                />
+            )}
+
+            {currentEditor && (
                 <TextBubbleMenu
                     editor={currentEditor}
                     blockClasses={["change-loading", "change-remove", "change-add"]}
@@ -461,14 +483,6 @@ const TextEditor = ({
                         "blockquote",
                         "table",
                     ]}
-                />
-            )}
-
-            {currentEditor && (
-                <TableBubbleMenu
-                    editor={currentEditor}
-                    blockClasses={["change-loading", "change-remove", "change-add"]}
-                    types={["table"]}
                 />
             )}
 

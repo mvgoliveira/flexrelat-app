@@ -184,6 +184,18 @@ export const Root = styled.div<IRootProps>`
         line-height: 1.5 !important;
     }
 
+    .layout {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p {
+            margin-bottom: 0px;
+        }
+    }
+
     table {
         border-collapse: collapse;
         overflow: hidden;

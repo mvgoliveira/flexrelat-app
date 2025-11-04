@@ -460,7 +460,7 @@ export const IconElementPieChart = ({
                 />
                 <path
                     d="M53.9393 31.237C54.9043 28.7113 55.2175 25.9947 54.8516 23.3244C54.4856 20.6541 53.4516 18.1114 51.8399 15.9184C50.2282 13.7253 48.0878 11.9486 45.6057 10.7434C43.1235 9.53824 40.3751 8.94124 37.6004 9.00456L38 25.5L53.9393 31.237Z"
-                    fill="#EAEAEA"
+                    fill={Theme.colors[color ? "blue40" : "gray20"]}
                 />
                 <path
                     d="M38 9.5C47.1269 9.5 54.5 16.6774 54.5 25.5C54.5 34.3226 47.1269 41.5 38 41.5C28.8731 41.5 21.5 34.3226 21.5 25.5C21.5 16.6774 28.8731 9.5 38 9.5Z"
@@ -480,6 +480,99 @@ export const IconElementPieChart = ({
                     />
                 </clipPath>
             </defs>
+        </svg>
+    );
+};
+
+export const IconElementLine = ({ size = 77, color }: ISVGsDynamicColorAndSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 77 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="75.6667" height="49" rx="3.5" fill="white" />
+            <rect x="0.5" y="0.5" width="75.6667" height="49" rx="3.5" stroke="#E0E0E0" />
+            <rect
+                x="7.5"
+                y="7.5"
+                width="61.6667"
+                height="35"
+                rx="5"
+                fill={Theme.colors[color ? "blue30" : "gray10"]}
+                stroke={Theme.colors[color || "gray60"]}
+                strokeDasharray="5 5"
+            />
+        </svg>
+    );
+};
+
+export const IconElementColumns = ({
+    size = 77,
+    color,
+}: ISVGsDynamicColorAndSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 77 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="75.6667" height="49" rx="3.5" fill="white" />
+            <rect x="0.5" y="0.5" width="75.6667" height="49" rx="3.5" stroke="#E0E0E0" />
+            <rect
+                x="5"
+                y="5"
+                width="19.5556"
+                height="40"
+                rx="5"
+                fill={Theme.colors[color ? "blue30" : "gray10"]}
+                stroke={Theme.colors[color || "gray60"]}
+                strokeDasharray="5 5"
+            />
+            <rect
+                x="28.5556"
+                y="5"
+                width="19.5556"
+                height="40"
+                rx="5"
+                fill={Theme.colors[color ? "blue30" : "gray10"]}
+                stroke={Theme.colors[color || "gray60"]}
+                strokeDasharray="5 5"
+            />
+            <rect
+                x="52.1111"
+                y="5"
+                width="19.5556"
+                height="40"
+                rx="5"
+                fill={Theme.colors[color ? "blue30" : "gray10"]}
+                stroke={Theme.colors[color || "gray60"]}
+                strokeDasharray="5 5"
+            />
+        </svg>
+    );
+};
+
+export const IconElementNotUniformColumns = ({
+    size = 77,
+    color,
+}: ISVGsDynamicColorAndSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 77 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="75.6667" height="49" rx="3.5" fill="white" />
+            <rect x="0.5" y="0.5" width="75.6667" height="49" rx="3.5" stroke="#E0E0E0" />
+            <rect
+                x="5"
+                y="5"
+                width="42"
+                height="40"
+                rx="5"
+                fill={Theme.colors[color ? "blue30" : "gray10"]}
+                stroke={Theme.colors[color || "gray60"]}
+                strokeDasharray="5 5"
+            />
+            <rect
+                x="51"
+                y="5"
+                width="20.6667"
+                height="40"
+                rx="5"
+                fill={Theme.colors[color ? "blue30" : "gray10"]}
+                stroke={Theme.colors[color || "gray60"]}
+                strokeDasharray="5 5"
+            />
         </svg>
     );
 };
