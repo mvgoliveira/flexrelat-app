@@ -330,7 +330,10 @@ const TextEditor = ({
 
                 if (variable === "line") {
                     const { schema } = view.state;
-                    const cell1 = schema.nodes.tableCell.createAndFill();
+                    const cell1 = schema.nodes.tableCell.create(
+                        { borderColor: "#EAEAEA" },
+                        schema.nodes.paragraph.create()
+                    );
 
                     if (!cell1) return true;
 

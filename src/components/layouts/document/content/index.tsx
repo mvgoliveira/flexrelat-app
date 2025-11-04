@@ -42,6 +42,7 @@ export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): React
     const [fontColor, setFontColor] = useState<string>("#000000");
     const [highlightColor, setHighlightColor] = useState<string | null>(null);
     const [backgroundColor, setBackgroundColor] = useState<string>("#ffffff");
+    const [borderColor, setBorderColor] = useState<string>("#000000");
 
     const [fontSize, setFontSize] = useState<number>(12);
     const [fontType, setFontType] = useState<FontFamilies>("times-new-roman");
@@ -62,15 +63,18 @@ export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): React
             const { $from } = state.selection;
 
             let cellBackgroundColor = "#ffffff";
+            let cellBorderColor = "#000000";
             for (let depth = $from.depth; depth > 0; depth--) {
                 const node = $from.node(depth);
                 if (node.type.name === "tableCell" || node.type.name === "tableHeader") {
                     cellBackgroundColor = node.attrs.backgroundColor || "#ffffff";
+                    cellBorderColor = node.attrs.borderColor || "#000000";
                     break;
                 }
             }
 
             setBackgroundColor(cellBackgroundColor);
+            setBorderColor(cellBorderColor);
 
             const currentFontSize = editor.getAttributes("textStyle")?.fontSize;
             if (currentFontSize) {
@@ -265,6 +269,37 @@ export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): React
                             editor
                                 ?.chain()
                                 .setBackgroundColor(color || "")
+                                .run();
+                        }
+                    }}
+                    borderColor={borderColor}
+                    onChangeBorderColor={color => {
+                        setBorderColor(color);
+
+                        if (!editor) return;
+
+                        // Verifica se estamos dentro de uma célula de tabela
+                        const { state } = editor;
+                        const { $from } = state.selection;
+
+                        // Procura por um nó de célula de tabela nos ancestrais
+                        let isInTableCell = false;
+                        for (let depth = $from.depth; depth > 0; depth--) {
+                            const node = $from.node(depth);
+                            if (
+                                node.type.name === "tableCell" ||
+                                node.type.name === "tableHeader"
+                            ) {
+                                isInTableCell = true;
+                                break;
+                            }
+                        }
+
+                        if (isInTableCell) {
+                            // Aplica a cor de borda na célula da tabela
+                            editor
+                                ?.chain()
+                                .setCellAttribute("borderColor", color || null)
                                 .run();
                         }
                     }}

@@ -7,9 +7,11 @@ import { useDocumentContext } from "@/context/documentContext";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { Theme } from "@/themes";
 import { ChangeEvent, ReactElement, useState } from "react";
+import { AiOutlineMergeCells } from "react-icons/ai";
 import { BiMinus } from "react-icons/bi";
 import {
     MdAdd,
+    MdBorderColor,
     MdFormatAlignJustify,
     MdFormatAlignLeft,
     MdFormatAlignRight,
@@ -58,6 +60,8 @@ interface IDocumentToolbarProps {
     onChangeHighlightColor: (color: string | null) => void;
     backgroundColor: string;
     onChangeBackgroundColor: (color: string) => void;
+    borderColor: string;
+    onChangeBorderColor: (color: string) => void;
 }
 
 export const DocumentToolbar = ({
@@ -88,6 +92,8 @@ export const DocumentToolbar = ({
     onChangeHighlightColor,
     backgroundColor,
     onChangeBackgroundColor,
+    borderColor,
+    onChangeBorderColor,
 }: IDocumentToolbarProps): ReactElement => {
     const { width: windowWidth } = useWindowSize();
     const { editor } = useDocumentContext();
@@ -375,7 +381,7 @@ export const DocumentToolbar = ({
                                 <Toolbar.Group className="TableColors Item">
                                     <ColorPicker
                                         presetColors={PRESET_FONT_COLORS}
-                                        currentColor={fontColor}
+                                        currentColor={backgroundColor}
                                         onChangeColor={onChangeBackgroundColor}
                                     >
                                         <Toolbar.ItemButton>
@@ -383,6 +389,28 @@ export const DocumentToolbar = ({
                                             <ColorContainer color={backgroundColor || "white"} />
                                         </Toolbar.ItemButton>
                                     </ColorPicker>
+
+                                    <ColorPicker
+                                        presetColors={PRESET_FONT_COLORS}
+                                        currentColor={borderColor}
+                                        onChangeColor={onChangeBorderColor}
+                                    >
+                                        <Toolbar.ItemButton>
+                                            <MdBorderColor size={18} color="black" />
+                                            <ColorContainer color={borderColor || "black"} />
+                                        </Toolbar.ItemButton>
+                                    </ColorPicker>
+                                </Toolbar.Group>
+
+                                <Toolbar.Group className="TableOptions Item">
+                                    <Toolbar.ItemButton
+                                        onClick={() => {
+                                            if (!editor) return;
+                                            editor.chain().focus().mergeOrSplit().run();
+                                        }}
+                                    >
+                                        <AiOutlineMergeCells size={18} color={Theme.colors.black} />
+                                    </Toolbar.ItemButton>
                                 </Toolbar.Group>
                             </ToolbarMenu.Content>
                         </ToolbarMenu>

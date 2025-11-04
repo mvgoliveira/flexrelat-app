@@ -96,7 +96,10 @@ const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElemen
 
         if (variable === "line") {
             const { schema } = state;
-            const cell1 = schema.nodes.tableCell.createAndFill();
+            const cell1 = schema.nodes.tableCell.create(
+                { borderColor: Theme.colors.gray40 },
+                schema.nodes.paragraph.create()
+            );
 
             if (!cell1) return;
 

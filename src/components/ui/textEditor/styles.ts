@@ -208,7 +208,10 @@ export const Root = styled.div<IRootProps>`
             }
 
             &:first-of-type {
-                border-top: 1px solid ${({ theme }) => theme.colors.black};
+                td,
+                th {
+                    border-top: 1px solid ${({ theme }) => theme.colors.black};
+                }
             }
 
             .selectedCell:after {
