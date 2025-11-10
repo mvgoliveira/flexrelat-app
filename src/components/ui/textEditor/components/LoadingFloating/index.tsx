@@ -12,7 +12,7 @@ export const LoadingFloating = ({
     componentLoading,
 }: ILoadingFloatingProps): ReactElement => {
     useEffect(() => {
-        if (!componentLoading) return;
+        if (!componentLoading.id) return;
 
         editor.state.doc.descendants((node, pos) => {
             if (editor.isDestroyed) return false;
@@ -33,7 +33,7 @@ export const LoadingFloating = ({
                     .run();
             }
         });
-    }, [componentLoading, editor]);
+    }, [componentLoading.id, editor]);
 
     return <></>;
 };
