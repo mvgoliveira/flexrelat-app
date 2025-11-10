@@ -5,7 +5,7 @@ import { useUserContext } from "@/context/userContext";
 import { Theme } from "@/themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { MdKeyboardArrowDown, MdLogout } from "react-icons/md";
 
 import { ProfileImage } from "./styles";
@@ -17,10 +17,6 @@ export const ProfileSelector = (): ReactElement => {
     const handleLogout = (): void => {
         router.push("/logout");
     };
-
-    useEffect(() => {
-        console.log("Authenticated User:", authenticatedUser);
-    }, [authenticatedUser]);
 
     return (
         <Menu>
