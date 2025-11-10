@@ -125,6 +125,8 @@ export const Root = styled.div<IRootProps>`
 
     hr {
         margin-bottom: 12px;
+        border: none;
+        border-bottom: 1px solid ${({ theme }) => theme.colors.gray80};
     }
 
     h1,

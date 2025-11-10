@@ -39,5 +39,6 @@ export const updateAiChangeStatus = async (
 
 export const getChange = async (prompt: string): Promise<string> => {
     const { data } = await client.post(`${PREFIX}/request-change`, { prompt });
+    console.log(data);
     return data;
 };

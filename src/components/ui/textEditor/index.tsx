@@ -35,6 +35,7 @@ import {
     TablePlus,
     TableRowPlus,
 } from "./plugins";
+import { GlobalClass } from "./plugins/GlobalClass";
 import { Indent } from "./plugins/Indent";
 import { Placeholder } from "./plugins/Placeholder";
 import { PreventEditExtension } from "./plugins/PreventEdit";
@@ -155,6 +156,7 @@ const TextEditor = ({
         CodeBlock.configure({
             enableTabIndentation: true,
         }),
+        GlobalClass,
         MathExtension.configure({
             blockOptions: {
                 onClick: (node, pos) => {

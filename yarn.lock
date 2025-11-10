@@ -3540,10 +3540,10 @@ html2canvas@^1.0.0, html2canvas@^1.0.0-rc.5:
     css-line-break "^2.1.0"
     text-segmentation "^1.0.3"
 
-html2pdf.js@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/html2pdf.js/-/html2pdf.js-0.12.0.tgz#97b263fe2f74e95050ce6d5a9a17c47cc2afa831"
-  integrity sha512-UiaAxJpkNiintpAKZ94V0GTmwDSootT78f5AHw5nUjDXo+RHsJJ0aVhoccrxdWiM7Lx2cJ929ca7mAnbSt13gw==
+html2pdf.js@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/html2pdf.js/-/html2pdf.js-0.12.1.tgz#df3dfb4669602ee3ff1d48bd064886896549d9d5"
+  integrity sha512-3rBWQ96H5oOU9jtoz3MnE/epGi27ig9h8aonBk4JTpvUERM3lMRxhIRckhJZEi4wE0YfRINoYOIDY0hLY0CHgQ==
   dependencies:
     html2canvas "^1.0.0"
     jspdf "^3.0.0"
