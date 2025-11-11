@@ -196,6 +196,47 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
             if (node) {
                 if (change.type === "update") {
+                    const elementTypeName = node.type.name;
+
+                    // Remove a classe "change-remove" do nó antigo
+                    editor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .updateAttributes(elementTypeName, {
+                            class: "",
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
+
+                    // Remove o nó com classe "change-add" se existir
+                    const nextPos = pos + node.nodeSize;
+                    const nextNode = editor.state.doc.nodeAt(nextPos);
+
+                    if (nextNode && nextNode.attrs["class"] === "change-add") {
+                        const nextNodeType = nextNode.type.name;
+
+                        // Remove a classe antes de deletar
+                        editor
+                            .chain()
+                            .setNodeSelection(nextPos)
+                            .updateAttributes(nextNodeType, {
+                                class: "",
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+
+                        // Deleta o nó "change-add"
+                        editor
+                            .chain()
+                            .deleteRange({
+                                from: nextPos,
+                                to: nextPos + nextNode.nodeSize,
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+                    }
+
+                    // Agora insere o novo conteúdo e deleta o antigo (isso entra no histórico)
                     editor
                         .chain()
                         .setNodeSelection(pos)

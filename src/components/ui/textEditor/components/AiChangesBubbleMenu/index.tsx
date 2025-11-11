@@ -29,7 +29,42 @@ export const AiChangesBubbleMenu = ({
     };
 
     const handleRejectChange = (): void => {
-        editor.chain().focus().setMeta("addToHistory", false).run();
+        const element = editor.view.dom.querySelector(`[data-id="${aiChange.old_content.id}"]`);
+
+        if (element) {
+            const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
+            const node = editor.state.doc.nodeAt(pos);
+
+            if (node) {
+                const elementTypeName = node.type.name;
+
+                // Remove a classe "change-remove" do nó antigo
+                editor
+                    .chain()
+                    .setNodeSelection(pos)
+                    .updateAttributes(elementTypeName, {
+                        class: "",
+                    })
+                    .setMeta("addToHistory", false)
+                    .run();
+
+                // Remove o nó com classe "change-add" se existir
+                const nextPos = pos + node.nodeSize;
+                const nextNode = editor.state.doc.nodeAt(nextPos);
+
+                if (nextNode && nextNode.attrs["class"] === "change-add") {
+                    editor
+                        .chain()
+                        .deleteRange({
+                            from: nextPos,
+                            to: nextPos + nextNode.nodeSize,
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
+                }
+            }
+        }
+
         setSelectedChanges([]);
         rejectChange(aiChange);
     };
