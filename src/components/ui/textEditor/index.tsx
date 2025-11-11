@@ -65,7 +65,7 @@ const TextEditor = ({
 }: ITextEditorProps): ReactElement => {
     const {
         documentData,
-        selectedChanges,
+        selectedChange,
         changes,
         clearChange,
         loadingComponentId,
@@ -401,7 +401,7 @@ const TextEditor = ({
     useEffect(() => {
         if (!currentEditor) return;
 
-        if (selectedChanges && selectedChanges.length === 0) {
+        if (!selectedChange) {
             currentEditor.state.doc.descendants((node, pos) => {
                 const nodeClass = node.attrs?.class;
 
@@ -428,7 +428,7 @@ const TextEditor = ({
                 }
             });
         }
-    }, [selectedChanges, currentEditor]);
+    }, [selectedChange, currentEditor]);
 
     useLayoutEffect(() => {
         if (!alreadyLoaded.current && documentData && currentEditor) {
@@ -471,7 +471,7 @@ const TextEditor = ({
         return () => {
             currentEditor.off("update", handleUpdate);
         };
-    }, [currentEditor, loadingComponentId, selectedChanges]);
+    }, [currentEditor, loadingComponentId, selectedChange]);
 
     return (
         <>
@@ -499,10 +499,9 @@ const TextEditor = ({
                 />
             )}
 
-            {currentEditor &&
-                selectedChanges.map((aiChange, idx) => (
-                    <AiChangesBubbleMenu key={idx} editor={currentEditor} aiChange={aiChange} />
-                ))}
+            {currentEditor && selectedChange && (
+                <AiChangesBubbleMenu editor={currentEditor} aiChange={selectedChange} />
+            )}
 
             {currentEditor && (
                 <LoadingFloating

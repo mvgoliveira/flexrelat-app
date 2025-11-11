@@ -159,19 +159,6 @@ export const Root = styled.div<IRootProps>`
         content: counter(h1) "." counter(h2) "." counter(h3) ". ";
     }
 
-    .change-add {
-        counter-increment: none !important;
-    }
-    h1.change-add::before {
-        content: counter(h1) ". ";
-    }
-    h2.change-add::before {
-        content: counter(h1) "." counter(h2) ". ";
-    }
-    h3.change-add::before {
-        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
-    }
-
     h1[contenteditable="false"],
     h2[contenteditable="false"],
     h3[contenteditable="false"],
@@ -333,6 +320,17 @@ export const Root = styled.div<IRootProps>`
             0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.green50, 20)};
         color: ${({ theme }) => theme.colors.green100};
         outline: none;
+        counter-increment: none !important;
+    }
+
+    h1.change-add::before {
+        content: counter(h1) ". ";
+    }
+    h2.change-add::before {
+        content: counter(h1) "." counter(h2) ". ";
+    }
+    h3.change-add::before {
+        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
     }
 
     .change-loading {

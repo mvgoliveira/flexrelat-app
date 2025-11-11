@@ -25,7 +25,7 @@ type DocumentContextType = {
     messages: Message[] | undefined;
     messagesStatus: Status;
     changes: AiChange[];
-    selectedChanges: AiChange[];
+    selectedChange: AiChange | null;
     updateSelectedChange: (change: AiChange) => void;
     documentData: DocumentData | undefined;
     getDocumentStatus: Status;
@@ -51,7 +51,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     const [editor, setEditor] = useState<Editor | null>(null);
     const { publicCode } = useParams();
     const [changes, setChanges] = useState<AiChange[]>([]);
-    const [selectedChanges, setSelectedChanges] = useState<AiChange[]>([]);
+    const [selectedChange, setSelectedChange] = useState<AiChange | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [loadingComponentId, setLoadingComponentId] = useState<string>("");
 
@@ -89,22 +89,65 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
     const updateSelectedChange = (change: AiChange): void => {
         if (change) {
-            const existingChange = selectedChanges.find(prevChange => prevChange.id === change.id);
-
-            if (existingChange) {
-                setSelectedChanges(
-                    selectedChanges.filter(prevChange => prevChange.id !== change.id)
-                );
+            // Se clicar na mesma change, desseleciona
+            if (selectedChange?.id === change.id) {
+                setSelectedChange(null);
             } else {
-                setSelectedChanges(prevState => [...prevState, change]);
+                // Se já existe uma change selecionada, limpa suas classes primeiro
+                if (selectedChange && editor) {
+                    const oldElement = editor.view.dom.querySelector(
+                        `[data-id="${selectedChange.old_content.id}"]`
+                    );
+
+                    if (oldElement) {
+                        const oldPos = editor.state.doc
+                            .resolve(editor.view.posAtDOM(oldElement, 0))
+                            .before(1);
+                        const oldNode = editor.state.doc.nodeAt(oldPos);
+
+                        if (oldNode) {
+                            const oldElementTypeName = oldNode.type.name;
+
+                            // Remove a classe change-remove do elemento antigo
+                            if (oldNode.attrs["class"] === "change-remove") {
+                                editor
+                                    .chain()
+                                    .setNodeSelection(oldPos)
+                                    .updateAttributes(oldElementTypeName, {
+                                        class: "",
+                                    })
+                                    .setMeta("addToHistory", false)
+                                    .run();
+                            }
+
+                            // Remove o elemento com change-add (novo conteúdo inserido)
+                            editor.state.doc.descendants((node, pos) => {
+                                if (node.attrs["class"] === "change-add") {
+                                    editor
+                                        .chain()
+                                        .deleteRange({
+                                            from: pos,
+                                            to: pos + node.nodeSize,
+                                        })
+                                        .setMeta("addToHistory", false)
+                                        .run();
+                                }
+                            });
+                        }
+                    }
+                }
+
+                // Seleciona a nova change
+                setSelectedChange(change);
             }
         }
     };
 
     const clearChange = (change: AiChange): void => {
-        setSelectedChanges(prevState =>
-            prevState.filter(prevChange => prevChange.id !== change.id)
-        );
+        // Se a mudança que está sendo limpa é a selecionada, desseleciona
+        if (selectedChange?.id === change.id) {
+            setSelectedChange(null);
+        }
 
         setMessages(prevMessages =>
             prevMessages.map(message => {
@@ -118,13 +161,13 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             })
         );
     };
-
     const approveChange = async (change: AiChange): Promise<void> => {
         if (!editor) return;
 
-        setSelectedChanges(prevState =>
-            prevState.filter(prevChange => prevChange.id !== change.id)
-        );
+        // Se a mudança aprovada é a selecionada, desseleciona
+        if (selectedChange?.id === change.id) {
+            setSelectedChange(null);
+        }
 
         const oldMessages = messages;
 
@@ -176,11 +219,11 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             }
         }
     };
-
     const rejectChange = async (change: AiChange): Promise<void> => {
-        setSelectedChanges(prevState =>
-            prevState.filter(prevChange => prevChange.id !== change.id)
-        );
+        // Se a mudança rejeitada é a selecionada, desseleciona
+        if (selectedChange?.id === change.id) {
+            setSelectedChange(null);
+        }
 
         const oldMessages = messages;
 
@@ -232,7 +275,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 changes,
                 messages,
                 messagesStatus,
-                selectedChanges,
+                selectedChange,
                 documentData,
                 getDocumentStatus,
                 updateSelectedChange,

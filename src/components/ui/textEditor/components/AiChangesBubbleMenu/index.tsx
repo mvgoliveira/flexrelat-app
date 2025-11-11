@@ -85,14 +85,19 @@ export const AiChangesBubbleMenu = ({
                         .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
                         .run();
 
-                    editor
-                        .chain()
-                        .setNodeSelection(pos + node.nodeSize)
-                        .updateAttributes(elementTypeName, {
-                            class: "change-add",
-                        })
-                        .setMeta("addToHistory", false)
-                        .run();
+                    const newNode = editor.state.doc.nodeAt(pos + node.nodeSize);
+
+                    if (newNode) {
+                        const newNodeType = newNode.type.name;
+                        editor
+                            .chain()
+                            .setMeta("addToHistory", false)
+                            .setNodeSelection(pos + node.nodeSize)
+                            .updateAttributes(newNodeType, {
+                                class: "change-add",
+                            })
+                            .run();
+                    }
 
                     setSelectedChanges([
                         {

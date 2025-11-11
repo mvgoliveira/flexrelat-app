@@ -32,10 +32,11 @@ export const ModalClearMessages = ({
     };
 
     useEffect(() => {
+        setIsLoading(false);
         return () => {
             setIsLoading(false);
         };
-    }, []);
+    }, [open]);
 
     return (
         <>
