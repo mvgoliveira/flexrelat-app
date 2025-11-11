@@ -1,4 +1,4 @@
-import { ChartOptionsModal } from "@/components/layouts/document/modals/chartOptionsModal";
+import { ModalChartOptions } from "@/components/layouts/modals/modalChartOptions";
 import styled from "@emotion/styled";
 import { useDisclosure } from "@mantine/hooks";
 import { Node, mergeAttributes } from "@tiptap/core";
@@ -115,7 +115,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
     return (
         <>
             {decodedData && (
-                <ChartOptionsModal
+                <ModalChartOptions
                     isOpen={opened}
                     close={close}
                     metadata={decodedData}

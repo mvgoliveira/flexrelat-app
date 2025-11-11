@@ -3,6 +3,7 @@ import { Spinner } from "@/components/features/loading/spinner";
 import { Skeleton } from "@/components/features/skeleton";
 import { toastError } from "@/components/features/toast";
 import { Typography } from "@/components/features/typography";
+import { ModalClearMessages } from "@/components/layouts/modals/modalClearMessages";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import { useDocumentContext } from "@/context/documentContext";
 import { clearMessagesByRelatedId, sendMessage } from "@/repositories/messageAPI";
@@ -48,6 +49,8 @@ export const AiChat = (): ReactElement => {
 
     const [chatMessage, setChatMessage] = useState("");
     const [aiIsLoading, setAiIsLoading] = useState(false);
+
+    const [isClearModalOpen, setIsClearModalOpen] = useState<boolean>(false);
 
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -157,6 +160,7 @@ export const AiChat = (): ReactElement => {
         if (documentData) {
             try {
                 await clearMessagesByRelatedId(documentData.id, "documents");
+                setIsClearModalOpen(false);
                 setMessages([]);
             } catch (error) {
                 console.error("Error clearing messages:", error);
@@ -167,6 +171,12 @@ export const AiChat = (): ReactElement => {
 
     return (
         <Root>
+            <ModalClearMessages
+                open={isClearModalOpen}
+                setOpen={setIsClearModalOpen}
+                onClearMessages={handleClearMessages}
+            />
+
             <ChangesHeader ref={changesHeaderRef}>
                 <div
                     style={{
@@ -190,7 +200,7 @@ export const AiChat = (): ReactElement => {
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
+                            fontSize={{ xs: "fs75" }}
                             color="gray70"
                             fontWeight="regular"
                         >
@@ -199,7 +209,11 @@ export const AiChat = (): ReactElement => {
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", width: 20 }}>
-                        <Button height="20px" variant="tertiary" onClick={handleClearMessages}>
+                        <Button
+                            height="20px"
+                            variant="tertiary"
+                            onClick={() => setIsClearModalOpen(true)}
+                        >
                             <MdDeleteOutline size={14} color={Theme.colors.black} />
                         </Button>
                     </div>

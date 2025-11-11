@@ -21,19 +21,19 @@ import {
     TopContainer,
 } from "./styles";
 
-interface IChartOptionsModalProps {
+interface IModalChartOptionsProps {
     isOpen: boolean;
     close: () => void;
     metadata: ChartData;
     changeChartData: (newData: ChartData) => void;
 }
 
-export const ChartOptionsModal = ({
+export const ModalChartOptions = ({
     isOpen,
     close,
     metadata,
     changeChartData,
-}: IChartOptionsModalProps): ReactElement => {
+}: IModalChartOptionsProps): ReactElement => {
     const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("data");
     const [decodedData, setDecodedData] = useState<ChartData | null>(null);
 
