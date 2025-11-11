@@ -91,11 +91,11 @@ export const AiChangesBubbleMenu = ({
                         const newNodeType = newNode.type.name;
                         editor
                             .chain()
-                            .setMeta("addToHistory", false)
                             .setNodeSelection(pos + node.nodeSize)
                             .updateAttributes(newNodeType, {
                                 class: "change-add",
                             })
+                            .setMeta("addToHistory", false)
                             .run();
                     }
 

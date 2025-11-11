@@ -89,11 +89,9 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
     const updateSelectedChange = (change: AiChange): void => {
         if (change) {
-            // Se clicar na mesma change, desseleciona
             if (selectedChange?.id === change.id) {
                 setSelectedChange(null);
             } else {
-                // Se já existe uma change selecionada, limpa suas classes primeiro
                 if (selectedChange && editor) {
                     const oldElement = editor.view.dom.querySelector(
                         `[data-id="${selectedChange.old_content.id}"]`
@@ -108,7 +106,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                         if (oldNode) {
                             const oldElementTypeName = oldNode.type.name;
 
-                            // Remove a classe change-remove do elemento antigo
                             if (oldNode.attrs["class"] === "change-remove") {
                                 editor
                                     .chain()
@@ -120,7 +117,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                                     .run();
                             }
 
-                            // Remove o elemento com change-add (novo conteúdo inserido)
                             editor.state.doc.descendants((node, pos) => {
                                 if (node.attrs["class"] === "change-add") {
                                     editor
@@ -161,6 +157,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             })
         );
     };
+
     const approveChange = async (change: AiChange): Promise<void> => {
         if (!editor) return;
 
@@ -219,6 +216,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             }
         }
     };
+
     const rejectChange = async (change: AiChange): Promise<void> => {
         // Se a mudança rejeitada é a selecionada, desseleciona
         if (selectedChange?.id === change.id) {

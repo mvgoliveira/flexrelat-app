@@ -89,7 +89,6 @@ const TextEditor = ({
             _.debounce(async (newContent: string) => {
                 try {
                     updateSaveStatus("pending");
-
                     await handleChangeDocumentContent(newContent);
                     updateSaveStatus("success");
                 } catch (error) {
@@ -240,6 +239,9 @@ const TextEditor = ({
         immediatelyRender: false,
         autofocus: false,
         content: ``,
+        parseOptions: {
+            preserveWhitespace: "full",
+        },
         onCreate: ({ editor }) => {
             migrateMathStrings(editor);
             editorRef.current = editor;
@@ -434,7 +436,9 @@ const TextEditor = ({
         if (!alreadyLoaded.current && documentData && currentEditor) {
             currentEditor
                 .chain()
-                .setContent(documentData.content)
+                .setContent(documentData.content, {
+                    parseOptions: { preserveWhitespace: "full" },
+                })
                 .setMeta("addToHistory", false)
                 .run();
             alreadyLoaded.current = true;
