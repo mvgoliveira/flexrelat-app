@@ -167,6 +167,7 @@ const TextEditor = ({
                             .setNodeSelection(pos)
                             .updateBlockMath({ latex: newCalculation })
                             .focus()
+                            .setMeta("addToHistory", false)
                             .run();
 
                         // Forçar salvamento após atualização
@@ -187,6 +188,7 @@ const TextEditor = ({
                             .setNodeSelection(pos)
                             .updateInlineMath({ latex: newCalculation })
                             .focus()
+                            .setMeta("addToHistory", false)
                             .run();
 
                         // Forçar salvamento após atualização
@@ -410,6 +412,7 @@ const TextEditor = ({
                         .updateAttributes(node.type.name, {
                             class: "",
                         })
+                        .setMeta("addToHistory", false)
                         .run();
                 }
 
@@ -420,6 +423,7 @@ const TextEditor = ({
                             from: pos,
                             to: pos + node.nodeSize,
                         })
+                        .setMeta("addToHistory", false)
                         .run();
                 }
             });
@@ -428,7 +432,11 @@ const TextEditor = ({
 
     useLayoutEffect(() => {
         if (!alreadyLoaded.current && documentData && currentEditor) {
-            currentEditor.commands.setContent(documentData.content);
+            currentEditor
+                .chain()
+                .setContent(documentData.content)
+                .setMeta("addToHistory", false)
+                .run();
             alreadyLoaded.current = true;
         }
     }, [documentData, currentEditor]);
@@ -451,6 +459,7 @@ const TextEditor = ({
                             .focus()
                             .setNodeSelection(pos)
                             .updateAttributes(elementTypeName, { class: undefined })
+                            .setMeta("addToHistory", false)
                             .run();
                     }
                 });

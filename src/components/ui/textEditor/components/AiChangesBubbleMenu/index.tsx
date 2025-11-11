@@ -28,8 +28,8 @@ export const AiChangesBubbleMenu = ({
         approveChange(aiChange);
     };
 
-    const handlerejectChange = (): void => {
-        editor.chain().focus().run();
+    const handleRejectChange = (): void => {
+        editor.chain().focus().setMeta("addToHistory", false).run();
         setSelectedChanges([]);
         rejectChange(aiChange);
     };
@@ -77,6 +77,7 @@ export const AiChangesBubbleMenu = ({
                         .updateAttributes(elementTypeName, {
                             class: "change-remove",
                         })
+                        .setMeta("addToHistory", false)
                         .run();
 
                     editor
@@ -90,6 +91,7 @@ export const AiChangesBubbleMenu = ({
                         .updateAttributes(elementTypeName, {
                             class: "change-add",
                         })
+                        .setMeta("addToHistory", false)
                         .run();
 
                     setSelectedChanges([
@@ -150,7 +152,7 @@ export const AiChangesBubbleMenu = ({
                     <MdDone size={12} color={Theme.colors.green80} />
                 </StyledButton>
 
-                <StyledButton onClick={handlerejectChange} color="red30">
+                <StyledButton onClick={handleRejectChange} color="red30">
                     <MdClose size={12} color={Theme.colors.red80} />
                 </StyledButton>
             </Root>

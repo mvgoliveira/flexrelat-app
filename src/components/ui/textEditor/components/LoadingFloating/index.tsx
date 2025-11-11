@@ -30,6 +30,7 @@ export const LoadingFloating = ({
                     .updateAttributes(nodeTypeName, {
                         class: "change-loading",
                     })
+                    .setMeta("addToHistory", false)
                     .run();
             }
         });
