@@ -1,4 +1,4 @@
-import { AiChange, updateAiChangeStatus } from "@/repositories/changesAPI";
+import { AiChange, ChangesType, updateAiChangeStatus } from "@/repositories/changesAPI";
 import {
     DocumentData,
     getDocumentByPublicCode,
@@ -41,6 +41,8 @@ type DocumentContextType = {
     setMessages: Dispatch<SetStateAction<Message[]>>;
     authenticatedUser: User | null;
     setAuthenticatedUser: Dispatch<SetStateAction<User | null>>;
+    selectedChangeType: ChangesType | null;
+    setSelectedChangeType: Dispatch<SetStateAction<ChangesType | null>>;
 };
 
 const DocumentContext = createContext<DocumentContextType | null>(null);
@@ -54,6 +56,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     const [selectedChange, setSelectedChange] = useState<AiChange | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [loadingComponentId, setLoadingComponentId] = useState<string>("");
+    const [selectedChangeType, setSelectedChangeType] = useState<ChangesType | null>(null);
 
     const { status: getDocumentStatus, data: documentData } = useQuery({
         queryKey: ["get_document_data", publicCode],
@@ -101,6 +104,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                         const oldPos = editor.state.doc
                             .resolve(editor.view.posAtDOM(oldElement, 0))
                             .before(1);
+
                         const oldNode = editor.state.doc.nodeAt(oldPos);
 
                         if (oldNode) {
@@ -195,10 +199,9 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
             const node = editor.state.doc.nodeAt(pos);
 
             if (node) {
-                if (change.type === "update") {
-                    const elementTypeName = node.type.name;
+                const elementTypeName = node.type.name;
 
-                    // Remove a classe "change-remove" do nó antigo
+                if (change.type === "update") {
                     editor
                         .chain()
                         .setNodeSelection(pos)
@@ -208,14 +211,12 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                         .setMeta("addToHistory", false)
                         .run();
 
-                    // Remove o nó com classe "change-add" se existir
                     const nextPos = pos + node.nodeSize;
                     const nextNode = editor.state.doc.nodeAt(nextPos);
 
                     if (nextNode && nextNode.attrs["class"] === "change-add") {
                         const nextNodeType = nextNode.type.name;
 
-                        // Remove a classe antes de deletar
                         editor
                             .chain()
                             .setNodeSelection(nextPos)
@@ -225,7 +226,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                             .setMeta("addToHistory", false)
                             .run();
 
-                        // Deleta o nó "change-add"
                         editor
                             .chain()
                             .deleteRange({
@@ -236,7 +236,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                             .run();
                     }
 
-                    // Agora insere o novo conteúdo e deleta o antigo (isso entra no histórico)
                     editor
                         .chain()
                         .setNodeSelection(pos)
@@ -247,12 +246,46 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                             to: pos + node.nodeSize,
                         })
                         .run();
+                }
 
-                    try {
-                        await updateAiChangeStatus(change.id, "approved");
-                    } catch (error) {
-                        setMessages(oldMessages);
-                    }
+                if (change.type === "delete") {
+                    // Remove a classe "change-remove" antes de deletar
+                    editor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .updateAttributes(elementTypeName, {
+                            class: "",
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
+
+                    editor
+                        .chain()
+                        .deleteRange({
+                            from: pos,
+                            to: pos + node.nodeSize,
+                        })
+                        .run();
+                }
+
+                if (change.type === "create") {
+                    const nodeType = node.type.name;
+
+                    editor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .setMeta("addToHistory", false)
+                        .updateAttributes(nodeType, {
+                            class: "",
+                        })
+                        .insertContentAt(pos, change.new_content.html)
+                        .run();
+                }
+
+                try {
+                    await updateAiChangeStatus(change.id, "approved");
+                } catch (error) {
+                    setMessages(oldMessages);
                 }
             }
         }
@@ -293,7 +326,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
     const getHtmlContent = (): string => {
         if (!editor) return "";
-        // const html = editor.getHTML();
         return editor.getHTML();
     };
 
@@ -330,6 +362,8 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 setMessages,
                 authenticatedUser,
                 setAuthenticatedUser,
+                selectedChangeType,
+                setSelectedChangeType,
             }}
         >
             {children}

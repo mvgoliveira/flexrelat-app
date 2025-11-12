@@ -138,27 +138,6 @@ export const Root = styled.div<IRootProps>`
         font-weight: ${({ theme }) => theme.fontWeight.bold};
     }
 
-    h1 {
-        counter-increment: h1;
-        counter-reset: h2;
-    }
-    h2 {
-        counter-increment: h2;
-        counter-reset: h3;
-    }
-    h3 {
-        counter-increment: h3;
-    }
-    h1::before {
-        content: counter(h1) ". ";
-    }
-    h2::before {
-        content: counter(h1) "." counter(h2) ". ";
-    }
-    h3::before {
-        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
-    }
-
     h1[contenteditable="false"],
     h2[contenteditable="false"],
     h3[contenteditable="false"],
@@ -321,16 +300,6 @@ export const Root = styled.div<IRootProps>`
         color: ${({ theme }) => theme.colors.green100};
         outline: none;
         counter-increment: none !important;
-    }
-
-    h1.change-add::before {
-        content: counter(h1) ". ";
-    }
-    h2.change-add::before {
-        content: counter(h1) "." counter(h2) ". ";
-    }
-    h3.change-add::before {
-        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
     }
 
     .change-loading {

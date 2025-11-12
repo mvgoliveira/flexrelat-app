@@ -71,6 +71,7 @@ const TextEditor = ({
         loadingComponentId,
         setEditor,
         handleChangeDocumentContent,
+        selectedChangeType,
     } = useDocumentContext();
 
     const { randomUUID } = new ShortUniqueId({ length: 10 });
@@ -401,36 +402,68 @@ const TextEditor = ({
     }, [changes, currentEditor]);
 
     useEffect(() => {
-        if (!currentEditor) return;
+        if (!currentEditor || !selectedChangeType) return;
 
         if (!selectedChange) {
             currentEditor.state.doc.descendants((node, pos) => {
                 const nodeClass = node.attrs?.class;
 
-                if (nodeClass === "change-remove") {
-                    currentEditor
-                        .chain()
-                        .setNodeSelection(pos)
-                        .updateAttributes(node.type.name, {
-                            class: "",
-                        })
-                        .setMeta("addToHistory", false)
-                        .run();
+                if (selectedChangeType === "update") {
+                    if (nodeClass === "change-remove") {
+                        currentEditor
+                            .chain()
+                            .setNodeSelection(pos)
+                            .updateAttributes(node.type.name, {
+                                class: "",
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+                    }
+
+                    if (nodeClass === "change-add") {
+                        currentEditor
+                            .chain()
+                            .deleteRange({
+                                from: pos,
+                                to: pos + node.nodeSize,
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+                    }
                 }
 
-                if (nodeClass === "change-add") {
-                    currentEditor
-                        .chain()
-                        .deleteRange({
-                            from: pos,
-                            to: pos + node.nodeSize,
-                        })
-                        .setMeta("addToHistory", false)
-                        .run();
+                if (selectedChangeType === "create") {
+                    if (nodeClass === "change-add") {
+                        currentEditor
+                            .chain()
+                            .setNodeSelection(pos)
+                            .updateAttributes(node.type.name, {
+                                class: "",
+                            })
+                            .deleteRange({
+                                from: pos,
+                                to: pos + node.nodeSize,
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+                    }
+                }
+
+                if (selectedChangeType === "delete") {
+                    if (nodeClass === "change-remove") {
+                        currentEditor
+                            .chain()
+                            .setNodeSelection(pos)
+                            .updateAttributes(node.type.name, {
+                                class: "",
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+                    }
                 }
             });
         }
-    }, [selectedChange, currentEditor]);
+    }, [selectedChange, currentEditor, selectedChangeType]);
 
     useLayoutEffect(() => {
         if (!alreadyLoaded.current && documentData && currentEditor) {
@@ -475,7 +508,7 @@ const TextEditor = ({
         return () => {
             currentEditor.off("update", handleUpdate);
         };
-    }, [currentEditor, loadingComponentId, selectedChange]);
+    }, [currentEditor, loadingComponentId]);
 
     return (
         <>
