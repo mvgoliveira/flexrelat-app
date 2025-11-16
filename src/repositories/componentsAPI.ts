@@ -1,1 +1,17 @@
-export type ComponentTypes = "text" | "title" | "citation" | "code" | "line";
+export type ComponentTypes =
+    | "text"
+    | "title"
+    | "citation"
+    | "code"
+    | "separator"
+    | "geometric"
+    | "image"
+    | "sheet"
+    | "code"
+    | "math"
+    | "lineChart"
+    | "barChart"
+    | "sectorChart"
+    | "line"
+    | "columns"
+    | "non-uniform-columns";

@@ -11,6 +11,7 @@ export const Header = styled.div<{ isOpen: boolean }>`
     align-items: center;
     justify-content: space-between;
     height: 35px;
+    width: 100%;
     background: ${({ theme }) => theme.colors.white};
     border: 1px solid ${({ theme }) => theme.colors.gray40};
     border-bottom: ${({ isOpen, theme }) => (isOpen ? "none" : `1px solid ${theme.colors.gray40}`)};
@@ -19,6 +20,26 @@ export const Header = styled.div<{ isOpen: boolean }>`
 
     &:hover {
         background: ${({ theme }) => theme.colors.gray10};
+    }
+`;
+
+export const DeleteButton = styled.button<{ isOpen: boolean }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 100%;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+    border-top: 1px solid ${({ theme }) => theme.colors.gray40};
+    border-left: 1px solid ${({ theme }) => theme.colors.gray40};
+    border-bottom: none;
+    border-bottom: ${({ isOpen, theme }) => (isOpen ? "none" : `1px solid ${theme.colors.gray40}`)};
+    border-right: none;
+
+    &:hover {
+        background: ${({ theme }) => theme.colors.gray20};
     }
 `;
 

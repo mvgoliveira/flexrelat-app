@@ -6,6 +6,7 @@ import { Theme } from "@/themes";
 import { ReactElement, useEffect, useState } from "react";
 import { TbDatabase } from "react-icons/tb";
 
+import { ModalCreateDataset } from "../../../modalCreateDataset";
 import { DataSet } from "../dataSet";
 import { Separator } from "./styles";
 
@@ -18,6 +19,7 @@ export const DataConfiguration = ({
     metadata,
     changeChartData,
 }: IDataConfigurationProps): ReactElement => {
+    const [isCreateDataModalOpen, setIsCreateDataModalOpen] = useState<boolean>(false);
     const [chartTitle, setChartTitle] = useState<string>("");
     const [xAxisLabel, setXAxisLabel] = useState<string>("");
     const [yAxisLabel, setYAxisLabel] = useState<string>("");
@@ -71,6 +73,42 @@ export const DataConfiguration = ({
         }
     };
 
+    const handleCreateDataSet = (name: string) => {
+        const newDataSet = { name, data: [] };
+        setDataSets(prev => [...prev, newDataSet]);
+
+        if (metadata) {
+            const newData = { ...metadata };
+            if (newData.data && newData.data.datasets) {
+                const oldProps = newData.data.datasets[0];
+
+                newData.data.datasets.push({
+                    ...oldProps,
+                    label: newDataSet.name,
+                    backgroundColor: undefined,
+                    borderColor: undefined,
+                    data: [],
+                });
+            }
+            changeChartData(newData);
+        }
+
+        setIsCreateDataModalOpen(false);
+    };
+
+    const handleDeleteDataSet = (index: number) => {
+        const filteredDataSets = dataSets.filter((_, idx) => idx !== index);
+        setDataSets(filteredDataSets);
+
+        if (metadata) {
+            const newData = { ...metadata };
+            if (newData.data && newData.data.datasets) {
+                newData.data.datasets = newData.data.datasets.filter((_, idx) => idx !== index);
+            }
+            changeChartData(newData);
+        }
+    };
+
     useEffect(() => {
         if (metadata) {
             setChartTitle(metadata.options?.title.text || "");
@@ -90,6 +128,12 @@ export const DataConfiguration = ({
 
     return (
         <>
+            <ModalCreateDataset
+                open={isCreateDataModalOpen}
+                setOpen={setIsCreateDataModalOpen}
+                onCreate={handleCreateDataSet}
+            />
+
             <Input
                 label="Título do gráfico"
                 placeholder="Insira o título do gráfico"
@@ -126,13 +170,19 @@ export const DataConfiguration = ({
                         key={`dataSet-${index}`}
                         data={dataset.data}
                         changeData={newData => handleChangeDataSet(index, newData)}
+                        onDelete={() => handleDeleteDataSet(index)}
                     />
                 ))}
             </div>
 
             <Separator />
 
-            <Button height="30px" variant="secondary" padding="0 10px" onClick={() => {}}>
+            <Button
+                height="30px"
+                variant="secondary"
+                padding="0 10px"
+                onClick={() => setIsCreateDataModalOpen(true)}
+            >
                 <TbDatabase size={12} color={Theme.colors.gray100} />
 
                 <Typography

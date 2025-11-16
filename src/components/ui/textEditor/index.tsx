@@ -42,6 +42,8 @@ import { PreventEditExtension } from "./plugins/PreventEdit";
 import { QuickChart } from "./plugins/QuickChart";
 import { Root } from "./styles";
 
+import { ComponentTypes } from "@/repositories/componentsAPI";
+
 interface ITextEditorProps {
     zoom?: number;
     marginRight?: number;
@@ -252,7 +254,7 @@ const TextEditor = ({
         },
         editorProps: {
             handleDrop: (view, event) => {
-                const variable = event.dataTransfer?.getData("variable");
+                const variable = event.dataTransfer?.getData("variable") as ComponentTypes | null;
 
                 if (!variable) {
                     return false;
@@ -349,7 +351,6 @@ const TextEditor = ({
                     view.dispatch(view.state.tr.insert(targetPos, table));
                     return true;
                 }
-
                 return true;
             },
         },

@@ -1,12 +1,12 @@
 import {
-    IconElementBarGraph,
+    IconElementbarChart,
     IconElementCitation,
     IconElementCode,
     IconElementColumns,
     IconElementGeometric,
     IconElementImage,
     IconElementLine,
-    IconElementLineGraph,
+    IconElementlineChart,
     IconElementMath,
     IconElementNotUniformColumns,
     IconElementPieChart,
@@ -19,6 +19,7 @@ import { SearchInput } from "@/components/features/searchInput";
 import { Typography } from "@/components/features/typography";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import { useDocumentContext } from "@/context/documentContext";
+import { ComponentTypes } from "@/repositories/componentsAPI";
 import { Theme } from "@/themes";
 import { ReactElement, ReactNode, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
@@ -36,7 +37,7 @@ import {
 } from "./styles";
 
 interface IElementProps {
-    value: string;
+    value: ComponentTypes;
     name: string;
     icon: ReactNode;
     coloredIcon: ReactNode;
@@ -45,7 +46,7 @@ interface IElementProps {
 const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElement => {
     const { editor } = useDocumentContext();
 
-    const handleElementClick = (variable: string) => {
+    const handleElementClick = (variable: ComponentTypes) => {
         if (!editor) return;
 
         const { state } = editor;
@@ -108,6 +109,10 @@ const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElemen
             editor.chain().focus().insertContentAt(from, table.toJSON()).run();
             return;
         }
+
+        // if (variable === "lineChart") {
+
+        // }
     };
 
     return (
@@ -246,19 +251,19 @@ const elementsGroups: IElementsGroupProps[] = [
         name: "Gráficos",
         elements: [
             {
-                value: "lineGraph",
+                value: "lineChart",
                 name: "Linha",
-                icon: <IconElementLineGraph size={35} />,
-                coloredIcon: <IconElementLineGraph size={35} color="blue50" />,
+                icon: <IconElementlineChart size={35} />,
+                coloredIcon: <IconElementlineChart size={35} color="blue50" />,
             },
             {
-                value: "barGraph",
+                value: "barChart",
                 name: "Barras",
-                icon: <IconElementBarGraph size={35} />,
-                coloredIcon: <IconElementBarGraph size={35} color="blue50" />,
+                icon: <IconElementbarChart size={35} />,
+                coloredIcon: <IconElementbarChart size={35} color="blue50" />,
             },
             {
-                value: "sectorGraph",
+                value: "sectorChart",
                 name: "Setores",
                 icon: <IconElementPieChart size={35} />,
                 coloredIcon: <IconElementPieChart size={35} color="blue50" />,

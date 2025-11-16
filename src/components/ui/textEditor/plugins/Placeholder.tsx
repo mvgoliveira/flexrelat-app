@@ -36,7 +36,7 @@ const TextContent = styled(Content)`
 `;
 
 const TitleContent = styled(Content)`
-    font-size: 18pt;
+    font-size: 14pt;
     font-weight: bold;
     height: calc(18pt * 1.8);
 `;
@@ -117,7 +117,7 @@ const PlaceholderComponent = ({ node, editor, getPos }: any) => {
                         content: [],
                     })
                     .setTextSelection(pos + 1)
-                    .setFontSize("18pt")
+                    .setFontSize("14pt")
                     .setBold()
                     .run();
                 break;

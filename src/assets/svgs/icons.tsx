@@ -339,7 +339,7 @@ export const IconElementMath = ({ size = 44, color }: ISVGsDynamicColorAndSize):
     );
 };
 
-export const IconElementLineGraph = ({
+export const IconElementlineChart = ({
     size = 50,
     color,
 }: ISVGsDynamicColorAndSize): ReactElement => {
@@ -372,7 +372,7 @@ export const IconElementLineGraph = ({
     );
 };
 
-export const IconElementBarGraph = ({
+export const IconElementbarChart = ({
     size = 50,
     color,
 }: ISVGsDynamicColorAndSize): ReactElement => {
