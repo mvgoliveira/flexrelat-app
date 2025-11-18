@@ -1,18 +1,18 @@
 import { Button } from "@/components/features/button";
 import { Input } from "@/components/features/input";
 import { Typography } from "@/components/features/typography";
-import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
 import { Theme } from "@/themes";
 import { ReactElement, useEffect, useState } from "react";
 import { TbDatabase } from "react-icons/tb";
 
+import { ChartLineData } from "../..";
 import { ModalCreateDataset } from "../../../modalCreateDataset";
 import { DataSet } from "../dataSet";
 import { Separator } from "./styles";
 
 interface IDataConfigurationProps {
-    metadata: ChartData;
-    changeChartData: (newData: ChartData) => void;
+    metadata: ChartLineData;
+    changeChartData: (newData: ChartLineData) => void;
 }
 
 export const DataConfiguration = ({
@@ -112,8 +112,8 @@ export const DataConfiguration = ({
     useEffect(() => {
         if (metadata) {
             setChartTitle(metadata.options?.title.text || "");
-            setXAxisLabel(metadata.options?.scales.xAxes[0]?.scaleLabel.labelString || "");
-            setYAxisLabel(metadata.options?.scales.yAxes[0]?.scaleLabel.labelString || "");
+            setXAxisLabel(metadata.options?.scales?.xAxes[0]?.scaleLabel.labelString || "");
+            setYAxisLabel(metadata.options?.scales?.yAxes[0]?.scaleLabel.labelString || "");
             setDataSets(
                 metadata.data.datasets.map((dataset, idx) => ({
                     name: dataset.label || `Data ${idx + 1}`,

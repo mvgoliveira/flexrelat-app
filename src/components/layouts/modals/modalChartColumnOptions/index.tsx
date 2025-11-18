@@ -1,15 +1,12 @@
 import { Button } from "@/components/features/button";
 import { Typography } from "@/components/features/typography";
 import { Modal } from "@/components/ui/modal";
-import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
 import { Theme } from "@/themes";
 import Image from "next/image";
 import { ReactElement, useEffect, useState } from "react";
 import { TbBrush, TbChartBubble, TbDatabase } from "react-icons/tb";
 
-import { DataConfiguration } from "./components/dataConfiguration";
 import { GeneralConfiguration } from "./components/generalConfiguration";
-import { StylesConfiguration } from "./components/stylesConfiguration";
 import {
     BottomContainer,
     ChartContainer,
@@ -21,21 +18,81 @@ import {
     TopContainer,
 } from "./styles";
 
-interface IModalChartOptionsProps {
+export type ChartColumnData = {
+    type: string;
+    data: {
+        labels: string[];
+        datasets: Array<{
+            label: string;
+            data: number[];
+            datalabels?: {
+                display: boolean;
+                align?: string;
+                anchor?: string;
+                color?: string;
+                borderWidth?: number;
+                formatter?: ((value: number, ctx: any) => string) | string;
+            };
+        }>;
+    };
+    options?: {
+        title?: {
+            display: boolean;
+            text: string;
+        };
+        plugins?: {
+            datalabels?: {
+                anchor?: string;
+                align?: string;
+                color?: string;
+                font?: {
+                    weight?: "normal";
+                };
+                formatter: string;
+            };
+        };
+        legend?: {
+            display?: boolean;
+            position?: "top" | "left" | "bottom" | "right";
+            labels?: {
+                usePointStyle: boolean;
+                boxWidth: number;
+            };
+        };
+        scales?: {
+            xAxes: Array<{
+                stacked: boolean;
+                scaleLabel?: {
+                    display: boolean;
+                    labelString: string;
+                };
+            }>;
+            yAxes: Array<{
+                stacked: boolean;
+                ticks: {
+                    beginAtZero: boolean;
+                    max?: number;
+                };
+            }>;
+        };
+    };
+};
+
+interface IModalChartColumnOptionsProps {
     isOpen: boolean;
     close: () => void;
-    metadata: ChartData;
-    changeChartData: (newData: ChartData) => void;
+    metadata: ChartColumnData;
+    changeChartData: (newData: ChartColumnData) => void;
 }
 
-export const ModalChartOptions = ({
+export const ModalChartColumnOptions = ({
     isOpen,
     close,
     metadata,
     changeChartData,
-}: IModalChartOptionsProps): ReactElement => {
-    const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("data");
-    const [decodedData, setDecodedData] = useState<ChartData | null>(null);
+}: IModalChartColumnOptionsProps): ReactElement => {
+    const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("general");
+    const [decodedData, setDecodedData] = useState<ChartColumnData | null>(null);
 
     const handleConfirmChanges = () => {
         if (decodedData) {
@@ -106,7 +163,7 @@ export const ModalChartOptions = ({
                             />
                         )}
 
-                        {decodedData && activeTab === "data" && (
+                        {/* {decodedData && activeTab === "data" && (
                             <DataConfiguration
                                 metadata={decodedData}
                                 changeChartData={setDecodedData}
@@ -118,7 +175,7 @@ export const ModalChartOptions = ({
                                 metadata={decodedData}
                                 changeChartData={setDecodedData}
                             />
-                        )}
+                        )} */}
                     </ConfigurationContent>
                 </ConfigurationContainer>
 

@@ -1,14 +1,14 @@
 import { Typography } from "@/components/features/typography";
 import { Switch } from "@/components/ui/switch";
-import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
 import { ReactElement, useEffect, useState } from "react";
 
+import { ChartLineData } from "../..";
 import { InlineContainer } from "../stylesConfiguration/styles";
 import { Separator } from "./styles";
 
 interface IGeneralConfigurationProps {
-    metadata: ChartData;
-    changeChartData: (newData: ChartData) => void;
+    metadata: ChartLineData;
+    changeChartData: (newData: ChartLineData) => void;
 }
 
 export const GeneralConfiguration = ({

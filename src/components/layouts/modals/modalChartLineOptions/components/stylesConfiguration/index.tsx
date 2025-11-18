@@ -1,6 +1,5 @@
 import { Typography } from "@/components/features/typography";
 import { Switch } from "@/components/ui/switch";
-import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
 import { Theme } from "@/themes";
 import { ReactElement, useEffect, useState } from "react";
 import {
@@ -14,11 +13,12 @@ import {
     TbBoxAlignTopFilled,
 } from "react-icons/tb";
 
+import { ChartLineData } from "../..";
 import { Separator, InlineContainer, StyledButton } from "./styles";
 
 interface IStylesConfigurationProps {
-    metadata: ChartData;
-    changeChartData: (newData: ChartData) => void;
+    metadata: ChartLineData;
+    changeChartData: (newData: ChartLineData) => void;
 }
 
 export const StylesConfiguration = ({
