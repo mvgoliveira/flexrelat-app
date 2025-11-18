@@ -197,7 +197,7 @@ const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElemen
             const chartData = {
                 type: "bar",
                 data: {
-                    labels: ["Janeiro", "Fevereiro", "Março"],
+                    labels: ["Categoria 1", "Categoria 2", "Categoria 3"],
                     datasets: [
                         {
                             label: "Exemplo 1",
@@ -221,6 +221,29 @@ const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElemen
                             usePointStyle: false,
                             boxWidth: 13,
                         },
+                    },
+                    scales: {
+                        xAxes: [
+                            {
+                                stacked: false,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "Eixo X",
+                                },
+                            },
+                        ],
+                        yAxes: [
+                            {
+                                stacked: false,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "Eixo Y",
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                },
+                            },
+                        ],
                     },
                 },
             };

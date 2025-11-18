@@ -439,7 +439,7 @@ const TextEditor = ({
                     const chartData = {
                         type: "bar",
                         data: {
-                            labels: ["Janeiro", "Fevereiro", "Março"],
+                            labels: ["Categoria 1", "Categoria 2", "Categoria 3"],
                             datasets: [
                                 {
                                     label: "Exemplo 1",
@@ -463,6 +463,29 @@ const TextEditor = ({
                                     usePointStyle: false,
                                     boxWidth: 13,
                                 },
+                            },
+                            scales: {
+                                xAxes: [
+                                    {
+                                        stacked: false,
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: "Eixo X",
+                                        },
+                                    },
+                                ],
+                                yAxes: [
+                                    {
+                                        stacked: false,
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: "Eixo Y",
+                                        },
+                                        ticks: {
+                                            beginAtZero: true,
+                                        },
+                                    },
+                                ],
                             },
                         },
                     };

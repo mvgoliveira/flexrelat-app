@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ReactElement, useEffect, useState } from "react";
 import { TbBrush, TbChartBubble, TbDatabase } from "react-icons/tb";
 
+import { DataConfiguration } from "./components/dataConfiguration";
 import { GeneralConfiguration } from "./components/generalConfiguration";
 import {
     BottomContainer,
@@ -40,17 +41,6 @@ export type ChartColumnData = {
             display: boolean;
             text: string;
         };
-        plugins?: {
-            datalabels?: {
-                anchor?: string;
-                align?: string;
-                color?: string;
-                font?: {
-                    weight?: "normal";
-                };
-                formatter: string;
-            };
-        };
         legend?: {
             display?: boolean;
             position?: "top" | "left" | "bottom" | "right";
@@ -60,18 +50,22 @@ export type ChartColumnData = {
             };
         };
         scales?: {
-            xAxes: Array<{
-                stacked: boolean;
+            xAxes?: Array<{
+                stacked?: boolean;
                 scaleLabel?: {
-                    display: boolean;
-                    labelString: string;
+                    display?: boolean;
+                    labelString?: string;
                 };
             }>;
-            yAxes: Array<{
-                stacked: boolean;
-                ticks: {
+            yAxes?: Array<{
+                stacked?: boolean;
+                ticks?: {
                     beginAtZero: boolean;
                     max?: number;
+                };
+                scaleLabel?: {
+                    display?: boolean;
+                    labelString?: string;
                 };
             }>;
         };
@@ -163,14 +157,14 @@ export const ModalChartColumnOptions = ({
                             />
                         )}
 
-                        {/* {decodedData && activeTab === "data" && (
+                        {decodedData && activeTab === "data" && (
                             <DataConfiguration
                                 metadata={decodedData}
                                 changeChartData={setDecodedData}
                             />
                         )}
 
-                        {decodedData && activeTab === "style" && (
+                        {/* {decodedData && activeTab === "style" && (
                             <StylesConfiguration
                                 metadata={decodedData}
                                 changeChartData={setDecodedData}

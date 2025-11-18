@@ -11,12 +11,21 @@ import { Container, DeleteButton, Header, Root } from "./styles";
 
 interface IDataSetProps {
     name: string;
-    data: Array<Array<string | number>>;
-    changeData: (data: Array<Array<string | number>>) => void;
+    data: Array<string | number>;
+    axis?: "X" | "Y";
+    changeData: (data: Array<string | number>) => void;
     onDelete: () => void;
+    hasDelete?: boolean;
 }
 
-export const DataSet = ({ name, data, changeData, onDelete }: IDataSetProps): ReactElement => {
+export const DataSet = ({
+    name,
+    data,
+    axis = "Y",
+    changeData,
+    onDelete,
+    hasDelete = true,
+}: IDataSetProps): ReactElement => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const spreadsheet = useRef(null);
@@ -29,12 +38,7 @@ export const DataSet = ({ name, data, changeData, onDelete }: IDataSetProps): Re
     const columns = [
         {
             type: "text",
-            title: "X",
-            tooltip: "Eixo-x do gráfico",
-        },
-        {
-            type: "text",
-            title: "Y",
+            title: axis,
             tooltip: "Eixo-y do gráfico",
         },
     ];
@@ -72,7 +76,7 @@ export const DataSet = ({ name, data, changeData, onDelete }: IDataSetProps): Re
     const handleChangeData = (worksheet: any) => {
         const updatedData = worksheet.getData() as Array<Array<string | number>>;
         const filteredNewData = updatedData.filter(row => !row.some(cell => cell === ""));
-        changeData(filteredNewData);
+        changeData(filteredNewData.flat() as Array<string | number>);
     };
 
     const handleLoad = useCallback((worksheet: any) => {
@@ -83,6 +87,12 @@ export const DataSet = ({ name, data, changeData, onDelete }: IDataSetProps): Re
         const ws = worksheetRef.current.worksheets[0];
 
         if (!ws) return;
+
+        if (e.key === "Tab") {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
 
         const isDelete = e.key === "Delete" || e.key === "Backspace";
         if (!isDelete) return;
@@ -111,12 +121,14 @@ export const DataSet = ({ name, data, changeData, onDelete }: IDataSetProps): Re
 
     return (
         <Root>
-            <ModalDeleteDataset
-                open={isDeleteModalOpen}
-                setOpen={setIsDeleteModalOpen}
-                onConfirmDelete={handleDeleteDataset}
-                name={name}
-            />
+            {hasDelete && (
+                <ModalDeleteDataset
+                    open={isDeleteModalOpen}
+                    setOpen={setIsDeleteModalOpen}
+                    onConfirmDelete={handleDeleteDataset}
+                    name={name}
+                />
+            )}
 
             <div
                 style={{
@@ -125,7 +137,7 @@ export const DataSet = ({ name, data, changeData, onDelete }: IDataSetProps): Re
                     width: "100%",
                 }}
             >
-                {isOpen && (
+                {isOpen && hasDelete && (
                     <DeleteButton isOpen={isOpen} onClick={() => setIsDeleteModalOpen(true)}>
                         <MdDeleteOutline size={12} color={Theme.colors.black} />
                     </DeleteButton>
@@ -163,7 +175,12 @@ export const DataSet = ({ name, data, changeData, onDelete }: IDataSetProps): Re
                         onchange={handleChangeData}
                         onload={handleLoad}
                     >
-                        <Worksheet minDimensions={[2, 20]} columns={columns} data={data} />
+                        <Worksheet
+                            minDimensions={[1, 20]}
+                            maxDimensions={[1, 50]}
+                            columns={columns}
+                            data={data.map(v => [v])}
+                        />
                     </Spreadsheet>
                 </div>
             </Container>

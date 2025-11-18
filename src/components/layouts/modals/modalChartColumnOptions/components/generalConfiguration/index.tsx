@@ -18,10 +18,12 @@ export const GeneralConfiguration = ({
     const [stackedState, setStackedState] = useState<boolean>(false);
     const [dataLabelsState, setDataLabelsState] = useState<boolean>(false);
     const [legendState, setLegendState] = useState<boolean>(false);
+    const [xScaleLabelState, setXScaleLabelState] = useState<boolean>(false);
+    const [yScaleLabelState, setYScaleLabelState] = useState<boolean>(false);
 
     const handleChangeStacked = (stackedValue: boolean) => {
         setStackedState(stackedValue);
-        handleChangeDataLabels(dataLabelsState, stackedValue);
+        handleChangeDataLabels(dataLabelsState);
 
         if (metadata && metadata.options) {
             const newData = { ...metadata };
@@ -54,35 +56,22 @@ export const GeneralConfiguration = ({
         }
     };
 
-    const handleChangeDataLabels = async (dataValue: boolean, isStacked: boolean) => {
+    const handleChangeDataLabels = async (dataValue: boolean) => {
         setDataLabelsState(dataValue);
 
         if (metadata && metadata.data && metadata.data.datasets) {
             const newData = { ...metadata };
 
-            if (isStacked) {
-                newData.data.datasets = newData.data.datasets.map(dataset => ({
-                    ...dataset,
-                    datalabels: {
-                        display: dataValue,
-                        color: "#000000",
-                        borderWidth: 1,
-                        anchor: "center",
-                        align: "center",
-                    },
-                }));
-            } else {
-                newData.data.datasets = newData.data.datasets.map(dataset => ({
-                    ...dataset,
-                    datalabels: {
-                        display: dataValue,
-                        color: "#000000",
-                        borderWidth: 1,
-                        anchor: "end",
-                        align: "top",
-                    },
-                }));
-            }
+            newData.data.datasets = newData.data.datasets.map(dataset => ({
+                ...dataset,
+                datalabels: {
+                    display: dataValue,
+                    color: "#000000",
+                    borderWidth: 1,
+                    anchor: "center",
+                    align: "center",
+                },
+            }));
 
             changeChartData(newData);
         }
@@ -113,15 +102,67 @@ export const GeneralConfiguration = ({
         }
     };
 
+    const handleChangeScaleLabel = (axis: "x" | "y", displayValue: boolean) => {
+        if (metadata && metadata.options) {
+            const newData = { ...metadata };
+
+            if (!newData.options) return;
+
+            if (axis === "x") {
+                newData.options = {
+                    ...newData.options,
+                    scales: {
+                        ...newData.options.scales,
+                        xAxes: [
+                            {
+                                ...newData.options.scales?.xAxes?.[0],
+                                scaleLabel: {
+                                    ...newData.options.scales?.xAxes?.[0]?.scaleLabel,
+                                    display: displayValue,
+                                },
+                            },
+                        ],
+                    },
+                };
+            }
+
+            if (axis === "y") {
+                newData.options = {
+                    ...newData.options,
+                    scales: {
+                        ...newData.options.scales,
+                        yAxes: [
+                            {
+                                ...newData.options.scales?.yAxes?.[0],
+                                scaleLabel: {
+                                    ...newData.options.scales?.yAxes?.[0]?.scaleLabel,
+                                    display: displayValue,
+                                },
+                            },
+                        ],
+                    },
+                };
+            }
+
+            changeChartData(newData);
+        }
+    };
+
     useEffect(() => {
         if (metadata) {
-            setStackedState(metadata.options?.scales?.xAxes[0]?.stacked ? true : false);
+            setStackedState(metadata.options?.scales?.xAxes?.[0]?.stacked ? true : false);
             setDataLabelsState(
                 metadata.data.datasets[metadata.data.datasets.length - 1]?.datalabels?.display
                     ? true
                     : false
             );
             setLegendState(metadata.options?.legend?.display ? true : false);
+            setXScaleLabelState(
+                metadata.options?.scales?.xAxes?.[0]?.scaleLabel?.display ? true : false
+            );
+            setYScaleLabelState(
+                metadata.options?.scales?.yAxes?.[0]?.scaleLabel?.display ? true : false
+            );
         }
     }, [metadata]);
 
@@ -159,7 +200,43 @@ export const GeneralConfiguration = ({
                 <Switch
                     size="small"
                     checked={dataLabelsState}
-                    onClick={() => handleChangeDataLabels(!dataLabelsState, stackedState)}
+                    onClick={() => handleChangeDataLabels(!dataLabelsState)}
+                />
+            </InlineContainer>
+
+            <InlineContainer>
+                <Typography
+                    tag="p"
+                    fontSize={{ xs: "fs75" }}
+                    color="black"
+                    fontWeight="regular"
+                    textAlign="left"
+                >
+                    Rótulo do Eixo X
+                </Typography>
+
+                <Switch
+                    size="small"
+                    checked={xScaleLabelState}
+                    onClick={() => handleChangeScaleLabel("x", !xScaleLabelState)}
+                />
+            </InlineContainer>
+
+            <InlineContainer>
+                <Typography
+                    tag="p"
+                    fontSize={{ xs: "fs75" }}
+                    color="black"
+                    fontWeight="regular"
+                    textAlign="left"
+                >
+                    Rótulo do Eixo Y
+                </Typography>
+
+                <Switch
+                    size="small"
+                    checked={yScaleLabelState}
+                    onClick={() => handleChangeScaleLabel("y", !yScaleLabelState)}
                 />
             </InlineContainer>
 
