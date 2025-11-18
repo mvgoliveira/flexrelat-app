@@ -1,5 +1,4 @@
 import { Typography } from "@/components/features/typography";
-import { Switch } from "@/components/ui/switch";
 import { Theme } from "@/themes";
 import { ReactElement, useEffect, useState } from "react";
 import {
@@ -14,7 +13,7 @@ import {
 } from "react-icons/tb";
 
 import { ChartColumnData } from "../..";
-import { Separator, InlineContainer, StyledButton } from "./styles";
+import { InlineContainer, StyledButton } from "./styles";
 
 interface IStylesConfigurationProps {
     metadata: ChartColumnData;
@@ -25,62 +24,9 @@ export const StylesConfiguration = ({
     metadata,
     changeChartData,
 }: IStylesConfigurationProps): ReactElement => {
-    const [fillState, setFillState] = useState<boolean>(false);
-    const [showLinesState, setShowLinesState] = useState<boolean>(true);
-    const [smoothCurvesState, setSmoothCurvesState] = useState<boolean>(false);
     const [legendPosition, setLegendPosition] = useState<"top" | "left" | "bottom" | "right">(
         "top"
     );
-
-    const handleChangeFill = (value: boolean) => {
-        setFillState(value);
-
-        if (value) {
-            handleChangeShowLines(true);
-        }
-
-        if (metadata && metadata.data && metadata.data.datasets) {
-            const newData = { ...metadata };
-            newData.data.datasets = newData.data.datasets.map(dataset => ({
-                ...dataset,
-                fill: value,
-            }));
-
-            changeChartData(newData);
-        }
-    };
-
-    const handleChangeShowLines = (value: boolean) => {
-        setShowLinesState(value);
-
-        if (!value) {
-            handleChangeFill(false);
-        }
-
-        if (metadata && metadata.data && metadata.data.datasets) {
-            const newData = { ...metadata };
-            newData.data.datasets = newData.data.datasets.map(dataset => ({
-                ...dataset,
-                showLine: value,
-            }));
-
-            changeChartData(newData);
-        }
-    };
-
-    const handleChangeSmoothCurves = (value: boolean) => {
-        setSmoothCurvesState(value);
-
-        if (metadata && metadata.data && metadata.data.datasets) {
-            const newData = { ...metadata };
-            newData.data.datasets = newData.data.datasets.map(dataset => ({
-                ...dataset,
-                lineTension: value ? 0.4 : 0,
-            }));
-
-            changeChartData(newData);
-        }
-    };
 
     const handleChangeLegendPosition = (position: "top" | "left" | "bottom" | "right") => {
         setLegendPosition(position);
@@ -104,81 +50,12 @@ export const StylesConfiguration = ({
 
     useEffect(() => {
         if (metadata) {
-            setFillState(!!metadata.data.datasets[0].fill);
-
-            setShowLinesState(
-                metadata.data.datasets[0].showLine !== undefined
-                    ? metadata.data.datasets[0].showLine
-                    : true
-            );
-            setSmoothCurvesState(
-                !!(
-                    metadata.data.datasets[0].lineTension &&
-                    metadata.data.datasets[0].lineTension > 0
-                )
-            );
             setLegendPosition(metadata.options?.legend?.position || "top");
         }
     }, [metadata]);
 
     return (
         <>
-            <InlineContainer>
-                <Typography
-                    tag="p"
-                    fontSize={{ xs: "fs75" }}
-                    color="black"
-                    fontWeight="regular"
-                    textAlign="left"
-                >
-                    Preencher Linhas
-                </Typography>
-
-                <Switch
-                    size="small"
-                    checked={fillState}
-                    onClick={() => handleChangeFill(!fillState)}
-                />
-            </InlineContainer>
-
-            <InlineContainer>
-                <Typography
-                    tag="p"
-                    fontSize={{ xs: "fs75" }}
-                    color="black"
-                    fontWeight="regular"
-                    textAlign="left"
-                >
-                    Mostrar Linhas
-                </Typography>
-
-                <Switch
-                    size="small"
-                    checked={showLinesState}
-                    onClick={() => handleChangeShowLines(!showLinesState)}
-                />
-            </InlineContainer>
-
-            <InlineContainer>
-                <Typography
-                    tag="p"
-                    fontSize={{ xs: "fs75" }}
-                    color="black"
-                    fontWeight="regular"
-                    textAlign="left"
-                >
-                    Curvas Suaves
-                </Typography>
-
-                <Switch
-                    size="small"
-                    checked={smoothCurvesState}
-                    onClick={() => handleChangeSmoothCurves(!smoothCurvesState)}
-                />
-            </InlineContainer>
-
-            <Separator />
-
             <InlineContainer>
                 <Typography
                     tag="p"

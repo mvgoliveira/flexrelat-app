@@ -8,6 +8,7 @@ import { TbBrush, TbChartBubble, TbDatabase } from "react-icons/tb";
 
 import { DataConfiguration } from "./components/dataConfiguration";
 import { GeneralConfiguration } from "./components/generalConfiguration";
+import { StylesConfiguration } from "./components/stylesConfiguration";
 import {
     BottomContainer,
     ChartContainer,
@@ -164,12 +165,12 @@ export const ModalChartColumnOptions = ({
                             />
                         )}
 
-                        {/* {decodedData && activeTab === "style" && (
+                        {decodedData && activeTab === "style" && (
                             <StylesConfiguration
                                 metadata={decodedData}
                                 changeChartData={setDecodedData}
                             />
-                        )} */}
+                        )}
                     </ConfigurationContent>
                 </ConfigurationContainer>
 
