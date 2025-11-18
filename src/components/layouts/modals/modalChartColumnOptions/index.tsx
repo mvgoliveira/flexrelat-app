@@ -82,7 +82,7 @@ interface IModalChartColumnOptionsProps {
     isOpen: boolean;
     close: () => void;
     metadata: ChartColumnData;
-    changeChartData: (newData: ChartColumnData) => void;
+    changeChartData: (newData: ChartColumnData | string) => void;
 }
 
 export const ModalChartColumnOptions = ({

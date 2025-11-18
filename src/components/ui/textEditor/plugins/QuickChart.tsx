@@ -43,7 +43,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
     };
 
     const handleChangeChartData = (newData: any) => {
-        const encoded = encodeURIComponent(JSON.stringify(newData));
+        const encoded = encodeURIComponent(newData);
         setChartData(encoded);
         updateAttributes({ chartData: encoded });
     };

@@ -1,8 +1,5 @@
-"use client";
-
 import { Typography } from "@/components/features/typography";
 import { Switch } from "@/components/ui/switch";
-import { requestQuickChartUrl } from "@/services/quickChartClient";
 import { ReactElement, useEffect, useState } from "react";
 
 import { ChartColumnData } from "../..";
@@ -24,6 +21,7 @@ export const GeneralConfiguration = ({
 
     const handleChangeStacked = (stackedValue: boolean) => {
         setStackedState(stackedValue);
+        handleChangeDataLabels(dataLabelsState, stackedValue);
 
         if (metadata && metadata.options) {
             const newData = { ...metadata };
@@ -56,60 +54,23 @@ export const GeneralConfiguration = ({
         }
     };
 
-    const handleChangeDataLabels = (dataValue: boolean) => {
+    const handleChangeDataLabels = async (dataValue: boolean, isStacked: boolean) => {
         setDataLabelsState(dataValue);
 
         if (metadata && metadata.data && metadata.data.datasets) {
             const newData = { ...metadata };
 
-            if (stackedState) {
+            if (isStacked) {
                 newData.data.datasets = newData.data.datasets.map(dataset => ({
                     ...dataset,
                     datalabels: {
                         display: dataValue,
                         color: "#000000",
                         borderWidth: 1,
-                        anchor: "end",
-                        align: "top",
-                        formatter: (value: number) => {
-                            return value.toLocaleString("pt-BR");
-                        },
+                        anchor: "center",
+                        align: "center",
                     },
                 }));
-
-                // newData.data.datasets = newData.data.datasets.map((data, index) => ({
-                //     ...data,
-                //     datalabels:
-                //         index === newData.data.datasets.length - 1
-                //             ? {
-                //                   formatter: (value: number, ctx: any) => {
-                //                       const dataIndex = ctx.dataIndex;
-                //                       const total = ctx.chart.data.datasets.reduce(
-                //                           (acc: number, acc_dataset: any) => {
-                //                               return acc + acc_dataset.data[dataIndex];
-                //                           },
-                //                           0
-                //                       );
-                //                       return total.toLocaleString("pt-BR");
-                //                   },
-                //                   display: dataValue,
-                //                   color: "#000000",
-                //                   borderWidth: 1,
-                //                   anchor: "end",
-                //                   align: "top",
-                //               }
-                //             : {
-                //                   display: false,
-                //               },
-                // }));
-
-                void (async () => {
-                    const previewUrl = await requestQuickChartUrl(newData);
-
-                    if (previewUrl) {
-                        console.log(previewUrl);
-                    }
-                })();
             } else {
                 newData.data.datasets = newData.data.datasets.map(dataset => ({
                     ...dataset,
@@ -119,9 +80,6 @@ export const GeneralConfiguration = ({
                         borderWidth: 1,
                         anchor: "end",
                         align: "top",
-                        formatter: (value: number) => {
-                            return value.toLocaleString("pt-BR");
-                        },
                     },
                 }));
             }
@@ -201,7 +159,7 @@ export const GeneralConfiguration = ({
                 <Switch
                     size="small"
                     checked={dataLabelsState}
-                    onClick={() => handleChangeDataLabels(!dataLabelsState)}
+                    onClick={() => handleChangeDataLabels(!dataLabelsState, stackedState)}
                 />
             </InlineContainer>
 
