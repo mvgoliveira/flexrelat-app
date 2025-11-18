@@ -351,6 +351,129 @@ const TextEditor = ({
                     view.dispatch(view.state.tr.insert(targetPos, table));
                     return true;
                 }
+
+                if (variable === "lineChart") {
+                    const chartData = {
+                        type: "scatter",
+                        data: {
+                            datasets: [
+                                {
+                                    label: "Dado de Exemplo",
+                                    showLine: true,
+                                    lineTension: 0,
+                                    fill: false,
+                                    borderColor: "blue",
+                                    data: [
+                                        {
+                                            x: 1,
+                                            y: 0,
+                                        },
+                                        {
+                                            x: 2,
+                                            y: 20,
+                                        },
+                                        {
+                                            x: 3,
+                                            y: -30,
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: "Título do Gráfico",
+                            },
+                            legend: {
+                                display: true,
+                                position: "top",
+                                labels: {
+                                    usePointStyle: false,
+                                    boxWidth: 13,
+                                },
+                            },
+                            scales: {
+                                xAxes: [
+                                    {
+                                        type: "linear",
+                                        display: true,
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: "Eixo X",
+                                        },
+                                        ticks: {
+                                            major: {
+                                                enabled: false,
+                                            },
+                                        },
+                                    },
+                                ],
+                                yAxes: [
+                                    {
+                                        type: "linear",
+                                        display: true,
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: "Eixo Y",
+                                        },
+                                        ticks: {
+                                            major: {
+                                                enabled: false,
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    };
+
+                    const newNode = view.state.schema.nodes.quickChart.create({
+                        chartData: encodeURIComponent(JSON.stringify(chartData)),
+                    });
+                    view.dispatch(view.state.tr.insert(targetPos, newNode));
+                    return;
+                }
+
+                if (variable === "barChart") {
+                    const chartData = {
+                        type: "bar",
+                        data: {
+                            labels: ["Janeiro", "Fevereiro", "Março"],
+                            datasets: [
+                                {
+                                    label: "Exemplo 1",
+                                    data: [10, 20, 30],
+                                },
+                                {
+                                    label: "Exemplo 2",
+                                    data: [15, 25, 30],
+                                },
+                            ],
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: "Título do Gráfico",
+                            },
+                            legend: {
+                                display: true,
+                                position: "top",
+                                labels: {
+                                    usePointStyle: false,
+                                    boxWidth: 13,
+                                },
+                            },
+                        },
+                    };
+
+                    const newNode = view.state.schema.nodes.quickChart.create({
+                        chartData: encodeURIComponent(JSON.stringify(chartData)),
+                    });
+                    view.dispatch(view.state.tr.insert(targetPos, newNode));
+                    return;
+                }
+
                 return true;
             },
         },
