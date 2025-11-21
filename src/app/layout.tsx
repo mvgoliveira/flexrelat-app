@@ -6,7 +6,7 @@ import "@/styles/globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import WrapProviders from "./wrap-providers";
 
-export const inter = Inter({
+const inter = Inter({
     subsets: ["latin"],
     display: "swap",
 });

@@ -1,4 +1,5 @@
 import { useDocumentContext } from "@/context/documentContext";
+import { ComponentTypes } from "@/repositories/componentsAPI";
 import { Theme } from "@/themes";
 import { BulletList } from "@tiptap/extension-bullet-list";
 import CodeBlock from "@tiptap/extension-code-block";
@@ -41,8 +42,6 @@ import { Placeholder } from "./plugins/Placeholder";
 import { PreventEditExtension } from "./plugins/PreventEdit";
 import { QuickChart } from "./plugins/QuickChart";
 import { Root } from "./styles";
-
-import { ComponentTypes } from "@/repositories/componentsAPI";
 
 interface ITextEditorProps {
     zoom?: number;

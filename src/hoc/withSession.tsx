@@ -29,6 +29,7 @@ const withSession = <P extends object>(WrappedComponent: ComponentType<P>): Comp
                 }
             };
             run();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
         if (loading)

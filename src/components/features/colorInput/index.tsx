@@ -1,11 +1,11 @@
 import { Theme } from "@/themes";
+import _ from "lodash";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { TbColorPicker } from "react-icons/tb";
 
 import { StyledColorInput } from "./styles";
 
 import "@mantine/core/styles.css";
-import _ from "lodash";
 
 interface IColorInputProps {
     currentColor: string;

@@ -297,9 +297,9 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         `;
 
         const opt = {
-            margin: [85.039, 85.039, 56.693, 56.693],
+            margin: [85.039, 85.039, 56.693, 56.693] as [number, number, number, number],
             filename: `${title || "Relatório sem título"}.pdf`,
-            image: { type: "webp", quality: 0.98 },
+            image: { type: "webp" as const, quality: 0.98 },
             html2canvas: {
                 allowTaint: true,
                 letterRendering: true,
@@ -308,7 +308,12 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                 scale: 2,
                 useCORS: true,
             },
-            jsPDF: { unit: "pt", format: "a4", orientation: "portrait", compress: true },
+            jsPDF: {
+                unit: "pt" as const,
+                format: "a4",
+                orientation: "portrait" as const,
+                compress: true,
+            },
             autoPaging: "text",
             pagebreak: { mode: ["css"], avoid: ["img", "h1", "h2", "h3", "h4", "h5", "h6"] },
         };
