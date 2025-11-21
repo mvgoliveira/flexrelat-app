@@ -20,17 +20,26 @@ const withSession = <P extends object>(WrappedComponent: ComponentType<P>): Comp
             const run = async () => {
                 try {
                     const user = await getAuthenticatedUser();
+
                     setAuthenticatedUser(user);
-                    localStorage.removeItem("redirectUrl");
                     setLoading(false);
+
+                    const redirectUrl = localStorage.getItem("redirectUrl");
+
+                    if (redirectUrl) {
+                        localStorage.removeItem("redirectUrl");
+                        window.location.href = redirectUrl;
+                        return;
+                    } else if (location.pathname === "/") {
+                        window.location.href = "/documents";
+                    }
                 } catch {
                     localStorage.setItem("redirectUrl", location.href);
                     redirectToLogin();
                 }
             };
             run();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
+        }, [setAuthenticatedUser]);
 
         if (loading)
             return (
