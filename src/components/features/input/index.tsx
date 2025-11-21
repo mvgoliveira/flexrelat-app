@@ -8,11 +8,20 @@ interface IInputProps {
     value?: string;
     onChange?: ChangeEventHandler<HTMLInputElement>;
     label?: string;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    hasError?: boolean;
 }
 
-export const Input = ({ placeholder, value, onChange, label }: IInputProps): ReactElement => {
+export const Input = ({
+    placeholder,
+    value,
+    onChange,
+    label,
+    onKeyDown,
+    hasError = false,
+}: IInputProps): ReactElement => {
     return (
-        <Root>
+        <Root onKeyDown={onKeyDown}>
             {label && (
                 <Typography
                     tag="p"
@@ -31,8 +40,23 @@ export const Input = ({ placeholder, value, onChange, label }: IInputProps): Rea
                     value={value}
                     onChange={onChange}
                     aria-label={label}
+                    hasError={hasError}
                 />
             </div>
+
+            {hasError && (
+                <div style={{ marginTop: 5 }}>
+                    <Typography
+                        tag="p"
+                        fontSize={{ xs: "fs75" }}
+                        color="red50"
+                        fontWeight="regular"
+                        textAlign="left"
+                    >
+                        Campo obrigatório
+                    </Typography>
+                </div>
+            )}
         </Root>
     );
 };

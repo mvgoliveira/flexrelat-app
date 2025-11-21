@@ -1,14 +1,14 @@
 import { Typography } from "@/components/features/typography";
 import { Switch } from "@/components/ui/switch";
-import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
 import { ReactElement, useEffect, useState } from "react";
 
+import { ChartLineData } from "../..";
 import { InlineContainer } from "../stylesConfiguration/styles";
 import { Separator } from "./styles";
 
 interface IGeneralConfigurationProps {
-    metadata: ChartData;
-    changeChartData: (newData: ChartData) => void;
+    metadata: ChartLineData;
+    changeChartData: (newData: ChartLineData) => void;
 }
 
 export const GeneralConfiguration = ({
@@ -17,6 +17,8 @@ export const GeneralConfiguration = ({
 }: IGeneralConfigurationProps): ReactElement => {
     const [dataLabelsState, setDataLabelsState] = useState<boolean>(false);
     const [legendState, setLegendState] = useState<boolean>(false);
+    const [xScaleLabelState, setXScaleLabelState] = useState<boolean>(false);
+    const [yScaleLabelState, setYScaleLabelState] = useState<boolean>(false);
 
     const handleChangeDataLabels = (dataValue: boolean) => {
         setDataLabelsState(dataValue);
@@ -66,10 +68,64 @@ export const GeneralConfiguration = ({
         }
     };
 
+    const handleChangeScaleLabel = (axis: "x" | "y", displayValue: boolean) => {
+        if (metadata && metadata.options) {
+            const newData = { ...metadata };
+
+            if (!newData.options) return;
+
+            if (axis === "x") {
+                newData.options = {
+                    ...newData.options,
+                    scales: {
+                        ...newData.options.scales,
+                        xAxes: [
+                            {
+                                ...newData.options.scales?.xAxes?.[0],
+                                scaleLabel: {
+                                    ...newData.options.scales?.xAxes?.[0]?.scaleLabel,
+                                    display: displayValue,
+                                },
+                            },
+                        ],
+                    },
+                };
+                setXScaleLabelState(displayValue);
+            }
+
+            if (axis === "y") {
+                newData.options = {
+                    ...newData.options,
+                    scales: {
+                        ...newData.options.scales,
+                        yAxes: [
+                            {
+                                ...newData.options.scales?.yAxes?.[0],
+                                scaleLabel: {
+                                    ...newData.options.scales?.yAxes?.[0]?.scaleLabel,
+                                    display: displayValue,
+                                },
+                            },
+                        ],
+                    },
+                };
+                setYScaleLabelState(displayValue);
+            }
+
+            changeChartData(newData);
+        }
+    };
+
     useEffect(() => {
         if (metadata) {
             setDataLabelsState(metadata.data.datasets[0]?.datalabels?.display ? true : false);
             setLegendState(metadata.options?.legend.display ? true : false);
+            setXScaleLabelState(
+                metadata.options?.scales?.xAxes?.[0]?.scaleLabel?.display ? true : false
+            );
+            setYScaleLabelState(
+                metadata.options?.scales?.yAxes?.[0]?.scaleLabel?.display ? true : false
+            );
         }
     }, [metadata]);
 
@@ -90,6 +146,42 @@ export const GeneralConfiguration = ({
                     size="small"
                     checked={dataLabelsState}
                     onClick={() => handleChangeDataLabels(!dataLabelsState)}
+                />
+            </InlineContainer>
+
+            <InlineContainer>
+                <Typography
+                    tag="p"
+                    fontSize={{ xs: "fs75" }}
+                    color="black"
+                    fontWeight="regular"
+                    textAlign="left"
+                >
+                    Rótulo do Eixo X
+                </Typography>
+
+                <Switch
+                    size="small"
+                    checked={xScaleLabelState}
+                    onClick={() => handleChangeScaleLabel("x", !xScaleLabelState)}
+                />
+            </InlineContainer>
+
+            <InlineContainer>
+                <Typography
+                    tag="p"
+                    fontSize={{ xs: "fs75" }}
+                    color="black"
+                    fontWeight="regular"
+                    textAlign="left"
+                >
+                    Rótulo do Eixo Y
+                </Typography>
+
+                <Switch
+                    size="small"
+                    checked={yScaleLabelState}
+                    onClick={() => handleChangeScaleLabel("y", !yScaleLabelState)}
                 />
             </InlineContainer>
 

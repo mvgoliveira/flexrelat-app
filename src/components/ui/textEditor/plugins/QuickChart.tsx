@@ -1,4 +1,5 @@
-import { ChartOptionsModal } from "@/components/layouts/document/modals/chartOptionsModal";
+import { ModalChartColumnOptions } from "@/components/layouts/modals/modalChartColumnOptions";
+import { ModalChartLineOptions } from "@/components/layouts/modals/modalChartLineOptions";
 import styled from "@emotion/styled";
 import { useDisclosure } from "@mantine/hooks";
 import { Node, mergeAttributes } from "@tiptap/core";
@@ -6,61 +7,6 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-
-export type ChartData = {
-    type: string;
-    data: {
-        labels: string[];
-        datasets: Array<{
-            label: string;
-            data: { x: number | string; y: number | string }[];
-            backgroundColor?: string | string[];
-            borderColor?: string | string[];
-            borderWidth?: number;
-            lineTension?: number;
-            showLine?: boolean;
-            fill?: boolean;
-            datalabels?: {
-                display: boolean;
-                color: string;
-                backgroundColor: string;
-                borderColor: string;
-                borderWidth: number;
-                borderRadius: number;
-                anchor: string;
-                align: string;
-            };
-        }>;
-    };
-    options?: {
-        title: {
-            display: boolean;
-            text: string;
-        };
-        legend: {
-            display?: boolean;
-            position?: "top" | "left" | "bottom" | "right";
-            labels: {
-                usePointStyle: boolean;
-                boxWidth: number;
-            };
-        };
-        scales: {
-            xAxes: Array<{
-                scaleLabel: {
-                    display: boolean;
-                    labelString: string;
-                };
-            }>;
-            yAxes: Array<{
-                scaleLabel: {
-                    display: boolean;
-                    labelString: string;
-                };
-            }>;
-        };
-    };
-};
 
 const ChartContainer = styled(NodeViewWrapper)`
     width: 100%;
@@ -86,7 +32,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
     const id = node.attrs.id;
 
     const [opened, { open, close }] = useDisclosure(false);
-    const [decodedData, setDecodedData] = useState<ChartData | null>(null);
+    const [decodedData, setDecodedData] = useState<any | null>(null);
     const [chartData, setChartData] = useState<string>("");
 
     const handleOpenChartOptions = () => {
@@ -96,7 +42,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
         open();
     };
 
-    const handleChangeChartData = (newData: ChartData) => {
+    const handleChangeChartData = (newData: any) => {
         const encoded = encodeURIComponent(JSON.stringify(newData));
         setChartData(encoded);
         updateAttributes({ chartData: encoded });
@@ -114,8 +60,17 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
 
     return (
         <>
-            {decodedData && (
-                <ChartOptionsModal
+            {decodedData && decodedData.type === "scatter" && (
+                <ModalChartLineOptions
+                    isOpen={opened}
+                    close={close}
+                    metadata={decodedData}
+                    changeChartData={handleChangeChartData}
+                />
+            )}
+
+            {decodedData && decodedData.type === "bar" && (
+                <ModalChartColumnOptions
                     isOpen={opened}
                     close={close}
                     metadata={decodedData}

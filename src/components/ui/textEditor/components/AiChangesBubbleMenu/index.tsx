@@ -20,7 +20,7 @@ export const AiChangesBubbleMenu = ({
     editor,
     aiChange,
 }: IAiChangesBubbleMenuProps): ReactElement => {
-    const { approveChange, rejectChange } = useDocumentContext();
+    const { approveChange, rejectChange, setSelectedChangeType } = useDocumentContext();
     const [selectedChanges, setSelectedChanges] = useState<SelectedChange[]>([]);
 
     const handleApproveChange = (): void => {
@@ -28,8 +28,43 @@ export const AiChangesBubbleMenu = ({
         approveChange(aiChange);
     };
 
-    const handlerejectChange = (): void => {
-        editor.chain().focus().run();
+    const handleRejectChange = (): void => {
+        const element = editor.view.dom.querySelector(`[data-id="${aiChange.old_content.id}"]`);
+
+        if (element) {
+            const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
+            const node = editor.state.doc.nodeAt(pos);
+
+            if (node) {
+                const elementTypeName = node.type.name;
+
+                // Remove a classe "change-remove" do nó antigo
+                editor
+                    .chain()
+                    .setNodeSelection(pos)
+                    .updateAttributes(elementTypeName, {
+                        class: "",
+                    })
+                    .setMeta("addToHistory", false)
+                    .run();
+
+                // Remove o nó com classe "change-add" se existir
+                const nextPos = pos + node.nodeSize;
+                const nextNode = editor.state.doc.nodeAt(nextPos);
+
+                if (nextNode && nextNode.attrs["class"] === "change-add") {
+                    editor
+                        .chain()
+                        .deleteRange({
+                            from: nextPos,
+                            to: nextPos + nextNode.nodeSize,
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
+                }
+            }
+        }
+
         setSelectedChanges([]);
         rejectChange(aiChange);
     };
@@ -38,45 +73,45 @@ export const AiChangesBubbleMenu = ({
         if (!aiChange) return;
         if (!editor) return;
 
+        const hasChangeRemove = editor.view.dom.querySelector(".change-remove");
+        const hasChangeAdd = editor.view.dom.querySelector(".change-add");
+
+        if (hasChangeRemove || hasChangeAdd) {
+            return;
+        }
+
         const element = editor.view.dom.querySelector(`[data-id="${aiChange.old_content.id}"]`);
 
         if (element) {
             const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
             const node = editor.state.doc.nodeAt(pos);
+
             if (node) {
                 const elementTypeName = node.type.name;
 
-                if (
-                    node.attrs["class"] === "change-remove" ||
-                    node.attrs["class"] === "change-add"
-                ) {
-                    return;
+                const targetElement = document.querySelector(
+                    `[data-id="${aiChange.old_content.id}"]`
+                );
+
+                if (targetElement) {
+                    const scrollTarget =
+                        elementTypeName === "table" ? targetElement.parentElement : targetElement;
+
+                    scrollTarget?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "center",
+                    });
                 }
 
                 if (aiChange.type === "update") {
-                    const targetElement = document.querySelector(
-                        `[data-id="${aiChange.old_content.id}"]`
-                    );
-
-                    if (targetElement) {
-                        const scrollTarget =
-                            elementTypeName === "table"
-                                ? targetElement.parentElement
-                                : targetElement;
-
-                        scrollTarget?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "center",
-                            inline: "center",
-                        });
-                    }
-
                     editor
                         .chain()
                         .setNodeSelection(pos)
                         .updateAttributes(elementTypeName, {
                             class: "change-remove",
                         })
+                        .setMeta("addToHistory", false)
                         .run();
 
                     editor
@@ -84,13 +119,19 @@ export const AiChangesBubbleMenu = ({
                         .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
                         .run();
 
-                    editor
-                        .chain()
-                        .setNodeSelection(pos + node.nodeSize)
-                        .updateAttributes(elementTypeName, {
-                            class: "change-add",
-                        })
-                        .run();
+                    const newNode = editor.state.doc.nodeAt(pos + node.nodeSize);
+
+                    if (newNode) {
+                        const newNodeType = newNode.type.name;
+                        editor
+                            .chain()
+                            .setNodeSelection(pos + node.nodeSize)
+                            .updateAttributes(newNodeType, {
+                                class: "change-add",
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+                    }
 
                     setSelectedChanges([
                         {
@@ -105,9 +146,62 @@ export const AiChangesBubbleMenu = ({
                         },
                     ]);
                 }
+
+                if (aiChange.type === "delete") {
+                    editor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .updateAttributes(elementTypeName, {
+                            class: "change-remove",
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
+
+                    setSelectedChanges([
+                        {
+                            from: pos,
+                            to: pos + node.nodeSize,
+                            type: "remove",
+                        },
+                    ]);
+                }
+
+                if (aiChange.type === "create") {
+                    editor.chain().insertContentAt(pos, aiChange.new_content.html).run();
+
+                    const newNode = editor.state.doc.nodeAt(pos);
+
+                    if (newNode) {
+                        const newNodeType = newNode.type.name;
+                        editor
+                            .chain()
+                            .setNodeSelection(pos)
+                            .updateAttributes(newNodeType, {
+                                class: "change-add",
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
+                    }
+
+                    setSelectedChanges([
+                        {
+                            from: pos + 1,
+                            to: pos + 1,
+                            type: "add",
+                        },
+                    ]);
+                }
             }
         }
     }, [aiChange, editor]);
+
+    useEffect(() => {
+        if (aiChange) {
+            setSelectedChangeType(aiChange.type);
+        } else {
+            setSelectedChangeType(null);
+        }
+    }, [aiChange, setSelectedChangeType]);
 
     useEffect(() => {
         const handler = () => {
@@ -150,7 +244,7 @@ export const AiChangesBubbleMenu = ({
                     <MdDone size={12} color={Theme.colors.green80} />
                 </StyledButton>
 
-                <StyledButton onClick={handlerejectChange} color="red30">
+                <StyledButton onClick={handleRejectChange} color="red30">
                     <MdClose size={12} color={Theme.colors.red80} />
                 </StyledButton>
             </Root>

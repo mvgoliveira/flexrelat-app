@@ -3,13 +3,14 @@ import { Spinner } from "@/components/features/loading/spinner";
 import { Skeleton } from "@/components/features/skeleton";
 import { toastError } from "@/components/features/toast";
 import { Typography } from "@/components/features/typography";
+import { ModalClearMessages } from "@/components/layouts/modals/modalClearMessages";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import { useDocumentContext } from "@/context/documentContext";
-import { sendMessage } from "@/repositories/messageAPI";
+import { clearMessagesByRelatedId, sendMessage } from "@/repositories/messageAPI";
 import { Theme } from "@/themes";
 import { useElementSize } from "@mantine/hooks";
 import { ReactElement, useRef, useState } from "react";
-import { MdCheck, MdClose, MdSend } from "react-icons/md";
+import { MdCheck, MdClose, MdDeleteOutline, MdSend } from "react-icons/md";
 import { RiBarChartBoxAiLine, RiBrainLine, RiChatAiLine } from "react-icons/ri";
 import { TbRobotOff } from "react-icons/tb";
 
@@ -48,6 +49,8 @@ export const AiChat = (): ReactElement => {
 
     const [chatMessage, setChatMessage] = useState("");
     const [aiIsLoading, setAiIsLoading] = useState(false);
+
+    const [isClearModalOpen, setIsClearModalOpen] = useState<boolean>(false);
 
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -153,29 +156,67 @@ export const AiChat = (): ReactElement => {
         }
     };
 
+    const handleClearMessages = async () => {
+        if (documentData) {
+            try {
+                await clearMessagesByRelatedId(documentData.id, "documents");
+                setIsClearModalOpen(false);
+                setMessages([]);
+            } catch (error) {
+                console.error("Error clearing messages:", error);
+                toastError();
+            }
+        }
+    };
+
     return (
         <Root>
+            <ModalClearMessages
+                open={isClearModalOpen}
+                setOpen={setIsClearModalOpen}
+                onClearMessages={handleClearMessages}
+            />
+
             <ChangesHeader ref={changesHeaderRef}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <ChangesNumberContainer>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        width: "100%",
+                    }}
+                >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <ChangesNumberContainer>
+                            <Typography
+                                tag="p"
+                                fontSize={{ xs: "fs50" }}
+                                color="black"
+                                fontWeight="regular"
+                            >
+                                {changes.filter(change => change.status === "pending").length}
+                            </Typography>
+                        </ChangesNumberContainer>
+
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
-                            color="black"
+                            fontSize={{ xs: "fs75" }}
+                            color="gray70"
                             fontWeight="regular"
                         >
-                            {changes.filter(change => change.status === "pending").length}
+                            Mudanças sem aprovação
                         </Typography>
-                    </ChangesNumberContainer>
+                    </div>
 
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="gray70"
-                        fontWeight="regular"
-                    >
-                        Mudanças sem aprovação
-                    </Typography>
+                    <div style={{ display: "flex", alignItems: "center", width: 20 }}>
+                        <Button
+                            height="20px"
+                            variant="tertiary"
+                            onClick={() => setIsClearModalOpen(true)}
+                        >
+                            <MdDeleteOutline size={14} color={Theme.colors.black} />
+                        </Button>
+                    </div>
                 </div>
 
                 {changes.filter(change => change.status === "pending").length > 0 && (

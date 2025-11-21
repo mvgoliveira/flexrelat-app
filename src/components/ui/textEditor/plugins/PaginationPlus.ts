@@ -32,6 +32,11 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
         };
     },
     onCreate() {
+        // Verificar se o view está disponível
+        if (!this.editor.view || !this.editor.view.dom) {
+            return;
+        }
+
         const targetNode = this.editor.view.dom;
         targetNode.classList.add("rm-with-pagination");
         const config = { attributes: true };
@@ -188,6 +193,10 @@ export const PaginationPlus = Extension.create<IPaginationPlusOptions>({
 });
 
 const getExistingPageCount = (view: EditorView) => {
+    if (!view || !view.dom) {
+        return 0;
+    }
+
     const editorDom = view.dom;
     const paginationElement = editorDom.querySelector("[data-rm-pagination]");
     if (paginationElement) {
@@ -197,6 +206,10 @@ const getExistingPageCount = (view: EditorView) => {
 };
 
 const calculatePageCount = (view: EditorView, pageOptions: IPaginationPlusOptions) => {
+    if (!view || !view.dom) {
+        return 1;
+    }
+
     const editorDom = view.dom as HTMLElement;
     const pageContentAreaHeight =
         pageOptions.pageHeight - pageOptions.pageHeaderHeight - pageOptions.pageFooterHeight;

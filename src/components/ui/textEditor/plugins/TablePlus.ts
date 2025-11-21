@@ -1,9 +1,7 @@
 import { Table, createColGroup } from "@tiptap/extension-table";
 
-import { TableRowGroup } from "./TableRowGroup";
-
 export const TablePlus = Table.extend({
-    content: "(tableRowGroup|tableRow)+",
+    content: "tableRow+",
 
     addAttributes() {
         // Pega TODOS os atributos da extensão pai
@@ -42,10 +40,6 @@ export const TablePlus = Table.extend({
         };
     },
 
-    addExtensions() {
-        return [TableRowGroup];
-    },
-
     addNodeView() {
         return ({ node }: { node: any }) => {
             const wrapper = document.createElement("div");
@@ -81,13 +75,7 @@ export const TablePlus = Table.extend({
 
             let maxCellCount = 0;
             node.forEach((child: any) => {
-                if (child.type.name === "tableRowGroup") {
-                    child.forEach((row: any) => {
-                        if (row.type.name === "tableRow" && row.childCount > maxCellCount) {
-                            maxCellCount = row.childCount;
-                        }
-                    });
-                } else if (child.type.name === "tableRow" && child.childCount > maxCellCount) {
+                if (child.type.name === "tableRow" && child.childCount > maxCellCount) {
                     maxCellCount = child.childCount;
                 }
             });

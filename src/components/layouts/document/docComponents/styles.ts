@@ -55,7 +55,7 @@ export const ElementContainer = styled.div`
     width: 100%;
 `;
 
-export const ElementIconContainer = styled.div`
+export const ElementIconContainer = styled.span<{ disabled: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -64,6 +64,37 @@ export const ElementIconContainer = styled.div`
     background: ${({ theme }) => theme.colors.gray10};
     border: 1px solid ${({ theme }) => theme.colors.gray30};
     border-radius: 4px;
+    position: relative;
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+
+    transition: border 0.2s;
+
+    svg {
+        transition: opacity 0.2s;
+
+        &:nth-of-type(1) {
+            opacity: 1;
+        }
+        &:nth-of-type(2) {
+            opacity: 0;
+            position: absolute;
+        }
+    }
+
+    &:hover {
+        border: 1px solid
+            ${({ theme, disabled }) => (disabled ? theme.colors.gray30 : theme.colors.blue50)};
+
+        svg {
+            &:nth-of-type(1) {
+                opacity: 0;
+                position: absolute;
+            }
+            &:nth-of-type(2) {
+                opacity: 1;
+            }
+        }
+    }
 `;
 
 export const Separator = styled.div`

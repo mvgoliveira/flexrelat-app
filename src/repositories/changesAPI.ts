@@ -7,7 +7,7 @@ type Content = {
     html: string;
 };
 
-export type ChangesType = "add" | "remove" | "update";
+export type ChangesType = "create" | "delete" | "update";
 
 export type StatusType = "pending" | "approved" | "rejected";
 

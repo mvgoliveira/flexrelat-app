@@ -1,10 +1,5 @@
 import styled from "@emotion/styled";
 
-export const StyledTrigger = styled.div`
-    display: flex;
-    align-items: center;
-`;
-
 export const ProfileImage = styled.div`
     width: 20px;
     height: 20px;

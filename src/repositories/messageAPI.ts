@@ -35,3 +35,10 @@ export const sendMessage = async (
 
     return data;
 };
+
+export const clearMessagesByRelatedId = async (
+    relatedId: string,
+    relatedType: "documents" | "models"
+): Promise<void> => {
+    await client.delete(`${PREFIX}/${relatedType}/${relatedId}`);
+};

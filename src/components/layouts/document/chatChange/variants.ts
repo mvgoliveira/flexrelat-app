@@ -11,8 +11,8 @@ type ColorMap = Record<ChangesType | StatusType, keyof typeof Theme.colors>;
 type TextMap = Record<ChangesType | StatusType, string>;
 
 export const CHANGES_COLOR_VARIANTS: ColorMap = {
-    add: "green50",
-    remove: "red50",
+    create: "green50",
+    delete: "red50",
     update: "yellow50",
     approved: "green50",
     rejected: "red50",
@@ -20,8 +20,8 @@ export const CHANGES_COLOR_VARIANTS: ColorMap = {
 };
 
 export const CHANGES_TEXT_VARIANTS: TextMap = {
-    add: "ADIÇÃO",
-    remove: "REMOÇÃO",
+    create: "ADIÇÃO",
+    delete: "REMOÇÃO",
     update: "ALTERAÇÃO",
     approved: "APROVADA",
     rejected: "REJEITADA",
@@ -29,11 +29,11 @@ export const CHANGES_TEXT_VARIANTS: TextMap = {
 };
 
 export const CHANGES_BADGE_VARIANTS: BadgeColorMap = {
-    add: {
+    create: {
         bgColor: "green30",
         textColor: "green60",
     },
-    remove: {
+    delete: {
         bgColor: "red30",
         textColor: "red50",
     },

@@ -252,6 +252,40 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     list-style-type: decimal;
                     padding-left: 40px;
                 }
+
+                blockquote {
+                    border-left: 4px solid #d1d5db;
+                    padding-left: 16px;
+                    margin-left: 0;
+                    margin-bottom: 12px;
+                    font-style: italic;
+                    background: rgba(249, 250, 251, 0.5);
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                }
+
+                blockquote p {
+                    margin-bottom: 0;
+                }
+
+                pre {
+                    background-color: #171717;
+                    background: #171717;
+                    color: #F6F6F6;
+                    font-family: monospace;
+                    padding: 16px;
+                    border-radius: 4px;
+                    margin-bottom: 12px;
+                    overflow-x: auto;
+                    line-height: 1.5;
+                }
+
+                pre code {
+                    background: none;
+                    color: inherit;
+                    font-size: 11pt;
+                    padding: 0;
+                }
             </style>
         `;
 
@@ -266,8 +300,16 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             margin: [85.039, 85.039, 56.693, 56.693],
             filename: `${title || "Relatório sem título"}.pdf`,
             image: { type: "webp", quality: 0.98 },
-            html2canvas: { scale: 2, dpi: 300, letterRendering: true, useCORS: true },
+            html2canvas: {
+                allowTaint: true,
+                letterRendering: true,
+                logging: false,
+                dpi: 300,
+                scale: 2,
+                useCORS: true,
+            },
             jsPDF: { unit: "pt", format: "a4", orientation: "portrait", compress: true },
+            autoPaging: "text",
             pagebreak: { mode: ["css"], avoid: ["img", "h1", "h2", "h3", "h4", "h5", "h6"] },
         };
 

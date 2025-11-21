@@ -37,6 +37,48 @@ export const Root = styled.div<IRootProps>`
         &:focus {
             outline: none;
         }
+
+        .tiptap-mathematics-render {
+            padding: 0 0.25rem;
+
+            &--editable {
+                cursor: pointer;
+                transition: background 0.2s;
+
+                &:hover {
+                    background: #eee;
+                }
+            }
+        }
+
+        .tiptap-mathematics-render {
+            border-radius: 0.25rem;
+
+            &[data-type="inline-math"] {
+                display: inline-block;
+            }
+
+            &[data-type="block-math"] {
+                background: ${({ theme }) => theme.colors.gray10};
+                display: block;
+                margin: 1rem 0;
+                padding: 1rem;
+                text-align: center;
+
+                &:hover {
+                    background: ${({ theme }) => theme.colors.gray20};
+                }
+            }
+
+            &.inline-math-error,
+            &.block-math-error {
+                background: var(--red-light);
+                color: var(--red);
+                border: 1px solid var(--red-dark);
+                padding: 0.5rem;
+                border-radius: 0.25rem;
+            }
+        }
     }
 
     .rm-pagination-gap {
@@ -81,6 +123,12 @@ export const Root = styled.div<IRootProps>`
         word-wrap: break-word;
     }
 
+    hr {
+        margin-bottom: 12px;
+        border: none;
+        border-bottom: 1px solid ${({ theme }) => theme.colors.gray80};
+    }
+
     h1,
     h2,
     h3,
@@ -88,40 +136,6 @@ export const Root = styled.div<IRootProps>`
     h5,
     h6 {
         font-weight: ${({ theme }) => theme.fontWeight.bold};
-    }
-
-    h1 {
-        counter-increment: h1;
-        counter-reset: h2;
-    }
-    h2 {
-        counter-increment: h2;
-        counter-reset: h3;
-    }
-    h3 {
-        counter-increment: h3;
-    }
-    h1::before {
-        content: counter(h1) ". ";
-    }
-    h2::before {
-        content: counter(h1) "." counter(h2) ". ";
-    }
-    h3::before {
-        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
-    }
-
-    .change-add {
-        counter-increment: none !important;
-    }
-    h1.change-add::before {
-        content: counter(h1) ". ";
-    }
-    h2.change-add::before {
-        content: counter(h1) "." counter(h2) ". ";
-    }
-    h3.change-add::before {
-        content: counter(h1) "." counter(h2) "." counter(h3) ". ";
     }
 
     h1[contenteditable="false"],
@@ -138,6 +152,18 @@ export const Root = styled.div<IRootProps>`
         line-height: 1.5 !important;
     }
 
+    .layout {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p {
+            margin-bottom: 0px;
+        }
+    }
+
     table {
         border-collapse: collapse;
         overflow: hidden;
@@ -147,6 +173,13 @@ export const Root = styled.div<IRootProps>`
         tr {
             &:last-of-type {
                 margin-bottom: 12px;
+            }
+
+            &:first-of-type {
+                td,
+                th {
+                    border-top: 1px solid ${({ theme }) => theme.colors.black};
+                }
             }
 
             .selectedCell:after {
@@ -182,7 +215,6 @@ export const Root = styled.div<IRootProps>`
         th {
             font-weight: ${({ theme }) => theme.fontWeight.bold};
             text-align: center;
-            border-top: 1px solid ${({ theme }) => theme.colors.black};
 
             p {
                 text-align: start;
@@ -200,6 +232,39 @@ export const Root = styled.div<IRootProps>`
         list-style-type: decimal;
         padding-left: 40px;
         gap: 12px;
+    }
+
+    blockquote {
+        border-left: 4px solid ${({ theme }) => theme.colors.gray40};
+        padding-left: 16px;
+        margin-left: 0;
+        margin-bottom: 12px;
+        font-style: italic;
+        background: ${({ theme }) => hexToRgba(theme.colors.gray10, 50)};
+        padding-top: 8px;
+        padding-bottom: 8px;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+
+    pre {
+        background: ${({ theme }) => theme.colors.gray90};
+        color: ${({ theme }) => theme.colors.gray10};
+        font-family: monospace;
+        padding: 16px;
+        border-radius: 4px;
+        margin-bottom: 12px;
+        overflow-x: auto;
+        line-height: 1.5;
+
+        code {
+            background: none;
+            color: inherit;
+            font-size: 11pt;
+            padding: 0;
+        }
     }
 
     .multi-selected {
@@ -234,6 +299,7 @@ export const Root = styled.div<IRootProps>`
             0 0 0 5px ${({ theme }) => hexToRgba(theme.colors.green50, 20)};
         color: ${({ theme }) => theme.colors.green100};
         outline: none;
+        counter-increment: none !important;
     }
 
     .change-loading {

@@ -1,7 +1,6 @@
 import { Button } from "@/components/features/button";
 import { Typography } from "@/components/features/typography";
 import { Modal } from "@/components/ui/modal";
-import { ChartData } from "@/components/ui/textEditor/plugins/QuickChart";
 import { Theme } from "@/themes";
 import Image from "next/image";
 import { ReactElement, useEffect, useState } from "react";
@@ -21,21 +20,76 @@ import {
     TopContainer,
 } from "./styles";
 
-interface IChartOptionsModalProps {
+export type ChartLineData = {
+    type: string;
+    data: {
+        labels: string[];
+        datasets: Array<{
+            label: string;
+            data: { x: number | string; y: number | string }[];
+            backgroundColor?: string | string[];
+            borderColor?: string | string[];
+            borderWidth?: number;
+            lineTension?: number;
+            showLine?: boolean;
+            fill?: boolean;
+            datalabels?: {
+                display: boolean;
+                color: string;
+                backgroundColor: string;
+                borderColor: string;
+                borderWidth: number;
+                borderRadius: number;
+                anchor: string;
+                align: string;
+            };
+        }>;
+    };
+    options?: {
+        title: {
+            display: boolean;
+            text: string;
+        };
+        legend: {
+            display?: boolean;
+            position?: "top" | "left" | "bottom" | "right";
+            labels: {
+                usePointStyle: boolean;
+                boxWidth: number;
+            };
+        };
+        scales: {
+            xAxes: Array<{
+                scaleLabel: {
+                    display: boolean;
+                    labelString: string;
+                };
+            }>;
+            yAxes: Array<{
+                scaleLabel: {
+                    display: boolean;
+                    labelString: string;
+                };
+            }>;
+        };
+    };
+};
+
+interface IModalChartLineOptionsProps {
     isOpen: boolean;
     close: () => void;
-    metadata: ChartData;
-    changeChartData: (newData: ChartData) => void;
+    metadata: ChartLineData;
+    changeChartData: (newData: ChartLineData) => void;
 }
 
-export const ChartOptionsModal = ({
+export const ModalChartLineOptions = ({
     isOpen,
     close,
     metadata,
     changeChartData,
-}: IChartOptionsModalProps): ReactElement => {
-    const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("data");
-    const [decodedData, setDecodedData] = useState<ChartData | null>(null);
+}: IModalChartLineOptionsProps): ReactElement => {
+    const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("general");
+    const [decodedData, setDecodedData] = useState<ChartLineData | null>(null);
 
     const handleConfirmChanges = () => {
         if (decodedData) {

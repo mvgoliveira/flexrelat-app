@@ -1,23 +1,12 @@
-import { Button } from "@/components/features/button";
-import { Menu } from "@/components/features/menu";
 import { Typography } from "@/components/features/typography";
 import { deleteDocument, DocumentDataWithUser, getOwnDocuments } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
-import { getShortElapsedTime } from "@/utils/date";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ReactElement, useEffect, useState } from "react";
-import { CgFileDocument } from "react-icons/cg";
-import {
-    MdArrowDownward,
-    MdDeleteOutline,
-    MdMoreHoriz,
-    MdOutlineArrowUpward,
-    MdOutlineDocumentScanner,
-    MdOutlineEdit,
-} from "react-icons/md";
+import { MdArrowDownward, MdOutlineArrowUpward, MdOutlineDocumentScanner } from "react-icons/md";
 
+import { DocumentItem } from "../documentItem";
 import {
     Root,
     TableContainer,
@@ -26,10 +15,7 @@ import {
     TableBody,
     TableRow,
     TableHeaderCell,
-    TableCell,
     EmptyState,
-    IconContainer,
-    ProfileImage,
 } from "./styles";
 
 interface IDocumentsListProps {
@@ -55,7 +41,7 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
         refetchInterval: 5 * 60 * 1000,
     });
 
-    const handleDeleteDocument = async (documentId: string) => {
+    const handleDelete = async (documentId: string) => {
         const oldDocumentsData = orderedDocuments;
 
         try {
@@ -69,8 +55,8 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
         }
     };
 
-    const handleEditDocument = () => {
-        console.log("handleEditDocument");
+    const handleEditDocument = (documentId: string) => {
+        console.log("handleEditDocument", documentId);
         // Add download logic here
     };
 
@@ -277,142 +263,13 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
 
                         <TableBody>
                             {orderedDocuments.map(document => (
-                                <TableRow
-                                    key={document.id}
-                                    onClick={() => onDocumentClick(document.publicCode)}
-                                >
-                                    <TableCell>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                gap: 10,
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <IconContainer>
-                                                <CgFileDocument size={12} color="gray80" />
-                                            </IconContainer>
-
-                                            <Typography
-                                                tag="p"
-                                                fontSize={{ xs: "fs75" }}
-                                                color="gray80"
-                                                fontWeight="regular"
-                                            >
-                                                {document.name || "Relatório sem título"}
-                                            </Typography>
-                                        </div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                gap: 10,
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <ProfileImage>
-                                                <Image
-                                                    src={`https://ui-avatars.com/api/?background=random&name=${document.user.username}&bold=true`}
-                                                    alt="organization avatar"
-                                                    width={20}
-                                                    height={20}
-                                                />
-                                            </ProfileImage>
-
-                                            <Typography
-                                                tag="p"
-                                                fontSize={{ xs: "fs75" }}
-                                                color="gray80"
-                                                fontWeight="regular"
-                                            >
-                                                {document.user.username}
-                                            </Typography>
-                                        </div>
-                                    </TableCell>
-
-                                    <TableCell centered>
-                                        <Typography
-                                            tag="p"
-                                            fontSize={{ xs: "fs75" }}
-                                            color="gray80"
-                                            fontWeight="regular"
-                                        >
-                                            {getShortElapsedTime(document.createdAt)}
-                                        </Typography>
-                                    </TableCell>
-
-                                    <TableCell centered>
-                                        <Typography
-                                            tag="p"
-                                            fontSize={{ xs: "fs75" }}
-                                            color="gray80"
-                                            fontWeight="regular"
-                                        >
-                                            {getShortElapsedTime(document.updatedAt)}
-                                        </Typography>
-                                    </TableCell>
-
-                                    <TableCell centered maxWidth="100px">
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                            }}
-                                        >
-                                            <Menu>
-                                                <Menu.Trigger>
-                                                    <Button
-                                                        height="25px"
-                                                        width="25px"
-                                                        variant="tertiary"
-                                                        padding="0 0px"
-                                                        onClick={e => e.stopPropagation()}
-                                                    >
-                                                        <MdMoreHoriz
-                                                            size={16}
-                                                            color={Theme.colors.gray80}
-                                                        />
-                                                    </Button>
-                                                </Menu.Trigger>
-
-                                                <Menu.Content align="center">
-                                                    <Menu.Item
-                                                        text="Excluir Documento"
-                                                        onClick={e => {
-                                                            handleDeleteDocument(document.id);
-                                                            e.stopPropagation();
-                                                        }}
-                                                        iconPosition="left"
-                                                        icon={
-                                                            <MdDeleteOutline
-                                                                size={14}
-                                                                color={Theme.colors.black}
-                                                            />
-                                                        }
-                                                    />
-
-                                                    <Menu.Item
-                                                        text="Editar Documento"
-                                                        onClick={e => {
-                                                            handleEditDocument();
-                                                            e.stopPropagation();
-                                                        }}
-                                                        iconPosition="left"
-                                                        icon={
-                                                            <MdOutlineEdit
-                                                                size={14}
-                                                                color={Theme.colors.black}
-                                                            />
-                                                        }
-                                                    />
-                                                </Menu.Content>
-                                            </Menu>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
+                                <DocumentItem
+                                    key={`document-list-item-${document.id}`}
+                                    document={document}
+                                    onClick={onDocumentClick}
+                                    onDelete={handleDelete}
+                                    onEdit={handleEditDocument}
+                                />
                             ))}
                         </TableBody>
                     </Table>

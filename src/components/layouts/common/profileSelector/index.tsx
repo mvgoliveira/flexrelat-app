@@ -5,7 +5,7 @@ import { useUserContext } from "@/context/userContext";
 import { Theme } from "@/themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { MdKeyboardArrowDown, MdLogout } from "react-icons/md";
 
 import { ProfileImage } from "./styles";
@@ -18,14 +18,9 @@ export const ProfileSelector = (): ReactElement => {
         router.push("/logout");
     };
 
-    useEffect(() => {
-        console.log("Authenticated User:", authenticatedUser);
-    }, [authenticatedUser]);
-
     return (
         <Menu>
             <Menu.Trigger>
-                {/* <StyledTrigger> */}
                 <Button
                     height="31px"
                     width="fit-content"
@@ -54,10 +49,9 @@ export const ProfileSelector = (): ReactElement => {
 
                     <MdKeyboardArrowDown size={12} color={Theme.colors.black} />
                 </Button>
-                {/* </StyledTrigger> */}
             </Menu.Trigger>
 
-            <Menu.Content>
+            <Menu.Content alignOffset={0}>
                 <Menu.Item
                     text="Sair"
                     onClick={handleLogout}

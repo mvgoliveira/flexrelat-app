@@ -107,7 +107,7 @@ const Content = React.forwardRef(
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        gap: "5px",
+                        gap: "0px",
                         width: "calc(100% - 90px)",
                     }}
                 >

@@ -8,14 +8,20 @@ export const Root = styled.div`
     height: fit-content;
 `;
 
-export const StyledInput = styled.input`
+interface IStyledInputProps {
+    hasError: boolean;
+}
+
+export const StyledInput = styled.input<IStyledInputProps>`
     width: 100%;
     background: transparent;
+    background: ${({ theme, hasError }) => (hasError ? theme.colors.red10 : "transparent")};
     font-family: ${({ theme }) => theme.fontFamily.inter};
     font-size: ${({ theme }) => theme.fontSize.fs75};
     font-weight: ${({ theme }) => theme.fontWeight.regular};
     color: ${({ theme }) => theme.colors.black};
-    border: 1px solid ${({ theme }) => theme.colors.gray50};
+    border: 1px solid
+        ${({ theme, hasError }) => (hasError ? theme.colors.red50 : theme.colors.gray50)};
     border-radius: 4px;
     padding: 7px 10px;
 

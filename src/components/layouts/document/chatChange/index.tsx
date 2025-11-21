@@ -21,7 +21,7 @@ interface IChatChangeProps {
 }
 
 export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
-    const { updateSelectedChange, selectedChanges, approveChange, rejectChange } =
+    const { updateSelectedChange, selectedChange, approveChange, rejectChange } =
         useDocumentContext();
 
     const handleSelectChange = () => {
@@ -33,7 +33,7 @@ export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
     return (
         <Root
             variant={metadata.type}
-            active={selectedChanges.some(change => change.id === metadata.id)}
+            active={selectedChange?.id === metadata.id}
             onClick={handleSelectChange}
             status={metadata.status}
         >
@@ -78,7 +78,7 @@ export const ChatChange = ({ metadata }: IChatChangeProps): ReactElement => {
 
                         <StyledCheckBox
                             variant={metadata.type}
-                            active={selectedChanges.some(change => change.id === metadata.id)}
+                            active={selectedChange?.id === metadata.id}
                             status={metadata.status}
                         />
                     </div>
