@@ -55,7 +55,7 @@ export const ElementContainer = styled.div`
     width: 100%;
 `;
 
-export const ElementIconContainer = styled.span`
+export const ElementIconContainer = styled.span<{ disabled: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,6 +65,7 @@ export const ElementIconContainer = styled.span`
     border: 1px solid ${({ theme }) => theme.colors.gray30};
     border-radius: 4px;
     position: relative;
+    opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
     transition: border 0.2s;
 
@@ -81,7 +82,8 @@ export const ElementIconContainer = styled.span`
     }
 
     &:hover {
-        border: 1px solid ${({ theme }) => theme.colors.blue50};
+        border: 1px solid
+            ${({ theme, disabled }) => (disabled ? theme.colors.gray30 : theme.colors.blue50)};
 
         svg {
             &:nth-of-type(1) {

@@ -2,13 +2,10 @@ import {
     IconElementbarChart,
     IconElementCitation,
     IconElementCode,
-    IconElementColumns,
     IconElementGeometric,
     IconElementImage,
-    IconElementLine,
     IconElementlineChart,
     IconElementMath,
-    IconElementNotUniformColumns,
     IconElementPieChart,
     IconElementSeparator,
     IconElementTable,
@@ -18,10 +15,11 @@ import {
 import { SearchInput } from "@/components/features/searchInput";
 import { Typography } from "@/components/features/typography";
 import { ScrollArea } from "@/components/ui/scrollArea";
+import { Toast } from "@/components/ui/toast";
 import { useDocumentContext } from "@/context/documentContext";
 import { ComponentTypes } from "@/repositories/componentsAPI";
 import { Theme } from "@/themes";
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useRef, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 
 import {
@@ -41,13 +39,26 @@ interface IElementProps {
     name: string;
     icon: ReactNode;
     coloredIcon: ReactNode;
+    disabled?: boolean;
 }
 
-const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElement => {
+const Element = ({
+    value,
+    name,
+    icon,
+    coloredIcon,
+    disabled = false,
+}: IElementProps): ReactElement => {
     const { editor } = useDocumentContext();
+    const toastErrorRef = useRef<{ publish: () => void } | null>(null);
 
     const handleElementClick = (variable: ComponentTypes) => {
         if (!editor) return;
+
+        if (disabled) {
+            if (toastErrorRef.current) toastErrorRef.current.publish();
+            return;
+        }
 
         const { state } = editor;
         const { selection } = state;
@@ -258,13 +269,24 @@ const Element = ({ value, name, icon, coloredIcon }: IElementProps): ReactElemen
 
     return (
         <ElementContainer>
+            <Toast>
+                <Toast.Content ref={toastErrorRef} variant="error">
+                    <Toast.Title>Componente Indisponível</Toast.Title>
+                    <Toast.Description>
+                        Este componente ainda não está disponível para uso.
+                    </Toast.Description>
+                </Toast.Content>
+            </Toast>
+
             <ElementIconContainer
+                disabled={disabled}
                 onClick={() => handleElementClick(value)}
-                draggable
+                draggable={!disabled}
                 onDragStart={e => e.dataTransfer.setData("variable", value)}
             >
                 {icon}
-                {coloredIcon}
+                {disabled && icon}
+                {!disabled && coloredIcon}
             </ElementIconContainer>
 
             <Typography
@@ -408,32 +430,36 @@ const elementsGroups: IElementsGroupProps[] = [
                 name: "Setores",
                 icon: <IconElementPieChart size={35} />,
                 coloredIcon: <IconElementPieChart size={35} color="blue50" />,
+                disabled: true,
             },
         ],
     },
-    {
-        name: "Layout",
-        elements: [
-            {
-                value: "line",
-                name: "Linha Simples",
-                icon: <IconElementLine size={35} />,
-                coloredIcon: <IconElementLine size={35} color="blue50" />,
-            },
-            {
-                value: "columns",
-                name: "Colunas",
-                icon: <IconElementColumns size={35} />,
-                coloredIcon: <IconElementColumns size={35} color="blue50" />,
-            },
-            {
-                value: "non-uniform-columns",
-                name: "Colunas Não Uniformes",
-                icon: <IconElementNotUniformColumns size={35} />,
-                coloredIcon: <IconElementNotUniformColumns size={35} color="blue50" />,
-            },
-        ],
-    },
+    // {
+    //     name: "Layout",
+    //     elements: [
+    //         {
+    //             value: "line",
+    //             name: "Linha Simples",
+    //             icon: <IconElementLine size={35} />,
+    //             coloredIcon: <IconElementLine size={35} color="blue50" />,
+    //             disabled: true,
+    //         },
+    //         {
+    //             value: "columns",
+    //             name: "Colunas",
+    //             icon: <IconElementColumns size={35} />,
+    //             coloredIcon: <IconElementColumns size={35} color="blue50" />,
+    //             disabled: true,
+    //         },
+    //         {
+    //             value: "non-uniform-columns",
+    //             name: "Colunas Não Uniformes",
+    //             icon: <IconElementNotUniformColumns size={35} />,
+    //             coloredIcon: <IconElementNotUniformColumns size={35} color="blue50" />,
+    //             disabled: true,
+    //         },
+    //     ],
+    // },
 ];
 
 export const DocComponents = (): ReactElement => {
