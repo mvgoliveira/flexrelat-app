@@ -1,3 +1,4 @@
+import { Input } from "@/components/features/input";
 import { Typography } from "@/components/features/typography";
 import { Switch } from "@/components/ui/switch";
 import { Theme } from "@/themes";
@@ -19,11 +20,17 @@ import { Separator, InlineContainer, StyledButton } from "./styles";
 interface IStylesConfigurationProps {
     metadata: ChartLineData;
     changeChartData: (newData: ChartLineData) => void;
+    chartWidth: number;
+    chartHeight: number;
+    handleChangeSize: (dimension: "width" | "height", value: number) => void;
 }
 
 export const StylesConfiguration = ({
     metadata,
     changeChartData,
+    chartWidth,
+    chartHeight,
+    handleChangeSize,
 }: IStylesConfigurationProps): ReactElement => {
     const [fillState, setFillState] = useState<boolean>(false);
     const [showLinesState, setShowLinesState] = useState<boolean>(true);
@@ -236,6 +243,28 @@ export const StylesConfiguration = ({
                     </StyledButton>
                 </div>
             </InlineContainer>
+
+            <Separator />
+
+            <Input
+                label="Largura do Gráfico (px)"
+                placeholder="Insira a largura do gráfico"
+                value={String(chartWidth)}
+                onChange={e => {
+                    handleChangeSize("width", Number(e.target.value));
+                }}
+                type="number"
+            />
+
+            <Input
+                label="Altura do Gráfico (px)"
+                placeholder="Insira a altura do gráfico"
+                value={String(chartHeight)}
+                onChange={e => {
+                    handleChangeSize("height", Number(e.target.value));
+                }}
+                type="number"
+            />
         </>
     );
 };

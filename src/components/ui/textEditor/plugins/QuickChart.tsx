@@ -14,26 +14,35 @@ const ChartContainer = styled(NodeViewWrapper)`
     user-select: none;
     pointer-events: auto;
     justify-content: center;
+    align-items: center;
     margin-bottom: 9pt;
+`;
+
+const ChartContent = styled.div<{
+    height: number;
+    width: number;
+}>`
+    width: ${({ width }) => width}px;
+    height: ${({ height }) => height}px;
+    cursor: pointer;
+    position: relative;
 
     &:hover {
         background: ${props => props.theme.colors.purple10};
     }
 `;
 
-const ChartContent = styled.div`
-    height: 300px;
-    width: 500px;
-    cursor: pointer;
-    position: relative;
-`;
-
 const QuickChartComponent = ({ node, updateAttributes }: any) => {
     const id = node.attrs.id;
+    const chartDataAttr = node.attrs.chartData;
+    const width = node.attrs.width;
+    const height = node.attrs.height;
 
     const [opened, { open, close }] = useDisclosure(false);
     const [decodedData, setDecodedData] = useState<any | null>(null);
     const [chartData, setChartData] = useState<string>("");
+    const [chartWidth, setChartWidth] = useState<number>(0);
+    const [chartHeight, setChartHeight] = useState<number>(0);
 
     const handleOpenChartOptions = () => {
         const decoded = decodeURIComponent(chartData);
@@ -48,15 +57,27 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
         updateAttributes({ chartData: encoded });
     };
 
-    useEffect(() => {
-        if (node.attrs.chartData) {
-            setChartData(node.attrs.chartData);
+    const handleChangeSize = (dimension: "width" | "height", value: number) => {
+        if (dimension === "width") {
+            setChartWidth(value);
+            updateAttributes({ width: value });
+        } else {
+            setChartHeight(value);
+            updateAttributes({ height: value });
         }
+    };
+
+    useEffect(() => {
+        if (chartDataAttr) setChartData(chartDataAttr);
+        if (width) setChartWidth(width);
+        if (height) setChartHeight(height);
 
         return () => {
             setChartData("");
+            setChartWidth(0);
+            setChartHeight(0);
         };
-    }, [node.attrs.chartData]);
+    }, [chartDataAttr, width, height]);
 
     return (
         <>
@@ -66,6 +87,9 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
                     close={close}
                     metadata={decodedData}
                     changeChartData={handleChangeChartData}
+                    chartWidth={chartWidth}
+                    chartHeight={chartHeight}
+                    handleChangeSize={handleChangeSize}
                 />
             )}
 
@@ -75,20 +99,22 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
                     close={close}
                     metadata={decodedData}
                     changeChartData={handleChangeChartData}
+                    chartWidth={chartWidth}
+                    chartHeight={chartHeight}
+                    handleChangeSize={handleChangeSize}
                 />
             )}
 
-            <ChartContainer
-                id={id}
-                contentEditable={false}
-                suppressContentEditableWarning={true}
-                onClick={handleOpenChartOptions}
-            >
-                <ChartContent>
+            <ChartContainer id={id} contentEditable={false} suppressContentEditableWarning={true}>
+                <ChartContent
+                    width={chartWidth}
+                    height={chartHeight}
+                    onClick={handleOpenChartOptions}
+                >
                     <Image
-                        src={`https://quickchart.io/chart?c=${chartData}`}
-                        height={300}
-                        width={500}
+                        src={`https://quickchart.io/chart?c=${chartData}&w=${chartWidth * 1.3}&h=${chartHeight * 1.3}`}
+                        height={chartHeight}
+                        width={chartWidth}
                         alt="chart"
                     />
                 </ChartContent>
@@ -106,6 +132,12 @@ export const QuickChart = Node.create({
         return {
             chartData: {
                 default: null,
+            },
+            width: {
+                default: 500,
+            },
+            height: {
+                default: 300,
             },
             id: {
                 default: null,
@@ -126,8 +158,12 @@ export const QuickChart = Node.create({
                 tag: `quick-chart`,
                 getAttrs: element => {
                     const chartData = element.getAttribute("chart-data");
+                    const width = element.getAttribute("width");
+                    const height = element.getAttribute("height");
 
                     return {
+                        width: width || 500,
+                        height: height || 300,
                         chartData: chartData || null,
                         id: element.getAttribute("data-id") || null,
                     };

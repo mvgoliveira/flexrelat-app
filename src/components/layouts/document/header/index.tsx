@@ -119,13 +119,15 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
         // Replace quick-chart with img
         filteredHtml = filteredHtml.replaceAll(
-            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
-            (match, chartData) => {
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData, width, height) => {
                 try {
                     const url = `https://quickchart.io/chart?c=${chartData}`;
+                    const widthPt = parseInt(width) * 0.75; // Convert px to pt
+                    const heightPt = parseInt(height) * 0.75;
                     return `
                         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
-                            <img src="${url}" style="width: 375pt;" />
+                            <img src="${url}" style="width: ${widthPt}pt; height: ${heightPt}pt;" />
                         </div>
                     `;
                 } catch (e) {
@@ -152,13 +154,13 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
         // Replace quick-chart with img
         const filteredHtml = htmlContent.replaceAll(
-            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*><\/quick-chart>/g,
-            (match, chartData) => {
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData, width, height) => {
                 try {
                     const url = `https://quickchart.io/chart?c=${chartData}`;
                     return `
                         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
-                            <img src="${url}" style="width: 500px; height: 300px;" />
+                            <img src="${url}" style="width: ${width}px; height: ${height}px;" />
                         </div>
                     `;
                 } catch (e) {

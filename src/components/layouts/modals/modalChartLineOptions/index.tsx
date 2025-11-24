@@ -80,6 +80,9 @@ interface IModalChartLineOptionsProps {
     close: () => void;
     metadata: ChartLineData;
     changeChartData: (newData: ChartLineData) => void;
+    handleChangeSize: (dimension: "width" | "height", value: number) => void;
+    chartWidth: number;
+    chartHeight: number;
 }
 
 export const ModalChartLineOptions = ({
@@ -87,9 +90,14 @@ export const ModalChartLineOptions = ({
     close,
     metadata,
     changeChartData,
+    chartWidth,
+    chartHeight,
+    handleChangeSize,
 }: IModalChartLineOptionsProps): ReactElement => {
     const [activeTab, setActiveTab] = useState<"general" | "data" | "style">("general");
     const [decodedData, setDecodedData] = useState<ChartLineData | null>(null);
+    const [modalWidth, setModalWidth] = useState<number>(400);
+    const [modalHeight, setModalHeight] = useState<number>(240);
 
     const handleConfirmChanges = () => {
         if (decodedData) {
@@ -103,6 +111,21 @@ export const ModalChartLineOptions = ({
             setDecodedData(metadata);
         }
     }, [metadata]);
+
+    useEffect(() => {
+        const maxWidth = 400;
+        const maxHeight = 300;
+
+        const widthRatio = chartWidth / maxWidth;
+        const heightRatio = chartHeight / maxHeight;
+        const maxRatio = Math.max(widthRatio, heightRatio, 1);
+
+        const calculatedWidth = Math.round(chartWidth / maxRatio);
+        const calculatedHeight = Math.round(chartHeight / maxRatio);
+
+        setModalWidth(calculatedWidth);
+        setModalHeight(calculatedHeight);
+    }, [chartWidth, chartHeight]);
 
     return (
         <Modal isOpen={isOpen} onClose={close} title="Editar Gráfico">
@@ -170,7 +193,10 @@ export const ModalChartLineOptions = ({
                         {decodedData && activeTab === "style" && (
                             <StylesConfiguration
                                 metadata={decodedData}
+                                chartWidth={chartWidth}
+                                chartHeight={chartHeight}
                                 changeChartData={setDecodedData}
+                                handleChangeSize={handleChangeSize}
                             />
                         )}
                     </ConfigurationContent>
@@ -179,9 +205,9 @@ export const ModalChartLineOptions = ({
                 <ChartContainer>
                     <ChartContent>
                         <Image
-                            src={`https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(decodedData))}`}
-                            height={240}
-                            width={400}
+                            src={`https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(decodedData))}&w=${modalWidth * 1.3}&h=${modalHeight * 1.3}`}
+                            width={modalWidth}
+                            height={modalHeight}
                             alt="chart"
                         />
                     </ChartContent>

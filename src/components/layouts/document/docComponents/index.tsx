@@ -2,10 +2,13 @@ import {
     IconElementbarChart,
     IconElementCitation,
     IconElementCode,
+    IconElementColumns,
     IconElementGeometric,
     IconElementImage,
+    IconElementLine,
     IconElementlineChart,
     IconElementMath,
+    IconElementNotUniformColumns,
     IconElementPieChart,
     IconElementSeparator,
     IconElementTable,
@@ -434,32 +437,31 @@ const elementsGroups: IElementsGroupProps[] = [
             },
         ],
     },
-    // {
-    //     name: "Layout",
-    //     elements: [
-    //         {
-    //             value: "line",
-    //             name: "Linha Simples",
-    //             icon: <IconElementLine size={35} />,
-    //             coloredIcon: <IconElementLine size={35} color="blue50" />,
-    //             disabled: true,
-    //         },
-    //         {
-    //             value: "columns",
-    //             name: "Colunas",
-    //             icon: <IconElementColumns size={35} />,
-    //             coloredIcon: <IconElementColumns size={35} color="blue50" />,
-    //             disabled: true,
-    //         },
-    //         {
-    //             value: "non-uniform-columns",
-    //             name: "Colunas Não Uniformes",
-    //             icon: <IconElementNotUniformColumns size={35} />,
-    //             coloredIcon: <IconElementNotUniformColumns size={35} color="blue50" />,
-    //             disabled: true,
-    //         },
-    //     ],
-    // },
+    {
+        name: "Layout",
+        elements: [
+            {
+                value: "line",
+                name: "Linha Simples",
+                icon: <IconElementLine size={35} />,
+                coloredIcon: <IconElementLine size={35} color="blue50" />,
+            },
+            {
+                value: "columns",
+                name: "Colunas",
+                icon: <IconElementColumns size={35} />,
+                coloredIcon: <IconElementColumns size={35} color="blue50" />,
+                disabled: true,
+            },
+            {
+                value: "non-uniform-columns",
+                name: "Colunas Não Uniformes",
+                icon: <IconElementNotUniformColumns size={35} />,
+                coloredIcon: <IconElementNotUniformColumns size={35} color="blue50" />,
+                disabled: true,
+            },
+        ],
+    },
 ];
 
 export const DocComponents = (): ReactElement => {

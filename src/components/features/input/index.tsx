@@ -1,5 +1,5 @@
 import { Typography } from "@/components/features/typography";
-import { ChangeEventHandler, ReactElement } from "react";
+import { ChangeEventHandler, HTMLInputTypeAttribute, ReactElement } from "react";
 
 import { Root, StyledInput } from "./styles";
 
@@ -10,6 +10,7 @@ interface IInputProps {
     label?: string;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     hasError?: boolean;
+    type?: HTMLInputTypeAttribute;
 }
 
 export const Input = ({
@@ -19,6 +20,7 @@ export const Input = ({
     label,
     onKeyDown,
     hasError = false,
+    type = "text",
 }: IInputProps): ReactElement => {
     return (
         <Root onKeyDown={onKeyDown}>
@@ -36,6 +38,7 @@ export const Input = ({
 
             <div style={{ width: "100%", height: 30 }}>
                 <StyledInput
+                    type={type}
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
