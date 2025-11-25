@@ -205,6 +205,7 @@ export const Root = styled.div<IRootProps>`
 
             > * {
                 margin-bottom: 0;
+                white-space: pre-wrap;
             }
 
             &:first-of-type {

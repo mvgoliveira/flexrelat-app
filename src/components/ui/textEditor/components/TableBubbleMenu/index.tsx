@@ -30,10 +30,12 @@ export const TableBubbleMenu = ({
 
     const handleAddRowBottom = () => {
         editor.chain().focus().addRowAfter().run();
+        editor.commands.createParagraphNear();
     };
 
     const handleAddColumnRight = () => {
         editor.chain().focus().addColumnAfter().run();
+        editor.commands.createParagraphNear();
     };
 
     return (

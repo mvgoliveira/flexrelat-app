@@ -12,6 +12,7 @@ import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
+import { LiaFileDownloadSolid, LiaSave } from "react-icons/lia";
 import {
     MdArrowBack,
     MdHistory,
@@ -21,11 +22,22 @@ import {
     MdOutlineCloudOff,
     MdOutlineCloudUpload,
     MdOutlineFileDownload,
+    MdSaveAlt,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
 import { VscDebugConsole } from "react-icons/vsc";
 
-import { ButtonsContainer, RightContainer, Root, TitleContainer, TitleContent } from "./styles";
+import {
+    AiLoadingIconContainer,
+    ButtonsContainer,
+    IconChangeAnimation,
+    IconChangeContainer,
+    LoadingContainer,
+    RightContainer,
+    Root,
+    TitleContainer,
+    TitleContent,
+} from "./styles";
 
 interface IHeaderProps {
     metadata: {
@@ -42,6 +54,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
     const titleRef = useRef<HTMLHeadingElement>(null);
     const [title, setTitle] = useState<string>(metadata.title || "Relatório sem título");
+    const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
 
     const { getHtmlContent } = useDocumentContext();
 
@@ -148,6 +161,8 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     };
 
     const handleDownloadPDFCanvas = async () => {
+        setIsDownloadLoading(true);
+
         const html2pdf = (await import("html2pdf.js")).default;
 
         const htmlContent = getHtmlContent();
@@ -196,10 +211,10 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     font-weight: bold;
                 }
 
-                p:empty {
-                    margin-bottom: 12px;
-                    min-height: 24px;
-                    width: 100%;
+                p:empty::before {
+                    content: " ";
+                    display: inline-block;
+                    height: 1.2em;
                 }
 
                 table {
@@ -208,37 +223,47 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     table-layout: fixed;
                     width: 100%;
                     margin-bottom: 12px;
-                    page-break-inside: auto;
                 }
 
                 table p {
-                    margin-bottom: 0;
+                    white-space: pre-wrap;
                 }
 
-                tr {
-                    page-break-inside: avoid;
-                    page-break-after: auto;
+                table p:empty {
+                    white-space: normal;
                 }
 
-                table tr:last-of-type { margin-bottom: 12px; }
+                table tr:last-of-type {
+                    margin-bottom: 12px;
+                }
 
-                td, th {
-                    border-right: 1px solid black;
-                    border-bottom: 1px solid black;
+                table tr:first-of-type td,
+                table tr:first-of-type th {
+                    border-top: 1px solid #000000;
+                }
+
+                table td,
+                table th {
+                    border-right: 1px solid #000000;
+                    border-bottom: 1px solid #000000;
                     box-sizing: border-box;
                     padding: 6px;
                     position: relative;
                 }
 
+                table td > *,
+                table th > * {
+                    margin-bottom: 0 !important;
+                }
+
                 table td:first-of-type,
                 table th:first-of-type {
-                    border-left: 1px solid black;
+                    border-left: 1px solid #000000;
                 }
 
                 table th {
                     font-weight: bold;
-                    text-align: start;
-                    border-top: 1px solid black;
+                    text-align: center;
                 }
 
                 table th p {
@@ -320,7 +345,8 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             pagebreak: { mode: ["css"], avoid: ["img", "h1", "h2", "h3", "h4", "h5", "h6"] },
         };
 
-        html2pdf().set(opt).from(finalHtml).save();
+        await html2pdf().set(opt).from(finalHtml).save();
+        setIsDownloadLoading(false);
     };
 
     const handleDownloadDOCX = async () => {};
@@ -347,6 +373,48 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
     return (
         <Root>
+            {isDownloadLoading && (
+                <LoadingContainer>
+                    <IconChangeContainer>
+                        <IconChangeAnimation>
+                            <AiLoadingIconContainer>
+                                <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
+                            </AiLoadingIconContainer>
+
+                            <AiLoadingIconContainer>
+                                <LiaSave size={20} color={Theme.colors.gray40} />
+                            </AiLoadingIconContainer>
+
+                            <AiLoadingIconContainer>
+                                <MdSaveAlt size={20} color={Theme.colors.gray40} />
+                            </AiLoadingIconContainer>
+
+                            <AiLoadingIconContainer>
+                                <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
+                            </AiLoadingIconContainer>
+
+                            <AiLoadingIconContainer>
+                                <LiaSave size={20} color={Theme.colors.gray40} />
+                            </AiLoadingIconContainer>
+
+                            <AiLoadingIconContainer>
+                                <MdSaveAlt size={20} color={Theme.colors.gray40} />
+                            </AiLoadingIconContainer>
+                        </IconChangeAnimation>
+                    </IconChangeContainer>
+
+                    <Typography
+                        tag="p"
+                        fontSize={{ xs: "fs50" }}
+                        color="gray50"
+                        fontWeight="medium"
+                        textAlign="left"
+                    >
+                        Preparando Arquivo
+                    </Typography>
+                </LoadingContainer>
+            )}
+
             <TitleContainer>
                 <Button
                     width="25px"
