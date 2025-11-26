@@ -123,42 +123,78 @@ export const BubbleMenu = ({
                 return;
             }
 
-            const posInfo = view.posAtCoords({ left: e.clientX, top: e.clientY });
-            if (!posInfo) return;
+            // Verificar se o clique ocorreu em um elemento específico no DOM
+            let target = e.target as HTMLElement | null;
+            let foundNode = null;
+            let foundPos = null;
 
-            const { pos } = posInfo;
-            if (!pos) return;
+            // Percorrer os elementos pais para encontrar um nó com data-id dos tipos permitidos
+            while (target && target !== view.dom) {
+                const dataId = target.getAttribute("data-id");
 
-            const $pos = view.state.doc.resolve(pos);
-            if (!$pos) return;
+                if (dataId) {
+                    // Encontrou um elemento com data-id, agora buscar o nó correspondente
+                    view.state.doc.descendants((node, pos) => {
+                        if (
+                            (node.attrs?.id === dataId || node.attrs?.["data-id"] === dataId) &&
+                            types.includes(node.type.name)
+                        ) {
+                            foundNode = node;
+                            foundPos = pos;
+                            return false; // Para a busca
+                        }
+                    });
 
-            const before = $pos.before(1);
-            const node = view.state.doc.nodeAt(before);
+                    if (foundNode) break;
+                }
 
-            if (!node) {
+                target = target.parentElement;
+            }
+
+            // Se não encontrou pelo DOM, usar o método tradicional
+            if (!foundNode || foundPos === null) {
+                const posInfo = view.posAtCoords({ left: e.clientX, top: e.clientY });
+                if (!posInfo) return;
+
+                const { pos } = posInfo;
+                if (!pos) return;
+
+                const $pos = view.state.doc.resolve(pos);
+                if (!$pos) return;
+
+                foundPos = $pos.before(1);
+                foundNode = view.state.doc.nodeAt(foundPos);
+            }
+
+            if (!foundNode) {
                 setIsOpen(false);
                 onChangePrevSelection(null);
                 return;
             }
 
-            if (blockClasses.includes(node.attrs["class"])) {
+            if (blockClasses.includes(foundNode.attrs["class"])) {
                 setIsOpen(false);
                 onChangeSelectedContent(null);
                 onChangePrevSelection(null);
                 return;
             }
 
-            if (!types.includes(node.type.name)) {
+            if (!types.includes(foundNode.type.name)) {
                 setIsOpen(false);
                 onChangePrevSelection(null);
                 onChangeSelectedContent(null);
                 return;
             }
 
-            const sel = NodeSelection.create(view.state.doc, before);
+            const sel = NodeSelection.create(view.state.doc, foundPos);
             if (!sel) return;
 
-            if (sel.content().content.size > 2) {
+            // Para nós atômicos (como quickChart), verificar apenas se o nó existe
+            // Para outros nós, verificar se tem conteúdo suficiente
+            const isAtomicNode = foundNode.isAtom;
+            const hasEnoughContent = isAtomicNode || sel.content().content.size > 2;
+
+            if (hasEnoughContent) {
                 onChangePrevSelection(sel);
 
                 if (
@@ -182,7 +218,7 @@ export const BubbleMenu = ({
                 setIsOpen(true);
             } else {
                 view.dispatch(
-                    view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
+                    view.state.tr.setSelection(TextSelection.create(view.state.doc, foundPos + 1))
                 );
                 setIsOpen(false);
                 onChangePrevSelection(null);

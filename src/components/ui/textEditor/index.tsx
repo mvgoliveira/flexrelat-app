@@ -157,7 +157,6 @@ const TextEditor = ({
         CodeBlock.configure({
             enableTabIndentation: true,
         }),
-        GlobalClass,
         MathExtension.configure({
             blockOptions: {
                 onClick: (node, pos) => {
@@ -235,6 +234,7 @@ const TextEditor = ({
         BackgroundColor,
         QuickChart,
         Placeholder,
+        GlobalClass,
     ];
 
     const currentEditor = useEditor({

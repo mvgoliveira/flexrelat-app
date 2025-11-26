@@ -76,7 +76,9 @@ export const AiChangesControlledBubbleMenu = ({
                         const transaction = view.state.tr.setSelection(
                             new TextSelection($start, $end)
                         );
-                        view.dispatch(transaction);
+                        queueMicrotask(() => {
+                            view.dispatch(transaction);
+                        });
                         return posToDOMRect(editor.view, range.from, range.to);
                     }
 

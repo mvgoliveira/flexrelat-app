@@ -35,6 +35,7 @@ const ChartContent = styled.div<{
 const QuickChartComponent = ({ node, updateAttributes }: any) => {
     const id = node.attrs.id;
     const chartDataAttr = node.attrs.chartData;
+    const className = node.attrs.class;
     const width = node.attrs.width;
     const height = node.attrs.height;
 
@@ -44,7 +45,10 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
     const [chartWidth, setChartWidth] = useState<number>(0);
     const [chartHeight, setChartHeight] = useState<number>(0);
 
-    const handleOpenChartOptions = () => {
+    const handleOpenChartOptions = (e: React.MouseEvent) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+            return;
+        }
         const decoded = decodeURIComponent(chartData);
         const config = JSON.parse(decoded);
         setDecodedData(config);
@@ -107,6 +111,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
 
             <ChartContainer
                 data-id={id}
+                className={className}
                 contentEditable={false}
                 suppressContentEditableWarning={true}
             >
@@ -134,6 +139,16 @@ export const QuickChart = Node.create({
 
     addAttributes() {
         return {
+            class: {
+                default: null,
+                parseHTML: (element: any) => element.getAttribute("class"),
+                renderHTML: (attributes: any) => {
+                    if (!attributes.class) return {};
+                    return {
+                        class: attributes.class,
+                    };
+                },
+            },
             chartData: {
                 default: null,
             },
@@ -170,6 +185,7 @@ export const QuickChart = Node.create({
                         height: height || 300,
                         chartData: chartData || null,
                         id: element.getAttribute("data-id") || null,
+                        class: element.getAttribute("class") || null,
                     };
                 },
             },

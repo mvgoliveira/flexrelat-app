@@ -105,92 +105,98 @@ export const AiChangesBubbleMenu = ({
                 }
 
                 if (aiChange.type === "update") {
-                    editor
-                        .chain()
-                        .setNodeSelection(pos)
-                        .updateAttributes(elementTypeName, {
-                            class: "change-remove",
-                        })
-                        .setMeta("addToHistory", false)
-                        .run();
-
-                    editor
-                        .chain()
-                        .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
-                        .run();
-
-                    const newNode = editor.state.doc.nodeAt(pos + node.nodeSize);
-
-                    if (newNode) {
-                        const newNodeType = newNode.type.name;
+                    queueMicrotask(() => {
                         editor
                             .chain()
-                            .setNodeSelection(pos + node.nodeSize)
-                            .updateAttributes(newNodeType, {
-                                class: "change-add",
+                            .setNodeSelection(pos)
+                            .updateAttributes(elementTypeName, {
+                                class: "change-remove",
                             })
                             .setMeta("addToHistory", false)
                             .run();
-                    }
 
-                    setSelectedChanges([
-                        {
-                            from: pos,
-                            to: pos + node.nodeSize + 1,
-                            type: "remove",
-                        },
-                        {
-                            from: pos + node.nodeSize + 1,
-                            to: pos + node.nodeSize + 1,
-                            type: "add",
-                        },
-                    ]);
+                        editor
+                            .chain()
+                            .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
+                            .run();
+
+                        const newNode = editor.state.doc.nodeAt(pos + node.nodeSize);
+
+                        if (newNode) {
+                            const newNodeType = newNode.type.name;
+                            editor
+                                .chain()
+                                .setNodeSelection(pos + node.nodeSize)
+                                .updateAttributes(newNodeType, {
+                                    class: "change-add",
+                                })
+                                .setMeta("addToHistory", false)
+                                .run();
+                        }
+
+                        setSelectedChanges([
+                            {
+                                from: pos,
+                                to: pos + node.nodeSize + 1,
+                                type: "remove",
+                            },
+                            {
+                                from: pos + node.nodeSize + 1,
+                                to: pos + node.nodeSize + 1,
+                                type: "add",
+                            },
+                        ]);
+                    });
                 }
 
                 if (aiChange.type === "delete") {
-                    editor
-                        .chain()
-                        .setNodeSelection(pos)
-                        .updateAttributes(elementTypeName, {
-                            class: "change-remove",
-                        })
-                        .setMeta("addToHistory", false)
-                        .run();
+                    queueMicrotask(() => {
+                        editor
+                            .chain()
+                            .setNodeSelection(pos)
+                            .updateAttributes(elementTypeName, {
+                                class: "change-remove",
+                            })
+                            .setMeta("addToHistory", false)
+                            .run();
 
-                    setSelectedChanges([
-                        {
-                            from: pos,
-                            to: pos + node.nodeSize,
-                            type: "remove",
-                        },
-                    ]);
+                        setSelectedChanges([
+                            {
+                                from: pos,
+                                to: pos + node.nodeSize,
+                                type: "remove",
+                            },
+                        ]);
+                    });
                 }
 
                 if (aiChange.type === "create") {
                     const insertPos = pos + node.nodeSize;
-                    editor.chain().insertContentAt(insertPos, aiChange.new_content.html).run();
+                    queueMicrotask(() => {
+                        editor.chain().insertContentAt(insertPos, aiChange.new_content.html).run();
 
-                    const newNode = editor.state.doc.nodeAt(insertPos);
+                        const newNode = editor.state.doc.nodeAt(insertPos);
 
-                    if (newNode) {
-                        const newNodeType = newNode.type.name;
-                        editor
-                            .chain()
-                            .setNodeSelection(insertPos)
-                            .updateAttributes(newNodeType, {
-                                class: "change-add",
-                            })
-                            .setMeta("addToHistory", false)
-                            .run();
-                    }
+                        if (newNode) {
+                            const newNodeType = newNode.type.name;
+                            editor
+                                .chain()
+                                .setNodeSelection(insertPos)
+                                .updateAttributes(newNodeType, {
+                                    class: "change-add",
+                                })
+                                .setMeta("addToHistory", false)
+                                .run();
+                        }
 
-                    setSelectedChanges([
-                        {
-                            from: insertPos + 1,
-                            to: insertPos + 1,
-                            type: "add",
-                        },
-                    ]);
+                        setSelectedChanges([
+                            {
+                                from: insertPos + 1,
+                                to: insertPos + 1,
+                                type: "add",
+                            },
+                        ]);
+                    });
                 }
             }
         }
