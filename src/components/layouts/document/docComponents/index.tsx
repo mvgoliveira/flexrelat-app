@@ -134,7 +134,6 @@ const Element = ({
                             showLine: true,
                             lineTension: 0,
                             fill: false,
-                            borderColor: "blue",
                             data: [
                                 {
                                     x: 1,

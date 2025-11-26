@@ -1576,10 +1576,10 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-underline/-/extension-underline-3.0.9.tgz#cb2686b84f083a90bf0548867176753dddaf2265"
   integrity sha512-xLR5NbnxlEJmvfb4Aj8wCbTmh/ycnPsSDeP8+TAsdAYxypSA6BP6G0t4d4NWreqAq+tq6QV6Eh0+YDN0G1VZxw==
 
-"@tiptap/extension-unique-id@^3.0.9":
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-unique-id/-/extension-unique-id-3.0.9.tgz#9970feb5b12ece96218b900519501153cd3b1b6f"
-  integrity sha512-eb4JLRUPI0Hd0kvLwJ2p2bMrg3JrXXfYthxM3p+toBgUiqju2Tunb6HyQsNvgyy8JhgQEYKpZOEvqyTOUTxJ5g==
+"@tiptap/extension-unique-id@^3.11.0":
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-unique-id/-/extension-unique-id-3.11.0.tgz#b257cddf814fe15676210679da754aae91bcf1b7"
+  integrity sha512-pIjQTLzem1UlpdCV8fAdBzXMuXzhYkgRQKG+29v6Ck9kuaYxfXJiZrqIPuzpHdRJxRFDAxrwQoghJwO0yAjneA==
   dependencies:
     uuid "^10.0.0"
 

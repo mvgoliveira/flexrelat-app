@@ -206,6 +206,7 @@ const TextEditor = ({
             types: [
                 "heading",
                 "paragraph",
+                "strong",
                 "table",
                 "bulletList",
                 "orderedList",
@@ -219,6 +220,7 @@ const TextEditor = ({
                 "inlineMath",
                 "placeholder",
                 "layout",
+                "hardBreak",
             ],
             generateID: () => randomUUID(),
         }),
@@ -237,8 +239,8 @@ const TextEditor = ({
 
     const currentEditor = useEditor({
         extensions,
-        shouldRerenderOnTransaction: true,
-        immediatelyRender: false,
+        shouldRerenderOnTransaction: false,
+        immediatelyRender: true,
         autofocus: false,
         content: ``,
         parseOptions: {
@@ -678,6 +680,7 @@ const TextEditor = ({
                         "listItem",
                         "blockquote",
                         "table",
+                        "quickChart",
                     ]}
                 />
             )}

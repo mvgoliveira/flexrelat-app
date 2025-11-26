@@ -105,7 +105,11 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
                 />
             )}
 
-            <ChartContainer id={id} contentEditable={false} suppressContentEditableWarning={true}>
+            <ChartContainer
+                data-id={id}
+                contentEditable={false}
+                suppressContentEditableWarning={true}
+            >
                 <ChartContent
                     width={chartWidth}
                     height={chartHeight}
