@@ -239,8 +239,8 @@ const TextEditor = ({
 
     const currentEditor = useEditor({
         extensions,
-        shouldRerenderOnTransaction: false,
-        immediatelyRender: true,
+        shouldRerenderOnTransaction: true,
+        immediatelyRender: false,
         autofocus: false,
         content: ``,
         parseOptions: {

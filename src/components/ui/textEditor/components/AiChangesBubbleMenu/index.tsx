@@ -167,15 +167,16 @@ export const AiChangesBubbleMenu = ({
                 }
 
                 if (aiChange.type === "create") {
-                    editor.chain().insertContentAt(pos, aiChange.new_content.html).run();
+                    const insertPos = pos + node.nodeSize;
+                    editor.chain().insertContentAt(insertPos, aiChange.new_content.html).run();
 
-                    const newNode = editor.state.doc.nodeAt(pos);
+                    const newNode = editor.state.doc.nodeAt(insertPos);
 
                     if (newNode) {
                         const newNodeType = newNode.type.name;
                         editor
                             .chain()
-                            .setNodeSelection(pos)
+                            .setNodeSelection(insertPos)
                             .updateAttributes(newNodeType, {
                                 class: "change-add",
                             })
@@ -185,8 +186,8 @@ export const AiChangesBubbleMenu = ({
 
                     setSelectedChanges([
                         {
-                            from: pos + 1,
-                            to: pos + 1,
+                            from: insertPos + 1,
+                            to: insertPos + 1,
                             type: "add",
                         },
                     ]);

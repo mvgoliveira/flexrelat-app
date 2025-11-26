@@ -75,6 +75,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
             const response: Message[] = await getMessagesByRelatedId(documentData.id, "documents");
             setMessages(response);
+            console.log(response);
             return response;
         },
     });
@@ -137,7 +138,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                     }
                 }
 
-                // Seleciona a nova change
                 setSelectedChange(change);
             }
         }
@@ -270,15 +270,16 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
                 if (change.type === "create") {
                     const nodeType = node.type.name;
+                    const insertPos = pos + node.nodeSize;
 
                     editor
                         .chain()
-                        .setNodeSelection(pos)
+                        .setNodeSelection(insertPos)
                         .setMeta("addToHistory", false)
                         .updateAttributes(nodeType, {
                             class: "",
                         })
-                        .insertContentAt(pos, change.new_content.html)
+                        .insertContentAt(insertPos, change.new_content.html)
                         .run();
                 }
 
