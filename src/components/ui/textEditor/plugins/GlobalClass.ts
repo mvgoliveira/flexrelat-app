@@ -17,6 +17,7 @@ export const GlobalClass = Extension.create({
                 "bulletList",
                 "orderedList",
                 "image",
+                "quickChart",
             ],
         };
     },
