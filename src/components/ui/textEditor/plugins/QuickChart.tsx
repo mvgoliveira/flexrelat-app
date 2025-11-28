@@ -135,7 +135,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
 export const QuickChart = Node.create({
     name: "quickChart",
     group: "block",
-    atom: true,
+    atom: false,
 
     addAttributes() {
         return {

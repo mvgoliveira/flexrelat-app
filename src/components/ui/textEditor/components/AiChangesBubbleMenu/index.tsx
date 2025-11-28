@@ -6,7 +6,7 @@ import { useDocumentContext } from "@/context/documentContext";
 import { AiChange } from "@/repositories/changesAPI";
 import { Theme } from "@/themes";
 import { Editor } from "@tiptap/core";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { MdClose, MdDone } from "react-icons/md";
 
 import { StyledButton, Root } from "./styles";
@@ -22,9 +22,13 @@ export const AiChangesBubbleMenu = ({
 }: IAiChangesBubbleMenuProps): ReactElement => {
     const { approveChange, rejectChange, setSelectedChangeType } = useDocumentContext();
     const [selectedChanges, setSelectedChanges] = useState<SelectedChange[]>([]);
+    const appliedChangeIdRef = useRef<string | null>(null);
+    const processingRef = useRef<boolean>(false);
 
     const handleApproveChange = (): void => {
         setSelectedChanges([]);
+        appliedChangeIdRef.current = null;
+        processingRef.current = false;
         approveChange(aiChange);
     };
 
@@ -66,12 +70,19 @@ export const AiChangesBubbleMenu = ({
         }
 
         setSelectedChanges([]);
+        appliedChangeIdRef.current = null;
+        processingRef.current = false;
         rejectChange(aiChange);
     };
 
     useEffect(() => {
         if (!aiChange) return;
         if (!editor) return;
+
+        // Evita aplicar a mesma mudança múltiplas vezes
+        if (appliedChangeIdRef.current === aiChange.id) {
+            return;
+        }
 
         const hasChangeRemove = editor.view.dom.querySelector(".change-remove");
         const hasChangeAdd = editor.view.dom.querySelector(".change-add");
@@ -105,51 +116,55 @@ export const AiChangesBubbleMenu = ({
                 }
 
                 if (aiChange.type === "update") {
-                    queueMicrotask(() => {
+                    appliedChangeIdRef.current = aiChange.id;
+
+                    editor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .updateAttributes(elementTypeName, {
+                            class: "change-remove",
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
+
+                    editor
+                        .chain()
+                        .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
+                        .run();
+
+                    const newNode = editor.state.doc.nodeAt(pos + node.nodeSize);
+
+                    if (newNode) {
+                        const newNodeType = newNode.type.name;
                         editor
                             .chain()
-                            .setNodeSelection(pos)
-                            .updateAttributes(elementTypeName, {
-                                class: "change-remove",
+                            .setNodeSelection(pos + node.nodeSize)
+                            .updateAttributes(newNodeType, {
+                                class: "change-add",
                             })
                             .setMeta("addToHistory", false)
                             .run();
+                    }
 
-                        editor
-                            .chain()
-                            .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
-                            .run();
-
-                        const newNode = editor.state.doc.nodeAt(pos + node.nodeSize);
-
-                        if (newNode) {
-                            const newNodeType = newNode.type.name;
-                            editor
-                                .chain()
-                                .setNodeSelection(pos + node.nodeSize)
-                                .updateAttributes(newNodeType, {
-                                    class: "change-add",
-                                })
-                                .setMeta("addToHistory", false)
-                                .run();
-                        }
-
-                        setSelectedChanges([
-                            {
-                                from: pos,
-                                to: pos + node.nodeSize + 1,
-                                type: "remove",
-                            },
-                            {
-                                from: pos + node.nodeSize + 1,
-                                to: pos + node.nodeSize + 1,
-                                type: "add",
-                            },
-                        ]);
-                    });
+                    setSelectedChanges([
+                        {
+                            from: pos,
+                            to: pos + node.nodeSize + 1,
+                            type: "remove",
+                        },
+                        {
+                            from: pos + node.nodeSize + 1,
+                            to: pos + node.nodeSize + 1,
+                            type: "add",
+                        },
+                    ]);
                 }
 
                 if (aiChange.type === "delete") {
+                    if (processingRef.current) return;
+                    processingRef.current = true;
+                    appliedChangeIdRef.current = aiChange.id;
+
                     queueMicrotask(() => {
                         editor
                             .chain()
@@ -167,12 +182,31 @@ export const AiChangesBubbleMenu = ({
                                 type: "remove",
                             },
                         ]);
+
+                        processingRef.current = false;
                     });
                 }
 
                 if (aiChange.type === "create") {
+                    if (processingRef.current) return;
+                    processingRef.current = true;
+                    appliedChangeIdRef.current = aiChange.id;
+
                     const insertPos = pos + node.nodeSize;
+                    const changeId = aiChange.id;
+
                     queueMicrotask(() => {
+                        const existingAddNode = editor.state.doc.nodeAt(insertPos);
+                        if (existingAddNode && existingAddNode.attrs["class"] === "change-add") {
+                            processingRef.current = false;
+                            return;
+                        }
+
+                        if (appliedChangeIdRef.current !== changeId) {
+                            processingRef.current = false;
+                            return;
+                        }
+
                         editor.chain().insertContentAt(insertPos, aiChange.new_content.html).run();
 
                         const newNode = editor.state.doc.nodeAt(insertPos);
@@ -196,6 +230,8 @@ export const AiChangesBubbleMenu = ({
                                 type: "add",
                             },
                         ]);
+
+                        processingRef.current = false;
                     });
                 }
             }

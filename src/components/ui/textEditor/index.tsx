@@ -241,7 +241,7 @@ const TextEditor = ({
         extensions,
         shouldRerenderOnTransaction: true,
         immediatelyRender: false,
-        autofocus: false,
+        autofocus: true,
         content: ``,
         parseOptions: {
             preserveWhitespace: "full",
@@ -553,61 +553,54 @@ const TextEditor = ({
         if (!currentEditor || !selectedChangeType) return;
 
         if (!selectedChange) {
+            const nodesToProcess: Array<{ node: any; pos: number }> = [];
+
             currentEditor.state.doc.descendants((node, pos) => {
                 const nodeClass = node.attrs?.class;
 
                 if (selectedChangeType === "update") {
-                    if (nodeClass === "change-remove") {
-                        currentEditor
-                            .chain()
-                            .setNodeSelection(pos)
-                            .updateAttributes(node.type.name, {
-                                class: "",
-                            })
-                            .setMeta("addToHistory", false)
-                            .run();
-                    }
-
-                    if (nodeClass === "change-add") {
-                        currentEditor
-                            .chain()
-                            .deleteRange({
-                                from: pos,
-                                to: pos + node.nodeSize,
-                            })
-                            .setMeta("addToHistory", false)
-                            .run();
+                    if (nodeClass === "change-remove" || nodeClass === "change-add") {
+                        nodesToProcess.push({ node, pos });
                     }
                 }
 
                 if (selectedChangeType === "create") {
                     if (nodeClass === "change-add") {
-                        currentEditor
-                            .chain()
-                            .setNodeSelection(pos)
-                            .updateAttributes(node.type.name, {
-                                class: "",
-                            })
-                            .deleteRange({
-                                from: pos,
-                                to: pos + node.nodeSize,
-                            })
-                            .setMeta("addToHistory", false)
-                            .run();
+                        nodesToProcess.push({ node, pos });
                     }
                 }
 
                 if (selectedChangeType === "delete") {
                     if (nodeClass === "change-remove") {
-                        currentEditor
-                            .chain()
-                            .setNodeSelection(pos)
-                            .updateAttributes(node.type.name, {
-                                class: "",
-                            })
-                            .setMeta("addToHistory", false)
-                            .run();
+                        nodesToProcess.push({ node, pos });
                     }
+                }
+            });
+
+            // Processar nós em ordem reversa para não invalidar posições
+            nodesToProcess.reverse().forEach(({ node, pos }) => {
+                const nodeClass = node.attrs?.class;
+
+                if (nodeClass === "change-remove") {
+                    currentEditor
+                        .chain()
+                        .setNodeSelection(pos)
+                        .updateAttributes(node.type.name, {
+                            class: "",
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
+                }
+
+                if (nodeClass === "change-add") {
+                    currentEditor
+                        .chain()
+                        .deleteRange({
+                            from: pos,
+                            to: pos + node.nodeSize,
+                        })
+                        .setMeta("addToHistory", false)
+                        .run();
                 }
             });
         }
