@@ -389,6 +389,7 @@ const elementsGroups: IElementsGroupProps[] = [
             {
                 value: "image",
                 name: "Imagem",
+                disabled: true,
                 icon: <IconElementImage size={25} />,
                 coloredIcon: <IconElementImage size={25} color="blue50" />,
             },
