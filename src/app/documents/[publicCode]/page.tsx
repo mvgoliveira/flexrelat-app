@@ -14,7 +14,7 @@ import { ReactElement, useState } from "react";
 import { MdOutlineAutoAwesomeMosaic, MdOutlineDocumentScanner } from "react-icons/md";
 import { RiRobot2Line } from "react-icons/ri";
 
-export type LeftTabsValue = "elements" | "components" | "models";
+export type LeftTabsValue = "components" | "ai";
 export type RightTabsValue = "ai" | "styles" | "properties";
 
 const leftTabs: TabHeaderType<LeftTabsValue>[] = [
@@ -23,6 +23,11 @@ const leftTabs: TabHeaderType<LeftTabsValue>[] = [
         icon: <MdOutlineAutoAwesomeMosaic size={12} />,
         text: "Componentes",
     },
+    // {
+    //     value: "ai",
+    //     icon: <RiRobot2Line size={12} />,
+    //     text: "FlexBot",
+    // },
 ];
 
 const rightTabs: TabHeaderType<RightTabsValue>[] = [
@@ -104,6 +109,7 @@ function Document(): ReactElement {
                 />
 
                 {activeLeftTab === "components" && <DocComponents />}
+                {/* {activeLeftTab === "ai" && <AiChat />} */}
             </Layout.LeftNavBar>
 
             <Layout.Content>

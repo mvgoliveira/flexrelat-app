@@ -550,7 +550,7 @@ const TextEditor = ({
     }, [changes, currentEditor]);
 
     useEffect(() => {
-        if (!currentEditor || !selectedChangeType) return;
+        if (!currentEditor) return;
 
         if (!selectedChange) {
             const nodesToProcess: Array<{ node: any; pos: number }> = [];
@@ -558,22 +558,8 @@ const TextEditor = ({
             currentEditor.state.doc.descendants((node, pos) => {
                 const nodeClass = node.attrs?.class;
 
-                if (selectedChangeType === "update") {
-                    if (nodeClass === "change-remove" || nodeClass === "change-add") {
-                        nodesToProcess.push({ node, pos });
-                    }
-                }
-
-                if (selectedChangeType === "create") {
-                    if (nodeClass === "change-add") {
-                        nodesToProcess.push({ node, pos });
-                    }
-                }
-
-                if (selectedChangeType === "delete") {
-                    if (nodeClass === "change-remove") {
-                        nodesToProcess.push({ node, pos });
-                    }
+                if (nodeClass === "change-remove" || nodeClass === "change-add") {
+                    nodesToProcess.push({ node, pos });
                 }
             });
 

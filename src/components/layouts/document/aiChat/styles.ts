@@ -16,7 +16,8 @@ export const StyledTextArea = styled(Input.TextArea)`
     box-shadow: none !important;
     font-size: ${({ theme }) => theme.fontSize.fs75} !important;
     font-family: ${({ theme }) => theme.fontFamily.inter} !important;
-    padding: 10px !important;
+    padding: 10px 10px 0 10px !important;
+    margin-bottom: 10px !important;
     resize: none !important;
 
     textarea {
@@ -103,6 +104,7 @@ export const MessageInputContainer = styled.div`
 
 export const InputContainer = styled.div`
     overflow: hidden;
+    position: relative;
     display: flex;
     width: 100%;
     height: 100%;
@@ -110,6 +112,7 @@ export const InputContainer = styled.div`
     background-color: ${({ theme }) => theme.colors.gray10};
     border: 1px solid ${({ theme }) => theme.colors.gray40};
     border-radius: 4px;
+    padding-top: 25px;
 `;
 
 export const IconContainer = styled.div`
@@ -119,6 +122,18 @@ export const IconContainer = styled.div`
     width: fit-content;
     height: 100%;
     padding: 10px 10px 8px 10px;
+    right: 0;
+`;
+
+export const FloatIconContainer = styled.div`
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    align-items: flex-end;
+    justify-content: center;
+    width: fit-content;
+    padding: 5px;
     right: 0;
 `;
 

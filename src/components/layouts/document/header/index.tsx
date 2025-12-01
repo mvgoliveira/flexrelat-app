@@ -2,6 +2,7 @@ import { Button } from "@/components/features/button";
 import { DocumentDownload } from "@/components/features/documentDownload";
 import { Menu } from "@/components/features/menu";
 import { Typography } from "@/components/features/typography";
+import { ModalData } from "@/components/layouts/modals/modalData";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useDocumentContext } from "@/context/documentContext";
 import { updateDocumentTitle } from "@/repositories/documentAPI";
@@ -15,9 +16,7 @@ import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
 import { LiaFileDownloadSolid, LiaSave } from "react-icons/lia";
 import {
     MdArrowBack,
-    MdHistory,
     MdMoreHoriz,
-    MdOutlineAutoMode,
     MdOutlineCloudDone,
     MdOutlineCloudOff,
     MdOutlineCloudUpload,
@@ -53,8 +52,10 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     const router = useRouter();
 
     const titleRef = useRef<HTMLHeadingElement>(null);
+
     const [title, setTitle] = useState<string>(metadata.title || "Relatório sem título");
     const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
+    const [isDataModalOpen, setIsDataModalOpen] = useState<boolean>(false);
 
     const { getHtmlContent } = useDocumentContext();
 
@@ -415,6 +416,8 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                 </LoadingContainer>
             )}
 
+            <ModalData isOpen={isDataModalOpen} close={() => setIsDataModalOpen(false)} />
+
             <TitleContainer>
                 <Button
                     width="25px"
@@ -525,21 +528,12 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
             <RightContainer>
                 <ButtonsContainer>
-                    <Button height="30px" variant="secondary" padding="0 10px">
-                        <MdOutlineAutoMode size={12} color={Theme.colors.gray100} />
-
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="gray100"
-                            fontWeight="regular"
-                            textAlign="left"
-                        >
-                            Automações
-                        </Typography>
-                    </Button>
-
-                    <Button height="30px" variant="secondary" padding="0 10px">
+                    <Button
+                        height="30px"
+                        variant="secondary"
+                        padding="0 10px"
+                        onClick={() => setIsDataModalOpen(true)}
+                    >
                         <TbDatabase size={12} color={Theme.colors.gray100} />
 
                         <Typography
@@ -553,7 +547,21 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         </Typography>
                     </Button>
 
-                    <Button height="30px" variant="secondary" padding="0 10px">
+                    {/* <Button height="30px" variant="secondary" padding="0 10px">
+                        <MdOutlineAutoMode size={12} color={Theme.colors.gray100} />
+
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs75" }}
+                            color="gray100"
+                            fontWeight="regular"
+                            textAlign="left"
+                        >
+                            Automações
+                        </Typography>
+                    </Button> */}
+
+                    {/* <Button height="30px" variant="secondary" padding="0 10px">
                         <MdHistory size={13} color={Theme.colors.gray100} />
 
                         <Typography
@@ -565,7 +573,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         >
                             Histórico
                         </Typography>
-                    </Button>
+                    </Button> */}
                 </ButtonsContainer>
 
                 <ButtonsContainer>

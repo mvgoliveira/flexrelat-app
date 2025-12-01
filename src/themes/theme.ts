@@ -126,6 +126,7 @@ export const Theme = {
         inter: "var(--font-inter), sans-serif",
         timesNewRoman: "Times New Roman, serif",
         arial: "Arial, sans-serif",
+        roboto: "Roboto, sans-serif",
     },
     fontWeight: {
         regular: 400,

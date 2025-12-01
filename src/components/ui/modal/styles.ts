@@ -22,6 +22,12 @@ export const ModalHeader = styled(Modal.Header)`
     }
 `;
 
+export const ModalTitle = styled(Modal.Title)`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+`;
+
 export const ModalBody = styled(Modal.Body)`
     display: flex;
     flex-direction: column;

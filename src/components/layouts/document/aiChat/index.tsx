@@ -10,6 +10,7 @@ import { clearMessagesByRelatedId, sendMessage } from "@/repositories/messageAPI
 import { Theme } from "@/themes";
 import { useElementSize } from "@mantine/hooks";
 import { ReactElement, useRef, useState } from "react";
+import { HiOutlinePaperClip } from "react-icons/hi";
 import { MdCheck, MdClose, MdDeleteOutline, MdSend } from "react-icons/md";
 import { RiBarChartBoxAiLine, RiBrainLine, RiChatAiLine } from "react-icons/ri";
 import { TbRobotOff } from "react-icons/tb";
@@ -20,6 +21,7 @@ import {
     ChangesHeader,
     ChangesNumberContainer,
     Fallback,
+    FloatIconContainer,
     IconChangeAnimation,
     IconChangeContainer,
     IconContainer,
@@ -361,10 +363,17 @@ export const AiChat = (): ReactElement => {
                     </ScrollArea>
                 </StyledSplitterPanel>
 
-                <StyledSplitterPanel min={80} max={300} defaultSize={110}>
+                <StyledSplitterPanel min={120} max={300} defaultSize={120}>
                     <MessageInputContainer>
                         <InputContainer>
+                            <FloatIconContainer>
+                                <SendButton disabled={chatMessage.length <= 0} onClick={() => {}}>
+                                    <HiOutlinePaperClip size={12} color={Theme.colors.gray70} />
+                                </SendButton>
+                            </FloatIconContainer>
+
                             <StyledTextArea
+                                placeholder="Peça alterações para o FlexBot..."
                                 value={chatMessage}
                                 onChange={e => setChatMessage(e.target.value)}
                                 maxLength={500}
