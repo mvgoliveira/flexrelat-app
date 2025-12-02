@@ -124,7 +124,7 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
 
     return (
         <Root>
-            <Typography tag="h2" fontSize={{ xs: "fs100" }} color="black" fontWeight="medium">
+            <Typography tag="h2" fontSize={{ xs: "fs75" }} color="black" fontWeight="medium">
                 Arquivos pessoais
             </Typography>
 
