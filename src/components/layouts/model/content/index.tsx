@@ -1,21 +1,22 @@
 import { Typography } from "@/components/features/typography";
 import ZoomButton from "@/components/features/zoomButton";
+import TextEditor from "@/components/layouts/model/textEditor";
 import { ScrollArea } from "@/components/ui/scrollArea";
-import TextEditor from "@/components/layouts/document/textEditor";
-import { useDocumentContext } from "@/context/documentContext";
+import { useModelContext } from "@/context/modelContext";
 import { ReactElement, useEffect, useRef, useState } from "react";
 
-import { DocumentToolbar } from "../documentToolbar";
-import { DocumentHeader, DocumentRoot, FloatContainer, PageContainer, Root } from "./styles";
+import { ModelToolbar } from "../modelToolbar";
+import { ModelHeader, ModelRoot, FloatContainer, PageContainer, Root } from "./styles";
 
 export type FontFamilies = "times-new-roman" | "arial";
 
-interface IDocumentContentProps {
+interface IModelContentProps {
     setSaveStatus: (status: "pending" | "success" | "error") => void;
+    isReadOnly: boolean;
 }
 
-export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): ReactElement => {
-    const { editor } = useDocumentContext();
+export const ModelContent = ({ setSaveStatus, isReadOnly }: IModelContentProps): ReactElement => {
+    const { editor } = useModelContext();
 
     const [zoom, setZoom] = useState<number>(83);
     const [pageWidth, setPageWidth] = useState<number>(794);
@@ -29,7 +30,7 @@ export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): React
     const [totalPages, setTotalPages] = useState<number>(1);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-    const documentRootRef = useRef<HTMLDivElement>(null);
+    const modelRootRef = useRef<HTMLDivElement>(null);
 
     const [boldActive, setBoldActive] = useState<boolean>(false);
     const [italicActive, setItalicActive] = useState<boolean>(false);
@@ -195,8 +196,9 @@ export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): React
 
     return (
         <Root>
-            <DocumentHeader className="no-print">
-                <DocumentToolbar
+            <ModelHeader className="no-print">
+                <ModelToolbar
+                    readOnly={isReadOnly}
                     zoom={zoom}
                     isBoldActive={boldActive}
                     onBoldClick={() => editor?.chain().focus().toggleBold().run()}
@@ -304,10 +306,10 @@ export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): React
                         }
                     }}
                 />
-            </DocumentHeader>
+            </ModelHeader>
 
             <ScrollArea ref={scrollAreaRef}>
-                <DocumentRoot className="DocumentRoot" ref={documentRootRef}>
+                <ModelRoot className="ModelRoot" ref={modelRootRef}>
                     <TextEditor
                         updateSaveStatus={setSaveStatus}
                         pageWidth={pageWidth}
@@ -316,9 +318,10 @@ export const DocumentContent = ({ setSaveStatus }: IDocumentContentProps): React
                         marginRight={marginRight}
                         marginBottom={marginBottom}
                         marginTop={marginTop}
+                        readOnly={isReadOnly}
                         zoom={zoom}
                     />
-                </DocumentRoot>
+                </ModelRoot>
 
                 <FloatContainer className="no-print">
                     <ZoomButton

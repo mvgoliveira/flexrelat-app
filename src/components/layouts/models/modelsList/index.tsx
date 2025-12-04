@@ -1,12 +1,12 @@
 import { Typography } from "@/components/features/typography";
-import { deleteDocument, DocumentDataWithUser, getOwnDocuments } from "@/repositories/documentAPI";
+import { deleteModel, ModelDataWithUser, getOwnModels } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ReactElement, useEffect, useState } from "react";
 import { MdArrowDownward, MdOutlineArrowUpward, MdOutlineDocumentScanner } from "react-icons/md";
 
-import { DocumentItem } from "../documentItem";
+import { ModelItem } from "../modelItem";
 import {
     Root,
     TableContainer,
@@ -18,45 +18,43 @@ import {
     EmptyState,
 } from "./styles";
 
-interface IDocumentsListProps {
-    onDocumentClick: (publicCode: string) => void;
+interface IModelsListProps {
+    onModelClick: (publicCode: string) => void;
 }
 
-export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactElement => {
+export const ModelsList = ({ onModelClick }: IModelsListProps): ReactElement => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [orderedDocuments, setOrderedDocuments] = useState<DocumentDataWithUser[]>([]);
+    const [orderedModels, setOrderedModels] = useState<ModelDataWithUser[]>([]);
     const [orderElement, setOrderElement] = useState<"name" | "createdAt" | "updatedAt" | null>(
         null
     );
     const [order, setOrder] = useState<"desc" | "asc">("desc");
 
-    const { status: status, data: documents } = useQuery({
-        queryKey: ["get_own_documents"],
-        queryFn: async (): Promise<DocumentDataWithUser[]> => {
-            const response: DocumentDataWithUser[] = await getOwnDocuments();
+    const { status: status, data: models } = useQuery({
+        queryKey: ["get_own_models"],
+        queryFn: async (): Promise<ModelDataWithUser[]> => {
+            const response: ModelDataWithUser[] = await getOwnModels();
             return response;
         },
         refetchInterval: 5 * 60 * 1000,
     });
 
-    const handleDelete = async (documentId: string) => {
-        const oldDocumentsData = orderedDocuments;
+    const handleDelete = async (modelId: string) => {
+        const oldModelsData = orderedModels;
 
         try {
-            setOrderedDocuments(prevDocuments =>
-                prevDocuments.filter(document => document.id !== documentId)
-            );
+            setOrderedModels(prevModels => prevModels.filter(model => model.id !== modelId));
 
-            await deleteDocument(documentId);
+            await deleteModel(modelId);
         } catch (error) {
-            setOrderedDocuments(oldDocumentsData);
+            setOrderedModels(oldModelsData);
         }
     };
 
-    const handleEditDocument = (documentId: string) => {
-        console.log("handleEditDocument", documentId);
+    const handleEditModel = (modelId: string) => {
+        console.log("handleEditModel", modelId);
         // Add download logic here
     };
 
@@ -93,22 +91,22 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
     }, [searchParams]);
 
     useEffect(() => {
-        if (!documents) {
-            setOrderedDocuments([]);
+        if (!models) {
+            setOrderedModels([]);
             return;
         }
 
         if (!orderElement) {
-            setOrderedDocuments(documents);
+            setOrderedModels(models);
             return;
         }
 
-        const sorted = [...documents].sort((a, b) => {
+        const sorted = [...models].sort((a, b) => {
             let comparison = 0;
 
             if (orderElement === "name") {
-                const nameA = (a.name || "Relatório sem título").toLowerCase();
-                const nameB = (b.name || "Relatório sem título").toLowerCase();
+                const nameA = a.name.toLowerCase();
+                const nameB = b.name.toLowerCase();
                 comparison = nameA.localeCompare(nameB);
             } else if (orderElement === "createdAt") {
                 comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
@@ -119,17 +117,17 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
             return order === "desc" ? comparison : -comparison;
         });
 
-        setOrderedDocuments(sorted);
-    }, [documents, orderElement, order]);
+        setOrderedModels(sorted);
+    }, [models, orderElement, order]);
 
     return (
         <Root>
             <Typography tag="h2" fontSize={{ xs: "fs75" }} color="black" fontWeight="medium">
-                Modelos pessoais
+                Arquivos pessoais
             </Typography>
 
             <TableContainer>
-                {status === "success" && orderedDocuments.length > 0 ? (
+                {status === "success" && orderedModels.length > 0 ? (
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -262,13 +260,13 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
                         </TableHead>
 
                         <TableBody>
-                            {orderedDocuments.map(document => (
-                                <DocumentItem
-                                    key={`document-list-item-${document.id}`}
-                                    document={document}
-                                    onClick={onDocumentClick}
+                            {orderedModels.map(model => (
+                                <ModelItem
+                                    key={`model-list-item-${model.id}`}
+                                    model={model}
+                                    onClick={onModelClick}
                                     onDelete={handleDelete}
-                                    onEdit={handleEditDocument}
+                                    onEdit={handleEditModel}
                                 />
                             ))}
                         </TableBody>
@@ -283,7 +281,7 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
                             color="gray70"
                             fontWeight="regular"
                         >
-                            Nenhum documento encontrado
+                            Nenhum modelo encontrado
                         </Typography>
                     </EmptyState>
                 )}

@@ -1,0 +1,40 @@
+import { ComponentLoading } from "@/repositories/changesAPI";
+import { Editor } from "@tiptap/core";
+import { ReactElement, useEffect } from "react";
+
+interface ILoadingFloatingProps {
+    editor: Editor;
+    componentLoading: ComponentLoading;
+}
+
+export const LoadingFloating = ({
+    editor,
+    componentLoading,
+}: ILoadingFloatingProps): ReactElement => {
+    useEffect(() => {
+        if (!componentLoading.id) return;
+
+        editor.state.doc.descendants((node, pos) => {
+            if (editor.isDestroyed) return false;
+
+            if (node?.attrs["class"] === "change-loading") {
+                return;
+            }
+
+            const nodeTypeName = node.type.name;
+
+            if (node.attrs.id === componentLoading.id) {
+                editor
+                    .chain()
+                    .setNodeSelection(pos)
+                    .updateAttributes(nodeTypeName, {
+                        class: "change-loading",
+                    })
+                    .setMeta("addToHistory", false)
+                    .run();
+            }
+        });
+    }, [componentLoading.id, editor]);
+
+    return <></>;
+};

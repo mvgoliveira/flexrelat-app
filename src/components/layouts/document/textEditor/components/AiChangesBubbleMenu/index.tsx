@@ -1,7 +1,7 @@
 import {
     AiChangesControlledBubbleMenu,
     SelectedChange,
-} from "@/components/ui/textEditor/plugins/AiChangesBubbleMenu";
+} from "@/components/layouts/document/textEditor/plugins/AiChangesBubbleMenu";
 import { useDocumentContext } from "@/context/documentContext";
 import { AiChange } from "@/repositories/changesAPI";
 import { Theme } from "@/themes";
