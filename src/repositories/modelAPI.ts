@@ -5,6 +5,7 @@ const PREFIX = "/models";
 export type ModelData = {
     id: string;
     name: string;
+    userId: string;
     description: string;
     keywords: string[] | null;
     isPublic: boolean;
@@ -19,8 +20,25 @@ export const getModelByPublicCode = async (publicCode: string): Promise<ModelDat
     return data;
 };
 
-export const createModel = async (): Promise<ModelData> => {
-    const { data } = await client.post<ModelData>(`${PREFIX}`);
+interface ICreateModelProps {
+    documentId: string;
+    name: string;
+    description: string;
+    withAi: boolean;
+}
+
+export const createModel = async ({
+    documentId,
+    name,
+    description,
+    withAi,
+}: ICreateModelProps): Promise<ModelData> => {
+    const { data } = await client.post<ModelData>(`${PREFIX}`, {
+        document_id: documentId,
+        name,
+        description,
+        ai_generation: withAi,
+    });
     return data;
 };
 

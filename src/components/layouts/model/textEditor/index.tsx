@@ -642,7 +642,7 @@ const TextEditor = ({
 
     return (
         <>
-            {currentEditor && (
+            {currentEditor && !readOnly && (
                 <TableBubbleMenu
                     editor={currentEditor}
                     blockClasses={["change-loading", "change-remove", "change-add"]}
@@ -650,7 +650,7 @@ const TextEditor = ({
                 />
             )}
 
-            {currentEditor && (
+            {currentEditor && !readOnly && (
                 <TextBubbleMenu
                     editor={currentEditor}
                     blockClasses={["change-loading", "change-remove", "change-add"]}
@@ -667,7 +667,7 @@ const TextEditor = ({
                 />
             )}
 
-            {currentEditor && selectedChange && (
+            {currentEditor && !readOnly && selectedChange && (
                 <AiChangesBubbleMenu editor={currentEditor} aiChange={selectedChange} />
             )}
 

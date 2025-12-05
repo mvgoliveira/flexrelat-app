@@ -309,7 +309,7 @@ export const ModelContent = ({ setSaveStatus, isReadOnly }: IModelContentProps):
             </ModelHeader>
 
             <ScrollArea ref={scrollAreaRef}>
-                <ModelRoot className="ModelRoot" ref={modelRootRef}>
+                <ModelRoot className="ModelRoot" ref={modelRootRef} isCentered={isReadOnly}>
                     <TextEditor
                         updateSaveStatus={setSaveStatus}
                         pageWidth={pageWidth}

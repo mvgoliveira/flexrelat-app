@@ -1,12 +1,20 @@
 import styled from "@emotion/styled";
 
-export const Root = styled.div<{
-    hasLeftNavbar: boolean;
-}>`
+export const Root = styled.div`
     display: grid;
     grid-template-rows: 60px 1fr;
-    /* grid-template-columns: ${({ hasLeftNavbar }) =>
-        hasLeftNavbar ? "auto 1fr auto" : "auto 1fr auto"}; */
+    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto;
+    height: 100vh;
+    max-height: 100vh;
+    background: ${({ theme }) => theme.colors.gray10};
+`;
+
+export const ReadOnlyRoot = styled.div`
+    display: grid;
+    grid-template-rows: 60px 1fr;
+    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr;
     height: 100vh;
     max-height: 100vh;
     background: ${({ theme }) => theme.colors.gray10};

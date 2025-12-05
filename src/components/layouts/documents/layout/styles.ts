@@ -22,11 +22,26 @@ export const SecondaryRoot = styled.div`
 export const StyledNavbar = styled.article`
     display: flex;
     flex-direction: column;
+    align-items: center;
     height: 100%;
     width: 100%;
     background-color: ${({ theme }) => theme.colors.white};
     border-right: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;
+`;
+
+export const StyledNavbarItem = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 8px;
+
+    &:hover {
+        background-color: ${({ theme }) => theme.colors.gray10};
+    }
 `;
 
 export const StyledContent = styled.article`

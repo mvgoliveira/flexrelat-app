@@ -36,6 +36,7 @@ export const ButtonsContainer = styled.div`
     align-items: center;
     gap: 5px;
     height: 100%;
+    width: fit-content;
 `;
 
 export const TitleContent = styled.div<{ hasTitle: boolean }>`

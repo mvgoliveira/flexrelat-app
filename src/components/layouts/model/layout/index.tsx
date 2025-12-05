@@ -2,6 +2,7 @@ import { IReactChildren } from "@/types/core";
 import { ReactElement } from "react";
 
 import {
+    ReadOnlyRoot,
     Root,
     SecondaryRoot,
     StyledContent,
@@ -11,11 +12,15 @@ import {
 } from "./styles";
 
 interface ILayoutProps extends IReactChildren {
-    hasLeftNavbar: boolean;
+    readOnly: boolean;
 }
 
-const Layout = ({ children, hasLeftNavbar }: ILayoutProps): ReactElement => {
-    return <Root hasLeftNavbar={hasLeftNavbar}>{children}</Root>;
+const Layout = ({ children, readOnly }: ILayoutProps): ReactElement => {
+    if (readOnly) {
+        return <ReadOnlyRoot>{children}</ReadOnlyRoot>;
+    }
+
+    return <Root>{children}</Root>;
 };
 
 const SecondaryLayout = ({ children }: IReactChildren): ReactElement => {

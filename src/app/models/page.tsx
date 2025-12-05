@@ -9,7 +9,7 @@ import withSession from "@/hoc/withSession";
 import { Theme } from "@/themes";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { CgCopy } from "react-icons/cg";
+import { LuFileText, LuTextSelect } from "react-icons/lu";
 
 function DocumentsPage(): React.ReactElement {
     const router = useRouter();
@@ -29,7 +29,17 @@ function DocumentsPage(): React.ReactElement {
     return (
         <Layout>
             <Layout.NavBar>
-                <></>
+                <Layout.NavBar.Item
+                    icon={<LuFileText size={14} color={Theme.colors.gray70} />}
+                    text="Documentos"
+                    onClick={() => router.push("/documents")}
+                />
+
+                <Layout.NavBar.Item
+                    active
+                    icon={<LuTextSelect size={14} color={Theme.colors.black} />}
+                    text="Modelos"
+                />
             </Layout.NavBar>
 
             <Layout.Content>
@@ -42,7 +52,7 @@ function DocumentsPage(): React.ReactElement {
                             alignItems: "center",
                         }}
                     >
-                        <CgCopy size={14} color={Theme.colors.black} />
+                        <LuTextSelect size={16} color={Theme.colors.black} />
 
                         <Typography
                             tag="h1"

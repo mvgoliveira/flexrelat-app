@@ -1,7 +1,10 @@
 import { Button } from "@/components/features/button";
+import { Spinner } from "@/components/features/loading/spinner";
 import { Typography } from "@/components/features/typography";
 import { ModalData } from "@/components/layouts/modals/modalData";
+import { Toast } from "@/components/ui/toast";
 import { Tooltip } from "@/components/ui/tooltip";
+import { createDocument } from "@/repositories/documentAPI";
 import { updateModelTitle } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
@@ -14,28 +17,33 @@ import {
     MdOutlineCloudDone,
     MdOutlineCloudOff,
     MdOutlineCloudUpload,
+    MdOutlineOpenInNew,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
 
 import { ButtonsContainer, RightContainer, Root, TitleContainer, TitleContent } from "./styles";
 
 interface IHeaderProps {
+    readOnly: boolean;
     metadata: {
         id: string;
         title: string;
+        content: string;
         createdAt: string;
         saveStatus: "pending" | "success" | "error";
         onChangeStatus: (status: "pending" | "success" | "error") => void;
     };
 }
 
-export const Header = ({ metadata }: IHeaderProps): ReactElement => {
+export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
     const router = useRouter();
 
+    const toastErrorRef = useRef<{ publish: () => void } | null>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
 
     const [title, setTitle] = useState<string>(metadata.title);
     const [isDataModalOpen, setIsDataModalOpen] = useState<boolean>(false);
+    const [isUseModelLoading, setIsUseModelLoading] = useState<boolean>(false);
 
     const saveTitle = useMemo(
         () =>
@@ -73,6 +81,8 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     );
 
     const handleBlurTitle = async () => {
+        if (readOnly) return;
+
         if (titleRef.current && titleRef.current.textContent !== title) {
             if (!titleRef.current.textContent) {
                 titleRef.current!.style.color = Theme.colors.gray70;
@@ -89,12 +99,16 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     };
 
     const handleChangeTitle = async () => {
+        if (readOnly) return;
+
         if (titleRef.current && titleRef.current.textContent !== "Relatório sem título") {
             titleRef.current.style.color = Theme.colors.gray100;
         }
     };
 
     const handleClickTitle = () => {
+        if (readOnly) return;
+
         if (titleRef.current && titleRef.current.textContent === "Relatório sem título") {
             titleRef.current.textContent = "";
         }
@@ -102,6 +116,18 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
     const handleBackToModels = (): void => {
         router.push(`/models`);
+    };
+
+    const handleCreateDocumentFromModel = async (modelName: string, modelContent: string) => {
+        try {
+            setIsUseModelLoading(true);
+            const newDocument = await createDocument({ name: modelName, content: modelContent });
+            router.push(`/documents/${newDocument.publicCode}`);
+        } catch (error) {
+            if (toastErrorRef.current) toastErrorRef.current.publish();
+        }
+
+        setIsUseModelLoading(false);
     };
 
     useEffect(() => {
@@ -116,134 +142,159 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     }, [metadata.title]);
 
     return (
-        <Root>
-            <ModalData isOpen={isDataModalOpen} close={() => setIsDataModalOpen(false)} />
+        <>
+            <Toast>
+                <Toast.Content ref={toastErrorRef} variant="error">
+                    <Toast.Title>Erro na Criação do Modelo</Toast.Title>
+                    <Toast.Description>
+                        Não foi possível criar um documento a partir do modelo. Tente novamente mais
+                        tarde.
+                    </Toast.Description>
+                </Toast.Content>
+            </Toast>
 
-            <TitleContainer>
-                <Button width="25px" height="25px" variant="secondary" onClick={handleBackToModels}>
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <MdArrowBack size={12} color={Theme.colors.gray90} />
-                    </div>
-                </Button>
+            <Root>
+                <ModalData isOpen={isDataModalOpen} close={() => setIsDataModalOpen(false)} />
 
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <TitleContent hasTitle={title !== ""}>
-                            <Typography
-                                tag="h1"
-                                fontSize={{ xs: "fs75" }}
-                                color="black"
-                                fontWeight="medium"
-                                textAlign="left"
-                                contentEditable={
-                                    metadata.saveStatus !== "pending" ? "plaintext-only" : false
-                                }
-                                onBlur={handleBlurTitle}
-                                onChange={handleChangeTitle}
-                                onClick={handleClickTitle}
-                                ref={titleRef}
-                            >
-                                {title === "" ? "Relatório sem título" : title}
-                            </Typography>
-                        </TitleContent>
-
-                        {metadata.saveStatus === "success" && (
-                            <Tooltip>
-                                <Tooltip.Trigger>
-                                    <MdOutlineCloudDone size={12} color={Theme.colors.black} />
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>Todas as alterações foram salvas</Tooltip.Content>
-                            </Tooltip>
-                        )}
-
-                        {metadata.saveStatus === "pending" && (
-                            <Tooltip>
-                                <Tooltip.Trigger>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "5px",
-                                        }}
-                                    >
-                                        <MdOutlineCloudUpload
-                                            size={12}
-                                            color={Theme.colors.black}
-                                        />
-
-                                        <Typography
-                                            tag="p"
-                                            fontSize={{ xs: "fs50" }}
-                                            color="black"
-                                            fontWeight="medium"
-                                            textAlign="left"
-                                        >
-                                            Salvando...
-                                        </Typography>
-                                    </div>
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>Salvando alterações...</Tooltip.Content>
-                            </Tooltip>
-                        )}
-
-                        {metadata.saveStatus === "error" && (
-                            <Tooltip>
-                                <Tooltip.Trigger>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "5px",
-                                        }}
-                                    >
-                                        <MdOutlineCloudOff size={12} color={Theme.colors.red70} />
-                                    </div>
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>Erro ao salvar as alterações</Tooltip.Content>
-                            </Tooltip>
-                        )}
-                    </div>
-
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="gray70"
-                        fontWeight="regular"
-                        textAlign="left"
-                    >
-                        Criado em {getFormattedDate(metadata.createdAt)}
-                    </Typography>
-                </div>
-            </TitleContainer>
-
-            <RightContainer>
-                <ButtonsContainer>
+                <TitleContainer>
                     <Button
-                        height="30px"
+                        width="25px"
+                        height="25px"
                         variant="secondary"
-                        padding="0 10px"
-                        onClick={() => setIsDataModalOpen(true)}
+                        onClick={handleBackToModels}
                     >
-                        <TbDatabase size={12} color={Theme.colors.gray100} />
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <MdArrowBack size={12} color={Theme.colors.gray90} />
+                        </div>
+                    </Button>
+
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <TitleContent hasTitle={title !== ""}>
+                                <Typography
+                                    tag="h1"
+                                    fontSize={{ xs: "fs75" }}
+                                    color="black"
+                                    fontWeight="medium"
+                                    textAlign="left"
+                                    contentEditable={
+                                        metadata.saveStatus !== "pending" && !readOnly
+                                            ? "plaintext-only"
+                                            : false
+                                    }
+                                    onBlur={handleBlurTitle}
+                                    onChange={handleChangeTitle}
+                                    onClick={handleClickTitle}
+                                    ref={titleRef}
+                                >
+                                    {title === "" ? "Relatório sem título" : title}
+                                </Typography>
+                            </TitleContent>
+
+                            {!readOnly && metadata.saveStatus === "success" && (
+                                <Tooltip>
+                                    <Tooltip.Trigger>
+                                        <MdOutlineCloudDone size={12} color={Theme.colors.black} />
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Content>
+                                        Todas as alterações foram salvas
+                                    </Tooltip.Content>
+                                </Tooltip>
+                            )}
+
+                            {!readOnly && metadata.saveStatus === "pending" && (
+                                <Tooltip>
+                                    <Tooltip.Trigger>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "5px",
+                                            }}
+                                        >
+                                            <MdOutlineCloudUpload
+                                                size={12}
+                                                color={Theme.colors.black}
+                                            />
+
+                                            <Typography
+                                                tag="p"
+                                                fontSize={{ xs: "fs50" }}
+                                                color="black"
+                                                fontWeight="medium"
+                                                textAlign="left"
+                                            >
+                                                Salvando...
+                                            </Typography>
+                                        </div>
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Content>Salvando alterações...</Tooltip.Content>
+                                </Tooltip>
+                            )}
+
+                            {!readOnly && metadata.saveStatus === "error" && (
+                                <Tooltip>
+                                    <Tooltip.Trigger>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "5px",
+                                            }}
+                                        >
+                                            <MdOutlineCloudOff
+                                                size={12}
+                                                color={Theme.colors.red70}
+                                            />
+                                        </div>
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Content>Erro ao salvar as alterações</Tooltip.Content>
+                                </Tooltip>
+                            )}
+                        </div>
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="gray100"
+                            fontSize={{ xs: "fs50" }}
+                            color="gray70"
                             fontWeight="regular"
                             textAlign="left"
                         >
-                            Dados
+                            Criado em {getFormattedDate(metadata.createdAt)}
                         </Typography>
-                    </Button>
+                    </div>
+                </TitleContainer>
 
-                    {/* <Button height="30px" variant="secondary" padding="0 10px">
+                <RightContainer>
+                    <ButtonsContainer>
+                        {!readOnly && (
+                            <Button
+                                height="30px"
+                                variant="secondary"
+                                padding="0 10px"
+                                onClick={() => setIsDataModalOpen(true)}
+                            >
+                                <TbDatabase size={12} color={Theme.colors.gray100} />
+
+                                <Typography
+                                    tag="p"
+                                    fontSize={{ xs: "fs75" }}
+                                    color="gray100"
+                                    fontWeight="regular"
+                                    textAlign="left"
+                                >
+                                    Dados
+                                </Typography>
+                            </Button>
+                        )}
+
+                        {/* <Button height="30px" variant="secondary" padding="0 10px">
                         <MdOutlineAutoMode size={12} color={Theme.colors.gray100} />
 
                         <Typography
@@ -257,7 +308,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         </Typography>
                     </Button> */}
 
-                    {/* <Button height="30px" variant="secondary" padding="0 10px">
+                        {/* <Button height="30px" variant="secondary" padding="0 10px">
                         <MdHistory size={13} color={Theme.colors.gray100} />
 
                         <Typography
@@ -270,14 +321,45 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                             Histórico
                         </Typography>
                     </Button> */}
-                </ButtonsContainer>
+                    </ButtonsContainer>
 
-                <ButtonsContainer>
-                    <Button height="30px" width="30px" variant="tertiary">
-                        <MdMoreHoriz size={16} color={Theme.colors.gray100} />
-                    </Button>
-                </ButtonsContainer>
-            </RightContainer>
-        </Root>
+                    <ButtonsContainer>
+                        <Button
+                            height="30px"
+                            width="120px"
+                            variant="primary"
+                            padding="0 10px"
+                            onClick={() =>
+                                handleCreateDocumentFromModel(metadata.title, metadata.content)
+                            }
+                        >
+                            {isUseModelLoading ? (
+                                <div style={{ transform: "scale(0.5)" }}>
+                                    <Spinner />
+                                </div>
+                            ) : (
+                                <>
+                                    <MdOutlineOpenInNew size={12} color={Theme.colors.gray10} />
+
+                                    <Typography
+                                        tag="p"
+                                        fontSize={{ xs: "fs75" }}
+                                        color="gray10"
+                                        fontWeight="regular"
+                                        textAlign="left"
+                                    >
+                                        Usar modelo
+                                    </Typography>
+                                </>
+                            )}
+                        </Button>
+
+                        <Button height="30px" width="30px" variant="tertiary">
+                            <MdMoreHoriz size={16} color={Theme.colors.gray100} />
+                        </Button>
+                    </ButtonsContainer>
+                </RightContainer>
+            </Root>
+        </>
     );
 };

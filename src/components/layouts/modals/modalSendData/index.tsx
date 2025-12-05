@@ -66,7 +66,11 @@ export const ModalSendData = ({ open, setOpen, onSendData }: ISendDataModalProps
                             }}
                         />
 
-                        <StyledDragger>
+                        <StyledDragger
+                            maxCount={1}
+                            accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/json, application/pdf"
+                            beforeUpload={() => false}
+                        >
                             <div
                                 style={{
                                     display: "flex",

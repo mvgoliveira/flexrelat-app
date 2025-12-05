@@ -12,7 +12,7 @@ import { createDocument } from "@/repositories/documentAPI";
 import { Theme } from "@/themes";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { CgFileDocument } from "react-icons/cg";
+import { LuFileText, LuTextSelect } from "react-icons/lu";
 import { MdAdd } from "react-icons/md";
 
 function DocumentsPage(): React.ReactElement {
@@ -26,7 +26,7 @@ function DocumentsPage(): React.ReactElement {
 
     const handleCreateDocument = async () => {
         setCreateIsLoading(true);
-        const document = await createDocument();
+        const document = await createDocument({});
         router.push(`/documents/${document.publicCode}`);
         setCreateIsLoading(false);
     };
@@ -40,7 +40,17 @@ function DocumentsPage(): React.ReactElement {
     return (
         <Layout>
             <Layout.NavBar>
-                <></>
+                <Layout.NavBar.Item
+                    active
+                    icon={<LuFileText size={14} color={Theme.colors.black} />}
+                    text="Documentos"
+                />
+
+                <Layout.NavBar.Item
+                    icon={<LuTextSelect size={14} color={Theme.colors.gray70} />}
+                    text="Modelos"
+                    onClick={() => router.push("/models")}
+                />
             </Layout.NavBar>
 
             <Layout.Content>
@@ -53,7 +63,7 @@ function DocumentsPage(): React.ReactElement {
                             alignItems: "center",
                         }}
                     >
-                        <CgFileDocument size={14} color={Theme.colors.black} />
+                        <LuFileText size={16} color={Theme.colors.black} />
 
                         <Typography
                             tag="h1"

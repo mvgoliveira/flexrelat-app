@@ -17,8 +17,16 @@ export const getDocumentByPublicCode = async (publicCode: string): Promise<Docum
     return data;
 };
 
-export const createDocument = async (): Promise<DocumentData> => {
-    const { data } = await client.post<DocumentData>(`${PREFIX}`);
+interface ICreateDocument {
+    name?: string;
+    content?: string;
+}
+
+export const createDocument = async ({ name, content }: ICreateDocument): Promise<DocumentData> => {
+    const { data } = await client.post<DocumentData>(`${PREFIX}`, {
+        name,
+        content,
+    });
     return data;
 };
 

@@ -3,9 +3,11 @@ import { DocumentDownload } from "@/components/features/documentDownload";
 import { Menu } from "@/components/features/menu";
 import { Typography } from "@/components/features/typography";
 import { ModalData } from "@/components/layouts/modals/modalData";
+import { Toast } from "@/components/ui/toast";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useDocumentContext } from "@/context/documentContext";
 import { updateDocumentTitle } from "@/repositories/documentAPI";
+import { createModel } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
 import { pdf } from "@react-pdf/renderer";
@@ -13,6 +15,7 @@ import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
+import { BiCopyAlt } from "react-icons/bi";
 import { LiaFileDownloadSolid, LiaSave } from "react-icons/lia";
 import {
     MdArrowBack,
@@ -26,6 +29,7 @@ import {
 import { TbDatabase } from "react-icons/tb";
 import { VscDebugConsole } from "react-icons/vsc";
 
+import { ModalCreateModel } from "../../modals/modalCreateModel";
 import {
     AiLoadingIconContainer,
     ButtonsContainer,
@@ -51,11 +55,14 @@ interface IHeaderProps {
 export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     const router = useRouter();
 
+    const toastErrorRef = useRef<{ publish: () => void } | null>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
 
     const [title, setTitle] = useState<string>(metadata.title || "Relatório sem título");
     const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
     const [isDataModalOpen, setIsDataModalOpen] = useState<boolean>(false);
+    const [isCreateModelModalOpen, setIsCreateModelModalOpen] = useState<boolean>(false);
+    const [isCreateModelLoading, setIsCreateModelLoading] = useState<boolean>(false);
 
     const { getHtmlContent } = useDocumentContext();
 
@@ -357,8 +364,24 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         console.log(htmlContent);
     };
 
-    const handleBackToDocuments = (): void => {
+    const handleBackToDocuments = () => {
         router.push(`/documents`);
+    };
+
+    const handleCreateModel = async (withAi: boolean) => {
+        try {
+            setIsCreateModelLoading(true);
+            const newModel = await createModel({
+                documentId: metadata.id,
+                name: `[MODELO] ${title}`,
+                description: "Sem descrição",
+                withAi,
+            });
+            router.push(`/models/${newModel.publicCode}`);
+        } catch (error) {
+            if (toastErrorRef.current) toastErrorRef.current.publish();
+        }
+        setIsCreateModelLoading(false);
     };
 
     useEffect(() => {
@@ -373,263 +396,308 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     }, [metadata.title]);
 
     return (
-        <Root>
-            {isDownloadLoading && (
-                <LoadingContainer>
-                    <IconChangeContainer>
-                        <IconChangeAnimation>
-                            <AiLoadingIconContainer>
-                                <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
-                            </AiLoadingIconContainer>
+        <>
+            <Toast>
+                <Toast.Content ref={toastErrorRef} variant="error">
+                    <Toast.Title>Erro na Criação do Modelo</Toast.Title>
+                    <Toast.Description>
+                        Não foi possível criar um documento a partir do modelo. Tente novamente mais
+                        tarde.
+                    </Toast.Description>
+                </Toast.Content>
+            </Toast>
+            <Root>
+                {isDownloadLoading && (
+                    <LoadingContainer>
+                        <IconChangeContainer>
+                            <IconChangeAnimation>
+                                <AiLoadingIconContainer>
+                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
+                                </AiLoadingIconContainer>
 
-                            <AiLoadingIconContainer>
-                                <LiaSave size={20} color={Theme.colors.gray40} />
-                            </AiLoadingIconContainer>
+                                <AiLoadingIconContainer>
+                                    <LiaSave size={20} color={Theme.colors.gray40} />
+                                </AiLoadingIconContainer>
 
-                            <AiLoadingIconContainer>
-                                <MdSaveAlt size={20} color={Theme.colors.gray40} />
-                            </AiLoadingIconContainer>
+                                <AiLoadingIconContainer>
+                                    <MdSaveAlt size={20} color={Theme.colors.gray40} />
+                                </AiLoadingIconContainer>
 
-                            <AiLoadingIconContainer>
-                                <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
-                            </AiLoadingIconContainer>
+                                <AiLoadingIconContainer>
+                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
+                                </AiLoadingIconContainer>
 
-                            <AiLoadingIconContainer>
-                                <LiaSave size={20} color={Theme.colors.gray40} />
-                            </AiLoadingIconContainer>
+                                <AiLoadingIconContainer>
+                                    <LiaSave size={20} color={Theme.colors.gray40} />
+                                </AiLoadingIconContainer>
 
-                            <AiLoadingIconContainer>
-                                <MdSaveAlt size={20} color={Theme.colors.gray40} />
-                            </AiLoadingIconContainer>
-                        </IconChangeAnimation>
-                    </IconChangeContainer>
+                                <AiLoadingIconContainer>
+                                    <MdSaveAlt size={20} color={Theme.colors.gray40} />
+                                </AiLoadingIconContainer>
+                            </IconChangeAnimation>
+                        </IconChangeContainer>
 
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="gray50"
-                        fontWeight="medium"
-                        textAlign="left"
-                    >
-                        Preparando Arquivo
-                    </Typography>
-                </LoadingContainer>
-            )}
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs50" }}
+                            color="gray50"
+                            fontWeight="medium"
+                            textAlign="left"
+                        >
+                            Preparando Arquivo
+                        </Typography>
+                    </LoadingContainer>
+                )}
 
-            <ModalData isOpen={isDataModalOpen} close={() => setIsDataModalOpen(false)} />
+                <ModalData isOpen={isDataModalOpen} close={() => setIsDataModalOpen(false)} />
 
-            <TitleContainer>
-                <Button
-                    width="25px"
-                    height="25px"
-                    variant="secondary"
-                    onClick={handleBackToDocuments}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <MdArrowBack size={12} color={Theme.colors.gray90} />
-                    </div>
-                </Button>
+                <ModalCreateModel
+                    open={isCreateModelModalOpen}
+                    setOpen={setIsCreateModelModalOpen}
+                    onCreateModel={handleCreateModel}
+                    isLoading={isCreateModelLoading}
+                />
 
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <TitleContent hasTitle={title !== ""}>
-                            <Typography
-                                tag="h1"
-                                fontSize={{ xs: "fs75" }}
-                                color="black"
-                                fontWeight="medium"
-                                textAlign="left"
-                                contentEditable={
-                                    metadata.saveStatus !== "pending" ? "plaintext-only" : false
-                                }
-                                onBlur={handleBlurTitle}
-                                onChange={handleChangeTitle}
-                                onClick={handleClickTitle}
-                                ref={titleRef}
-                            >
-                                {title === "" ? "Relatório sem título" : title}
-                            </Typography>
-                        </TitleContent>
-
-                        {metadata.saveStatus === "success" && (
-                            <Tooltip>
-                                <Tooltip.Trigger>
-                                    <MdOutlineCloudDone size={12} color={Theme.colors.black} />
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>Todas as alterações foram salvas</Tooltip.Content>
-                            </Tooltip>
-                        )}
-
-                        {metadata.saveStatus === "pending" && (
-                            <Tooltip>
-                                <Tooltip.Trigger>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "5px",
-                                        }}
-                                    >
-                                        <MdOutlineCloudUpload
-                                            size={12}
-                                            color={Theme.colors.black}
-                                        />
-
-                                        <Typography
-                                            tag="p"
-                                            fontSize={{ xs: "fs50" }}
-                                            color="black"
-                                            fontWeight="medium"
-                                            textAlign="left"
-                                        >
-                                            Salvando...
-                                        </Typography>
-                                    </div>
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>Salvando alterações...</Tooltip.Content>
-                            </Tooltip>
-                        )}
-
-                        {metadata.saveStatus === "error" && (
-                            <Tooltip>
-                                <Tooltip.Trigger>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "5px",
-                                        }}
-                                    >
-                                        <MdOutlineCloudOff size={12} color={Theme.colors.red70} />
-                                    </div>
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>Erro ao salvar as alterações</Tooltip.Content>
-                            </Tooltip>
-                        )}
-                    </div>
-
-                    <Typography
-                        tag="p"
-                        fontSize={{ xs: "fs50" }}
-                        color="gray70"
-                        fontWeight="regular"
-                        textAlign="left"
-                    >
-                        Criado em {getFormattedDate(metadata.createdAt)}
-                    </Typography>
-                </div>
-            </TitleContainer>
-
-            <RightContainer>
-                <ButtonsContainer>
+                <TitleContainer>
                     <Button
-                        height="30px"
+                        width="25px"
+                        height="25px"
                         variant="secondary"
-                        padding="0 10px"
-                        onClick={() => setIsDataModalOpen(true)}
+                        onClick={handleBackToDocuments}
                     >
-                        <TbDatabase size={12} color={Theme.colors.gray100} />
-
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="gray100"
-                            fontWeight="regular"
-                            textAlign="left"
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
                         >
-                            Dados
-                        </Typography>
+                            <MdArrowBack size={12} color={Theme.colors.gray90} />
+                        </div>
                     </Button>
 
-                    {/* <Button height="30px" variant="secondary" padding="0 10px">
-                        <MdOutlineAutoMode size={12} color={Theme.colors.gray100} />
-
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="gray100"
-                            fontWeight="regular"
-                            textAlign="left"
-                        >
-                            Automações
-                        </Typography>
-                    </Button> */}
-
-                    {/* <Button height="30px" variant="secondary" padding="0 10px">
-                        <MdHistory size={13} color={Theme.colors.gray100} />
-
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="gray100"
-                            fontWeight="regular"
-                            textAlign="left"
-                        >
-                            Histórico
-                        </Typography>
-                    </Button> */}
-                </ButtonsContainer>
-
-                <ButtonsContainer>
-                    <Menu>
-                        <Menu.Trigger>
-                            <Button height="30px" variant="primary" padding="0 10px">
-                                <MdOutlineFileDownload size={12} color={Theme.colors.white} />
-
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <TitleContent hasTitle={title !== ""}>
                                 <Typography
-                                    tag="p"
+                                    tag="h1"
                                     fontSize={{ xs: "fs75" }}
-                                    color="white"
-                                    fontWeight="regular"
+                                    color="black"
+                                    fontWeight="medium"
                                     textAlign="left"
+                                    contentEditable={
+                                        metadata.saveStatus !== "pending" ? "plaintext-only" : false
+                                    }
+                                    onBlur={handleBlurTitle}
+                                    onChange={handleChangeTitle}
+                                    onClick={handleClickTitle}
+                                    ref={titleRef}
                                 >
-                                    Download
+                                    {title === "" ? "Relatório sem título" : title}
                                 </Typography>
-                            </Button>
-                        </Menu.Trigger>
+                            </TitleContent>
 
-                        <Menu.Content>
-                            <Menu.Item
-                                text="Download em PDF"
-                                onClick={handleDownloadPDF}
-                                iconPosition="left"
-                                icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
-                            />
+                            {metadata.saveStatus === "success" && (
+                                <Tooltip>
+                                    <Tooltip.Trigger>
+                                        <MdOutlineCloudDone size={12} color={Theme.colors.black} />
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Content>
+                                        Todas as alterações foram salvas
+                                    </Tooltip.Content>
+                                </Tooltip>
+                            )}
 
-                            <Menu.Item
-                                text="Download em PDF Canvas"
-                                onClick={handleDownloadPDFCanvas}
-                                iconPosition="left"
-                                icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
-                            />
+                            {metadata.saveStatus === "pending" && (
+                                <Tooltip>
+                                    <Tooltip.Trigger>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "5px",
+                                            }}
+                                        >
+                                            <MdOutlineCloudUpload
+                                                size={12}
+                                                color={Theme.colors.black}
+                                            />
 
-                            <Menu.Item
-                                text="Download em DOCX"
-                                onClick={handleDownloadDOCX}
-                                iconPosition="left"
-                                icon={<AiOutlineFileWord size={12} color={Theme.colors.black} />}
-                            />
+                                            <Typography
+                                                tag="p"
+                                                fontSize={{ xs: "fs50" }}
+                                                color="black"
+                                                fontWeight="medium"
+                                                textAlign="left"
+                                            >
+                                                Salvando...
+                                            </Typography>
+                                        </div>
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Content>Salvando alterações...</Tooltip.Content>
+                                </Tooltip>
+                            )}
 
-                            <Menu.Item
-                                text="Depuração"
-                                onClick={handleDebugConsole}
-                                iconPosition="left"
-                                icon={<VscDebugConsole size={12} color={Theme.colors.black} />}
-                            />
-                        </Menu.Content>
-                    </Menu>
+                            {metadata.saveStatus === "error" && (
+                                <Tooltip>
+                                    <Tooltip.Trigger>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "5px",
+                                            }}
+                                        >
+                                            <MdOutlineCloudOff
+                                                size={12}
+                                                color={Theme.colors.red70}
+                                            />
+                                        </div>
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Content>Erro ao salvar as alterações</Tooltip.Content>
+                                </Tooltip>
+                            )}
+                        </div>
 
-                    <Button height="30px" width="30px" variant="tertiary">
-                        <MdMoreHoriz size={16} color={Theme.colors.gray100} />
-                    </Button>
-                </ButtonsContainer>
-            </RightContainer>
-        </Root>
+                        <Typography
+                            tag="p"
+                            fontSize={{ xs: "fs50" }}
+                            color="gray70"
+                            fontWeight="regular"
+                            textAlign="left"
+                        >
+                            Criado em {getFormattedDate(metadata.createdAt)}
+                        </Typography>
+                    </div>
+                </TitleContainer>
+
+                <RightContainer>
+                    <ButtonsContainer>
+                        <Button
+                            height="30px"
+                            width="120px"
+                            variant="secondary"
+                            padding="0 10px"
+                            onClick={() => setIsCreateModelModalOpen(true)}
+                        >
+                            <BiCopyAlt size={12} color={Theme.colors.gray100} />
+
+                            <Typography
+                                tag="p"
+                                fontSize={{ xs: "fs75" }}
+                                color="gray100"
+                                fontWeight="regular"
+                                textAlign="left"
+                            >
+                                Criar Modelo
+                            </Typography>
+                        </Button>
+
+                        <Button
+                            height="30px"
+                            variant="secondary"
+                            padding="0 10px"
+                            onClick={() => setIsDataModalOpen(true)}
+                        >
+                            <TbDatabase size={12} color={Theme.colors.gray100} />
+
+                            <Typography
+                                tag="p"
+                                fontSize={{ xs: "fs75" }}
+                                color="gray100"
+                                fontWeight="regular"
+                                textAlign="left"
+                            >
+                                Dados
+                            </Typography>
+                        </Button>
+
+                        {/* <Button height="30px" variant="secondary" padding="0 10px">
+                            <MdOutlineAutoMode size={12} color={Theme.colors.gray100} />
+
+                            <Typography
+                                tag="p"
+                                fontSize={{ xs: "fs75" }}
+                                color="gray100"
+                                fontWeight="regular"
+                                textAlign="left"
+                            >
+                                Automações
+                            </Typography>
+                        </Button> */}
+
+                        {/* <Button height="30px" variant="secondary" padding="0 10px">
+                            <MdHistory size={13} color={Theme.colors.gray100} />
+
+                            <Typography
+                                tag="p"
+                                fontSize={{ xs: "fs75" }}
+                                color="gray100"
+                                fontWeight="regular"
+                                textAlign="left"
+                            >
+                                Histórico
+                            </Typography>
+                        </Button> */}
+                    </ButtonsContainer>
+
+                    <ButtonsContainer>
+                        <Menu>
+                            <Menu.Trigger>
+                                <Button height="30px" variant="primary" padding="0 10px">
+                                    <MdOutlineFileDownload size={12} color={Theme.colors.white} />
+
+                                    <Typography
+                                        tag="p"
+                                        fontSize={{ xs: "fs75" }}
+                                        color="white"
+                                        fontWeight="regular"
+                                        textAlign="left"
+                                    >
+                                        Download
+                                    </Typography>
+                                </Button>
+                            </Menu.Trigger>
+
+                            <Menu.Content>
+                                <Menu.Item
+                                    text="Download em PDF"
+                                    onClick={handleDownloadPDF}
+                                    iconPosition="left"
+                                    icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
+                                />
+
+                                <Menu.Item
+                                    text="Download em PDF Canvas"
+                                    onClick={handleDownloadPDFCanvas}
+                                    iconPosition="left"
+                                    icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
+                                />
+
+                                <Menu.Item
+                                    text="Download em DOCX"
+                                    onClick={handleDownloadDOCX}
+                                    iconPosition="left"
+                                    icon={
+                                        <AiOutlineFileWord size={12} color={Theme.colors.black} />
+                                    }
+                                />
+
+                                <Menu.Item
+                                    text="Depuração"
+                                    onClick={handleDebugConsole}
+                                    iconPosition="left"
+                                    icon={<VscDebugConsole size={12} color={Theme.colors.black} />}
+                                />
+                            </Menu.Content>
+                        </Menu>
+
+                        <Button height="30px" width="30px" variant="tertiary">
+                            <MdMoreHoriz size={16} color={Theme.colors.gray100} />
+                        </Button>
+                    </ButtonsContainer>
+                </RightContainer>
+            </Root>
+        </>
     );
 };

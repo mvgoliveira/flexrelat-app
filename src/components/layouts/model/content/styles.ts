@@ -18,9 +18,9 @@ export const ModelHeader = styled.div`
     overflow: hidden;
 `;
 
-export const ModelRoot = styled.div`
+export const ModelRoot = styled.div<{ isCentered: boolean }>`
     display: flex;
-    justify-content: flex-start;
+    justify-content: ${({ isCentered }) => (isCentered ? "center" : "flex-start")};
     padding: 10px;
     overflow: hidden;
 `;

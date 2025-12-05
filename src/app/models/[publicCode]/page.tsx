@@ -8,9 +8,10 @@ import { Layout, SecondaryLayout } from "@/components/layouts/model/layout";
 import { ModelComponents } from "@/components/layouts/model/modelComponents";
 import { NavHeader, TabHeaderType } from "@/components/layouts/model/navHeader";
 import { useModelContext } from "@/context/modelContext";
+import { useUserContext } from "@/context/userContext";
 import withSession from "@/hoc/withSession";
 import { Theme } from "@/themes";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { MdOutlineAutoAwesomeMosaic, MdOutlineDocumentScanner } from "react-icons/md";
 import { RiRobot2Line } from "react-icons/ri";
 
@@ -35,10 +36,19 @@ const rightTabs: TabHeaderType<RightTabsValue>[] = [
 
 function Model(): ReactElement {
     const { getModelStatus, modelData } = useModelContext();
+    const { authenticatedUser } = useUserContext();
     const [activeLeftTab, setActiveLeftTab] = useState<LeftTabsValue>("components");
     const [activeRightTab, setActiveRightTab] = useState<RightTabsValue>("ai");
     const [saveStatus, setSaveStatus] = useState<"pending" | "success" | "error">("success");
-    const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
+    const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (authenticatedUser?.id !== modelData?.userId) {
+            setIsReadOnly(true);
+        } else {
+            setIsReadOnly(false);
+        }
+    }, [authenticatedUser, modelData]);
 
     if (getModelStatus === "pending") return <></>;
 
@@ -82,13 +92,15 @@ function Model(): ReactElement {
     }
 
     return (
-        <Layout hasLeftNavbar={!isReadOnly}>
+        <Layout readOnly={isReadOnly}>
             <Layout.Header>
                 {modelData && (
                     <Header
+                        readOnly={isReadOnly}
                         metadata={{
                             id: modelData.id,
                             title: modelData.name,
+                            content: modelData.content,
                             createdAt: modelData.createdAt,
                             saveStatus: saveStatus,
                             onChangeStatus: setSaveStatus,
@@ -100,12 +112,12 @@ function Model(): ReactElement {
             {!isReadOnly && (
                 <Layout.LeftNavBar>
                     <NavHeader
-                        headerItens={leftTabs}
+                        headerItens={!isReadOnly ? leftTabs : []}
                         activeTab={activeLeftTab}
                         setActiveLeftTab={activeTab => setActiveLeftTab(activeTab as LeftTabsValue)}
                     />
 
-                    {activeLeftTab === "components" && <ModelComponents />}
+                    {activeLeftTab === "components" && !isReadOnly && <ModelComponents />}
                 </Layout.LeftNavBar>
             )}
 
@@ -113,16 +125,20 @@ function Model(): ReactElement {
                 <ModelContent setSaveStatus={setSaveStatus} isReadOnly={isReadOnly} />
             </Layout.Content>
 
-            <Layout.RightNavBar>
-                <NavHeader
-                    headerItens={rightTabs}
-                    activeTab={activeRightTab}
-                    setActiveLeftTab={activeTab => setActiveRightTab(activeTab as RightTabsValue)}
-                    hasCloseButton
-                />
+            {!isReadOnly && (
+                <Layout.RightNavBar>
+                    <NavHeader
+                        headerItens={rightTabs}
+                        activeTab={activeRightTab}
+                        setActiveLeftTab={activeTab =>
+                            setActiveRightTab(activeTab as RightTabsValue)
+                        }
+                        hasCloseButton
+                    />
 
-                <AiChat />
-            </Layout.RightNavBar>
+                    <AiChat />
+                </Layout.RightNavBar>
+            )}
         </Layout>
     );
 }
