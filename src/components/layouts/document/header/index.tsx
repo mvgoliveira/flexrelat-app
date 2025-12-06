@@ -1,5 +1,4 @@
 import { Button } from "@/components/features/button";
-import { DocumentDownload } from "@/components/features/documentDownload";
 import { Menu } from "@/components/features/menu";
 import { Typography } from "@/components/features/typography";
 import { ModalData } from "@/components/layouts/modals/modalData";
@@ -10,11 +9,10 @@ import { updateDocumentTitle } from "@/repositories/documentAPI";
 import { createModel } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
-import { pdf } from "@react-pdf/renderer";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
-import { AiOutlineFilePdf, AiOutlineFileWord } from "react-icons/ai";
+import { AiOutlineFilePdf } from "react-icons/ai";
 import { BiCopyAlt } from "react-icons/bi";
 import { LiaFileDownloadSolid, LiaSave } from "react-icons/lia";
 import {
@@ -27,7 +25,6 @@ import {
     MdSaveAlt,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
-import { VscDebugConsole } from "react-icons/vsc";
 
 import { ModalCreateModel } from "../../modals/modalCreateModel";
 import {
@@ -129,44 +126,44 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         }
     };
 
-    const handleDownloadPDF = async () => {
-        const htmlContent = getHtmlContent();
+    // const handleDownloadPDF = async () => {
+    //     const htmlContent = getHtmlContent();
 
-        // Remove all id
-        let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
+    //     // Remove all id
+    //     let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
 
-        // Remove inline style min-width
-        filteredHtml = filteredHtml.replaceAll(/style="[^"]*min-width:[^;"]*;?"/g, "");
+    //     // Remove inline style min-width
+    //     filteredHtml = filteredHtml.replaceAll(/style="[^"]*min-width:[^;"]*;?"/g, "");
 
-        // Replace quick-chart with img
-        filteredHtml = filteredHtml.replaceAll(
-            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
-            (match, chartData, width, height) => {
-                try {
-                    const url = `https://quickchart.io/chart?c=${chartData}`;
-                    const widthPt = parseInt(width) * 0.75; // Convert px to pt
-                    const heightPt = parseInt(height) * 0.75;
-                    return `
-                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
-                            <img src="${url}" style="width: ${widthPt}pt; height: ${heightPt}pt;" />
-                        </div>
-                    `;
-                } catch (e) {
-                    console.error("Erro ao processar chartdata:", e);
-                    return "";
-                }
-            }
-        );
+    //     // Replace quick-chart with img
+    //     filteredHtml = filteredHtml.replaceAll(
+    //         /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
+    //         (match, chartData, width, height) => {
+    //             try {
+    //                 const url = `https://quickchart.io/chart?c=${chartData}`;
+    //                 const widthPt = parseInt(width) * 0.75; // Convert px to pt
+    //                 const heightPt = parseInt(height) * 0.75;
+    //                 return `
+    //                     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+    //                         <img src="${url}" style="width: ${widthPt}pt; height: ${heightPt}pt;" />
+    //                     </div>
+    //                 `;
+    //             } catch (e) {
+    //                 console.error("Erro ao processar chartdata:", e);
+    //                 return "";
+    //             }
+    //         }
+    //     );
 
-        const pdfBlob = await pdf(<DocumentDownload html={filteredHtml} />).toBlob();
-        const url = URL.createObjectURL(pdfBlob);
-        const link = document.createElement("a");
-        link.href = url;
-        const currentTitle = title || "Relatório sem título";
-        link.download = currentTitle;
-        link.click();
-        URL.revokeObjectURL(url);
-    };
+    //     const pdfBlob = await pdf(<DocumentDownload html={filteredHtml} />).toBlob();
+    //     const url = URL.createObjectURL(pdfBlob);
+    //     const link = document.createElement("a");
+    //     link.href = url;
+    //     const currentTitle = title || "Relatório sem título";
+    //     link.download = currentTitle;
+    //     link.click();
+    //     URL.revokeObjectURL(url);
+    // };
 
     const handleDownloadPDFCanvas = async () => {
         setIsDownloadLoading(true);
@@ -357,12 +354,12 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         setIsDownloadLoading(false);
     };
 
-    const handleDownloadDOCX = async () => {};
+    // const handleDownloadDOCX = async () => {};
 
-    const handleDebugConsole = async () => {
-        const htmlContent = getHtmlContent();
-        console.log(htmlContent);
-    };
+    // const handleDebugConsole = async () => {
+    //     const htmlContent = getHtmlContent();
+    //     console.log(htmlContent);
+    // };
 
     const handleBackToDocuments = () => {
         router.push(`/documents`);
@@ -665,35 +662,35 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                             </Menu.Trigger>
 
                             <Menu.Content>
-                                <Menu.Item
+                                {/* <Menu.Item
                                     text="Download em PDF"
                                     onClick={handleDownloadPDF}
                                     iconPosition="left"
                                     icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
-                                />
+                                /> */}
 
                                 <Menu.Item
-                                    text="Download em PDF Canvas"
+                                    text="Download em PDF"
                                     onClick={handleDownloadPDFCanvas}
                                     iconPosition="left"
                                     icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
                                 />
 
-                                <Menu.Item
+                                {/* <Menu.Item
                                     text="Download em DOCX"
                                     onClick={handleDownloadDOCX}
                                     iconPosition="left"
                                     icon={
                                         <AiOutlineFileWord size={12} color={Theme.colors.black} />
                                     }
-                                />
+                                /> */}
 
-                                <Menu.Item
+                                {/* <Menu.Item
                                     text="Depuração"
                                     onClick={handleDebugConsole}
                                     iconPosition="left"
                                     icon={<VscDebugConsole size={12} color={Theme.colors.black} />}
-                                />
+                                /> */}
                             </Menu.Content>
                         </Menu>
 

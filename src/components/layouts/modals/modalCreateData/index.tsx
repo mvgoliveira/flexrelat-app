@@ -6,7 +6,7 @@ import { Modal } from "@/components/ui/modalRadix";
 import { Toast } from "@/components/ui/toast";
 import { parseFileContent } from "@/repositories/documentDataAPI";
 import { Theme } from "@/themes";
-import { ReactElement, RefObject, useState } from "react";
+import { ReactElement, RefObject, useEffect, useState } from "react";
 import { ImUpload } from "react-icons/im";
 import { TbDatabase } from "react-icons/tb";
 
@@ -45,6 +45,18 @@ export const ModalCreateData = ({
     const closeModal = (): void => {
         setOpen(false);
     };
+
+    useEffect(() => {
+        if (!open) {
+            setName("");
+            setFileData("");
+        }
+
+        return () => {
+            setName("");
+            setFileData("");
+        };
+    }, [open]);
 
     return (
         <>

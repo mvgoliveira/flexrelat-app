@@ -18,7 +18,6 @@ import {
     MdOutlineCloudUpload,
     MdOutlineOpenInNew,
 } from "react-icons/md";
-import { TbDatabase } from "react-icons/tb";
 
 import { ButtonsContainer, RightContainer, Root, TitleContainer, TitleContent } from "./styles";
 
@@ -268,58 +267,17 @@ export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
                     </div>
                 </TitleContainer>
 
+                <Typography
+                    tag="p"
+                    fontSize={{ xs: "fs50" }}
+                    color="gray70"
+                    fontWeight="medium"
+                    textAlign="left"
+                >
+                    [MODELO]
+                </Typography>
+
                 <RightContainer>
-                    <ButtonsContainer>
-                        {!readOnly && (
-                            <Button
-                                height="30px"
-                                variant="secondary"
-                                padding="0 10px"
-                                onClick={() => setIsDataModalOpen(true)}
-                            >
-                                <TbDatabase size={12} color={Theme.colors.gray100} />
-
-                                <Typography
-                                    tag="p"
-                                    fontSize={{ xs: "fs75" }}
-                                    color="gray100"
-                                    fontWeight="regular"
-                                    textAlign="left"
-                                >
-                                    Dados
-                                </Typography>
-                            </Button>
-                        )}
-
-                        {/* <Button height="30px" variant="secondary" padding="0 10px">
-                        <MdOutlineAutoMode size={12} color={Theme.colors.gray100} />
-
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="gray100"
-                            fontWeight="regular"
-                            textAlign="left"
-                        >
-                            Automações
-                        </Typography>
-                    </Button> */}
-
-                        {/* <Button height="30px" variant="secondary" padding="0 10px">
-                        <MdHistory size={13} color={Theme.colors.gray100} />
-
-                        <Typography
-                            tag="p"
-                            fontSize={{ xs: "fs75" }}
-                            color="gray100"
-                            fontWeight="regular"
-                            textAlign="left"
-                        >
-                            Histórico
-                        </Typography>
-                    </Button> */}
-                    </ButtonsContainer>
-
                     <ButtonsContainer>
                         <Button
                             height="30px"

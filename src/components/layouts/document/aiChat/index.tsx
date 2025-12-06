@@ -1,26 +1,33 @@
 import { Button } from "@/components/features/button";
 import { Spinner } from "@/components/features/loading/spinner";
+import { Menu } from "@/components/features/menu";
 import { Skeleton } from "@/components/features/skeleton";
 import { toastError } from "@/components/features/toast";
 import { Typography } from "@/components/features/typography";
 import { ModalClearMessages } from "@/components/layouts/modals/modalClearMessages";
 import { ScrollArea } from "@/components/ui/scrollArea";
 import { useDocumentContext } from "@/context/documentContext";
+import { DocumentDataResponse, getDataByDocument } from "@/repositories/documentDataAPI";
 import { clearMessagesByRelatedId, sendMessage } from "@/repositories/messageAPI";
 import { Theme } from "@/themes";
 import { useElementSize } from "@mantine/hooks";
-import { ReactElement, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ReactElement, useRef, useState, MouseEvent } from "react";
+import { GrDocumentCsv, GrDocumentExcel, GrDocumentPdf, GrDocumentTxt } from "react-icons/gr";
 import { HiOutlinePaperClip } from "react-icons/hi";
+import { LuFileJson2 } from "react-icons/lu";
 import { MdCheck, MdClose, MdDeleteOutline, MdSend } from "react-icons/md";
 import { RiBarChartBoxAiLine, RiBrainLine, RiChatAiLine } from "react-icons/ri";
 import { TbRobotOff } from "react-icons/tb";
 
+import { AiChatAttachment } from "../aiAttachment";
 import { ChatMessage } from "../chatMessage";
 import {
     AiLoadingIconContainer,
     ChangesHeader,
     ChangesNumberContainer,
     Fallback,
+    FloatAttachContainer,
     FloatIconContainer,
     IconChangeAnimation,
     IconChangeContainer,
@@ -35,6 +42,15 @@ import {
     StyledTextArea,
     TypingAnimation,
 } from "./styles";
+
+const DataBaseTypeIconMap = {
+    pdf: <GrDocumentPdf size={9} color={Theme.colors.black} />,
+    text: <GrDocumentTxt size={9} color={Theme.colors.black} />,
+    csv: <GrDocumentCsv size={9} color={Theme.colors.black} />,
+    json: <LuFileJson2 size={9} color={Theme.colors.black} />,
+    xls: <GrDocumentExcel size={9} color={Theme.colors.black} />,
+    xlsx: <GrDocumentExcel size={9} color={Theme.colors.black} />,
+};
 
 export const AiChat = (): ReactElement => {
     const {
@@ -51,10 +67,27 @@ export const AiChat = (): ReactElement => {
 
     const [chatMessage, setChatMessage] = useState("");
     const [aiIsLoading, setAiIsLoading] = useState(false);
+    const [activeAttachId, setActiveAttachId] = useState<string>("");
+    const [selectedAttachments, setSelectedAttachments] = useState<DocumentDataResponse[]>([]);
 
     const [isClearModalOpen, setIsClearModalOpen] = useState<boolean>(false);
 
     const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const attachContainerRef = useRef<HTMLDivElement>(null);
+    const isDraggingRef = useRef(false);
+    const startXRef = useRef(0);
+    const scrollLeftRef = useRef(0);
+
+    const { data: documentDataBase, refetch } = useQuery({
+        queryKey: ["get_chat_document_data", documentData?.id],
+        retry: false,
+        queryFn: async (): Promise<DocumentDataResponse[]> => {
+            if (!documentData?.id) return [];
+
+            const response: DocumentDataResponse[] = await getDataByDocument(documentData.id);
+            return response;
+        },
+    });
 
     if (messagesStatus === "pending") {
         return (
@@ -145,6 +178,7 @@ export const AiChat = (): ReactElement => {
                 const aiResponse = await sendMessage(
                     documentData.id,
                     "documents",
+                    selectedAttachments.map(attach => attach.value.data).join(", "),
                     chatMessage.trim()
                 );
 
@@ -169,6 +203,43 @@ export const AiChat = (): ReactElement => {
                 toastError();
             }
         }
+    };
+
+    const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+        if (attachContainerRef.current) {
+            isDraggingRef.current = true;
+            startXRef.current = e.pageX - attachContainerRef.current.offsetLeft;
+            scrollLeftRef.current = attachContainerRef.current.scrollLeft;
+        }
+    };
+
+    const handleMouseLeave = () => {
+        isDraggingRef.current = false;
+    };
+
+    const handleMouseUp = () => {
+        isDraggingRef.current = false;
+    };
+
+    const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+        if (!isDraggingRef.current || !attachContainerRef.current) return;
+        e.preventDefault();
+        const x = e.pageX - attachContainerRef.current.offsetLeft;
+        const walk = (x - startXRef.current) * 2;
+        attachContainerRef.current.scrollLeft = scrollLeftRef.current - walk;
+    };
+
+    const handleChangeAttachActive = (id: string) => {
+        if (activeAttachId === id) setActiveAttachId("");
+        setActiveAttachId(id);
+    };
+
+    const handleRemoveAttach = (id: string) => {
+        setSelectedAttachments(prev => prev.filter(item => item.id !== id));
+    };
+
+    const handleSelectAttach = (dataItem: DocumentDataResponse) => {
+        setSelectedAttachments(prev => [...prev, dataItem]);
     };
 
     return (
@@ -367,10 +438,70 @@ export const AiChat = (): ReactElement => {
                     <MessageInputContainer>
                         <InputContainer>
                             <FloatIconContainer>
-                                <SendButton disabled={chatMessage.length <= 0} onClick={() => {}}>
-                                    <HiOutlinePaperClip size={12} color={Theme.colors.gray70} />
-                                </SendButton>
+                                <Menu>
+                                    <Menu.Trigger>
+                                        <Button
+                                            variant="tertiary"
+                                            onClick={() => refetch()}
+                                            padding="2px"
+                                        >
+                                            <HiOutlinePaperClip
+                                                size={12}
+                                                color={Theme.colors.gray70}
+                                            />
+                                        </Button>
+                                    </Menu.Trigger>
+
+                                    <Menu.Content
+                                        alignOffset={-5}
+                                        sideOffset={10}
+                                        align="start"
+                                        side="top"
+                                    >
+                                        {documentDataBase
+                                            ?.filter(item =>
+                                                selectedAttachments.every(sel => sel.id !== item.id)
+                                            )
+                                            ?.map(dataItem => (
+                                                <Menu.Item
+                                                    key={dataItem.id}
+                                                    text={dataItem.name}
+                                                    onClick={() => handleSelectAttach(dataItem)}
+                                                    iconPosition="left"
+                                                    icon={DataBaseTypeIconMap[dataItem.type]}
+                                                />
+                                            ))}
+                                    </Menu.Content>
+                                </Menu>
                             </FloatIconContainer>
+
+                            <FloatAttachContainer
+                                ref={attachContainerRef}
+                                onMouseDown={handleMouseDown}
+                                onMouseLeave={handleMouseLeave}
+                                onMouseUp={handleMouseUp}
+                                onMouseMove={handleMouseMove}
+                            >
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        gap: 5,
+                                        alignItems: "center",
+                                        width: "fit-content",
+                                    }}
+                                >
+                                    {selectedAttachments?.map(dataItem => (
+                                        <AiChatAttachment
+                                            key={dataItem.id}
+                                            name={dataItem.name}
+                                            type={dataItem.type}
+                                            active={activeAttachId === dataItem.id}
+                                            onClick={() => handleChangeAttachActive(dataItem.id)}
+                                            onRemove={() => handleRemoveAttach(dataItem.id)}
+                                        />
+                                    ))}
+                                </div>
+                            </FloatAttachContainer>
 
                             <StyledTextArea
                                 placeholder="Peça alterações para o FlexBot..."

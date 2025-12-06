@@ -128,13 +128,45 @@ export const IconContainer = styled.div`
 export const FloatIconContainer = styled.div`
     display: flex;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 5px;
+    left: 5px;
     align-items: flex-end;
     justify-content: center;
     width: fit-content;
-    padding: 5px;
-    right: 0;
+    gap: 5px;
+`;
+
+export const FloatAttachContainer = styled.div`
+    display: flex;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    align-items: flex-end;
+    justify-content: flex-start;
+    width: fit-content;
+    margin-left: 25px;
+    gap: 5px;
+    width: calc(100% - 50px);
+
+    overflow-y: hidden;
+    overflow-x: scroll;
+
+    &::-webkit-scrollbar {
+        height: 0px !important;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: ${({ theme }) => theme.colors.gray20} !important;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: ${({ theme }) => theme.colors.gray30} !important;
+        cursor: pointer;
+    }
 `;
 
 export const SendButton = styled.button`

@@ -25,12 +25,14 @@ export const getMessagesByRelatedId = async (
 export const sendMessage = async (
     relatedId: string,
     relatedType: "documents" | "models",
+    attachments: string,
     text: string
 ): Promise<Message> => {
     const { data } = await client.post<Message>(`${PREFIX}`, {
         relatedId,
         relatedType,
         text,
+        attachments,
     });
 
     return data;
