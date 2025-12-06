@@ -1,7 +1,7 @@
 import { Typography } from "@/components/features/typography";
 import ZoomButton from "@/components/features/zoomButton";
-import { ScrollArea } from "@/components/ui/scrollArea";
 import TextEditor from "@/components/layouts/document/textEditor";
+import { ScrollArea } from "@/components/ui/scrollArea";
 import { useDocumentContext } from "@/context/documentContext";
 import { ReactElement, useEffect, useRef, useState } from "react";
 

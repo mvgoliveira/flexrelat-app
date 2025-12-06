@@ -75,7 +75,6 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
 
             const response: Message[] = await getMessagesByRelatedId(documentData.id, "documents");
             setMessages(response);
-            console.log(response);
             return response;
         },
     });

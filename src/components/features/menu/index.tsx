@@ -20,6 +20,7 @@ interface IContentProps extends IReactChildren {
     hasCloseButton?: boolean;
     hasArrow?: boolean;
     align?: "start" | "center" | "end";
+    side?: "top" | "right" | "bottom" | "left";
 }
 
 const Content = ({
@@ -29,6 +30,7 @@ const Content = ({
     hasCloseButton = false,
     hasArrow = false,
     align = "end",
+    side = "bottom",
 }: IContentProps): ReactElement => (
     <Popover.Content
         sideOffset={sideOffset}
@@ -36,6 +38,7 @@ const Content = ({
         hasCloseButton={hasCloseButton}
         hasArrow={hasArrow}
         align={align}
+        side={side}
     >
         <Container>{children}</Container>
     </Popover.Content>

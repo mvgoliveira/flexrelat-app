@@ -71,7 +71,6 @@ export function ModelProvider({ children }: { children: ReactNode }): React.Reac
 
             const response: Message[] = await getMessagesByRelatedId(modelData.id, "models");
             setMessages(response);
-            console.log(response);
             return response;
         },
     });

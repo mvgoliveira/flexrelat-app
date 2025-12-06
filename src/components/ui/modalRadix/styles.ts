@@ -31,7 +31,7 @@ export const StyledOverlay = styled(RadixOverlay)`
     backdrop-filter: blur(3px);
     position: fixed;
     inset: 0;
-    z-index: 999998;
+    z-index: 997;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,7 +63,7 @@ export const StyledContent = styled(RadixContent)<IStyledContentProps>`
     max-width: 1000px;
     max-height: 85vh;
     overflow: hidden;
-    z-index: 999999;
+    z-index: 998;
     border: 1px solid ${({ theme }) => theme.colors.gray10};
     background: ${({ theme }) => theme.colors.white};
     padding: 20px 10px 20px 20px;

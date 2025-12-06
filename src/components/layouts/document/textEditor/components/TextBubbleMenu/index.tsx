@@ -109,8 +109,6 @@ export const TextBubbleMenu = ({
 
         const element = editor.view.dom.querySelector(`[data-id="${changeId}"]`);
 
-        console.log(element);
-
         if (element) {
             const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);
             const node = editor.state.doc.nodeAt(pos);

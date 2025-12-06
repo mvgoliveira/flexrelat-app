@@ -3,42 +3,60 @@ import { Input } from "@/components/features/input";
 import { Spinner } from "@/components/features/loading/spinner";
 import { Typography } from "@/components/features/typography";
 import { Modal } from "@/components/ui/modalRadix";
+import { Toast } from "@/components/ui/toast";
+import { parseFileContent } from "@/repositories/documentDataAPI";
 import { Theme } from "@/themes";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, RefObject, useState } from "react";
 import { ImUpload } from "react-icons/im";
 import { TbDatabase } from "react-icons/tb";
 
 import { StyledContent, StyledDragger } from "./styles";
 
-interface ISendDataModalProps {
+interface ICreateDataModalProps {
     open: boolean;
     setOpen: (open: boolean) => void;
-    onSendData: () => void;
+    onCreateData: (name: string, dataValue: string | object) => void;
+    isLoading: boolean;
+    toastErrorRef: RefObject<{
+        publish: () => void;
+    } | null>;
 }
 
-export const ModalSendData = ({ open, setOpen, onSendData }: ISendDataModalProps): ReactElement => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+export const ModalCreateData = ({
+    open,
+    setOpen,
+    onCreateData,
+    isLoading,
+    toastErrorRef,
+}: ICreateDataModalProps): ReactElement => {
     const [name, setName] = useState<string>("");
+    const [fileData, setFileData] = useState<string | object>("");
 
-    const handleSendData = async (e: any): Promise<void> => {
+    const handleCreateData = async (e: any): Promise<void> => {
         e.preventDefault();
-        setIsLoading(true);
-        onSendData();
+        onCreateData(name, fileData);
+    };
+
+    const handleSendFile = async (file: File) => {
+        const text = await parseFileContent(file);
+        setFileData(text);
     };
 
     const closeModal = (): void => {
         setOpen(false);
     };
 
-    useEffect(() => {
-        setIsLoading(false);
-        return () => {
-            setIsLoading(false);
-        };
-    }, [open]);
-
     return (
         <>
+            <Toast>
+                <Toast.Content ref={toastErrorRef} variant="error">
+                    <Toast.Title>Erro na criação do dado</Toast.Title>
+                    <Toast.Description>
+                        Não foi possível criar uma nova fonte dado. Tente novamente mais tarde.
+                    </Toast.Description>
+                </Toast.Content>
+            </Toast>
+
             <Modal open={open} onOpenChange={setOpen} width="350px" onClickOverlay={closeModal}>
                 <Modal.Header>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -56,7 +74,7 @@ export const ModalSendData = ({ open, setOpen, onSendData }: ISendDataModalProps
                 </Modal.Header>
 
                 <Modal.Content>
-                    <StyledContent onSubmit={handleSendData}>
+                    <StyledContent onSubmit={handleCreateData}>
                         <Input
                             label="Nome do dado"
                             placeholder="Insira o nome do dado"
@@ -69,7 +87,15 @@ export const ModalSendData = ({ open, setOpen, onSendData }: ISendDataModalProps
                         <StyledDragger
                             maxCount={1}
                             accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/json, application/pdf"
-                            beforeUpload={() => false}
+                            name="file"
+                            customRequest={async ({ file, onSuccess, onError }) => {
+                                try {
+                                    await handleSendFile(file as File);
+                                    onSuccess?.("ok");
+                                } catch (error) {
+                                    onError?.(error as Error);
+                                }
+                            }}
                         >
                             <div
                                 style={{
@@ -125,7 +151,7 @@ export const ModalSendData = ({ open, setOpen, onSendData }: ISendDataModalProps
                                 </Typography>
                             </Button>
 
-                            <Button height="30px" type="submit">
+                            <Button height="30px" type="submit" disabled={isLoading || !name}>
                                 {isLoading ? (
                                     <div style={{ transform: "scale(0.6)" }}>
                                         <Spinner />

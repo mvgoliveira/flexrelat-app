@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div<{ active: boolean }>`
     display: flex;
+    justify-content: space-between;
     width: 100%;
     height: 40px;
     border-radius: 4px;
@@ -11,7 +12,6 @@ export const Container = styled.div<{ active: boolean }>`
     padding: 8px 12px;
     align-items: center;
     cursor: pointer;
-    gap: 8px;
 
     :hover {
         background: ${({ theme, active }) =>

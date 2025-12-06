@@ -1,7 +1,6 @@
 import { Button } from "@/components/features/button";
 import { Spinner } from "@/components/features/loading/spinner";
 import { Typography } from "@/components/features/typography";
-import { ModalData } from "@/components/layouts/modals/modalData";
 import { Toast } from "@/components/ui/toast";
 import { Tooltip } from "@/components/ui/tooltip";
 import { createDocument } from "@/repositories/documentAPI";
@@ -154,8 +153,6 @@ export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
             </Toast>
 
             <Root>
-                <ModalData isOpen={isDataModalOpen} close={() => setIsDataModalOpen(false)} />
-
                 <TitleContainer>
                     <Button
                         width="25px"

@@ -34,6 +34,7 @@ interface IContentProps extends IReactChildren {
     hasCloseButton?: boolean;
     hasArrow?: boolean;
     align?: "start" | "center" | "end";
+    side?: "top" | "right" | "bottom" | "left";
 }
 
 const Content = ({
@@ -43,6 +44,7 @@ const Content = ({
     hasCloseButton = true,
     hasArrow = true,
     align = "start",
+    side = "bottom",
 }: IContentProps): ReactElement => {
     return (
         <RadixPortal>
@@ -50,7 +52,7 @@ const Content = ({
                 sideOffset={sideOffset}
                 alignOffset={alignOffset}
                 align={align}
-                side="bottom"
+                side={side}
             >
                 {hasCloseButton && <RadixClose />}
                 {hasArrow && <RadixArrow />}

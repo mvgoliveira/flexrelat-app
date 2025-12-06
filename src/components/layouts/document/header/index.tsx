@@ -406,6 +406,20 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     </Toast.Description>
                 </Toast.Content>
             </Toast>
+
+            <ModalData
+                isOpen={isDataModalOpen}
+                close={() => setIsDataModalOpen(false)}
+                documentId={metadata.id}
+            />
+
+            <ModalCreateModel
+                open={isCreateModelModalOpen}
+                setOpen={setIsCreateModelModalOpen}
+                onCreateModel={handleCreateModel}
+                isLoading={isCreateModelLoading}
+            />
+
             <Root>
                 {isDownloadLoading && (
                     <LoadingContainer>
@@ -448,15 +462,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         </Typography>
                     </LoadingContainer>
                 )}
-
-                <ModalData isOpen={isDataModalOpen} close={() => setIsDataModalOpen(false)} />
-
-                <ModalCreateModel
-                    open={isCreateModelModalOpen}
-                    setOpen={setIsCreateModelModalOpen}
-                    onCreateModel={handleCreateModel}
-                    isLoading={isCreateModelLoading}
-                />
 
                 <TitleContainer>
                     <Button

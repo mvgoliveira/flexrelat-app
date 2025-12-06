@@ -88,7 +88,7 @@ export const TextBubbleMenu = ({
                     throw new Error("Invalid command type");
             }
 
-            const element = model.createElement("div");
+            const element = document.createElement("div");
             element.innerHTML = html;
 
             const docFragment = DOMParser.fromSchema(editor.schema).parse(element);
@@ -108,8 +108,6 @@ export const TextBubbleMenu = ({
         if (!editor || !changeId || !newNode) return;
 
         const element = editor.view.dom.querySelector(`[data-id="${changeId}"]`);
-
-        console.log(element);
 
         if (element) {
             const pos = editor.state.doc.resolve(editor.view.posAtDOM(element, 0)).before(1);

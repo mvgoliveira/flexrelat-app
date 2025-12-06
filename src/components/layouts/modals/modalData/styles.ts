@@ -31,7 +31,7 @@ export const ConfigurationContent = styled.div`
     overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
-    gap: 20px;
+    gap: 10px;
 
     &::-webkit-scrollbar {
         width: 5px !important;
@@ -51,7 +51,14 @@ export const ConfigurationContent = styled.div`
     }
 `;
 
-export const ChartContainer = styled.div`
+export const DataContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+`;
+
+export const DataContent = styled.div`
     display: flex;
     width: 100%;
     height: 100%;
@@ -65,6 +72,16 @@ export const ChartContainer = styled.div`
     .cm-gutterElement {
         font-size: ${({ theme }) => theme.fontSize.fs50};
     }
+`;
+
+export const DataFooter = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 25px;
+    padding: 0 10px;
+    background: ${({ theme }) => theme.colors.white};
+    border-top: 1px solid ${props => props.theme.colors.gray40};
 `;
 
 export const BottomContainer = styled.div`
