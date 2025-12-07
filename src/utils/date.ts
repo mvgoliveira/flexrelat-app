@@ -49,12 +49,12 @@ export const getShortElapsedTime = (timestamp: string): string => {
             return selectedDate.locale(dayJsLocale).format("DD MMM YYYY");
         }
 
-        return `Há ${hours} hora${hours > 1 ? "s" : ""}`;
+        return `Há ${hours} h${hours > 1 ? "s" : ""}`;
     }
 
     if (minutesDiff < 1) {
         return "Agora mesmo";
     }
 
-    return `Há ${minutesDiff} minuto${minutesDiff !== 1 ? "s" : ""}`;
+    return `Há ${minutesDiff} min`;
 };

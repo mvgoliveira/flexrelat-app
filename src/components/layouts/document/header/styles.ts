@@ -77,7 +77,7 @@ export const LoadingContainer = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    background: ${({ theme }) => hexToRgba(theme.colors.purple100, 50)};
+    background: ${({ theme }) => hexToRgba(theme.colors.blue80, 50)};
     backdrop-filter: blur(4px);
     z-index: 1000;
 `;

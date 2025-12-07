@@ -30,14 +30,14 @@ function DocumentsPage(): React.ReactElement {
         <Layout>
             <Layout.NavBar>
                 <Layout.NavBar.Item
-                    icon={<LuFileText size={14} color={Theme.colors.gray70} />}
+                    icon={<LuFileText size={14} color={Theme.colors.gray100} />}
                     text="Documentos"
                     onClick={() => router.push("/documents")}
                 />
 
                 <Layout.NavBar.Item
                     active
-                    icon={<LuTextSelect size={14} color={Theme.colors.black} />}
+                    icon={<LuTextSelect size={14} color={Theme.colors.gray100} />}
                     text="Modelos"
                 />
             </Layout.NavBar>

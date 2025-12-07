@@ -30,7 +30,7 @@ export const StyledNavbar = styled.article`
     overflow: hidden;
 `;
 
-export const StyledNavbarItem = styled.div`
+export const StyledNavbarItem = styled.div<{ active: boolean }>`
     display: flex;
     align-items: center;
     gap: 10px;
@@ -38,9 +38,10 @@ export const StyledNavbarItem = styled.div`
     cursor: pointer;
     width: 100%;
     border-radius: 8px;
+    background: ${({ active, theme }) => (active ? theme.colors.gray20 : "transparent")};
 
     &:hover {
-        background-color: ${({ theme }) => theme.colors.gray10};
+        background: ${({ theme, active }) => (active ? theme.colors.gray20 : theme.colors.gray10)};
     }
 `;
 

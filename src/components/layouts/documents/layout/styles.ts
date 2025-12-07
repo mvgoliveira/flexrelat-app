@@ -25,12 +25,12 @@ export const StyledNavbar = styled.article`
     align-items: center;
     height: 100%;
     width: 100%;
-    background-color: ${({ theme }) => theme.colors.white};
+    background: ${({ theme }) => theme.colors.white};
     border-right: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;
 `;
 
-export const StyledNavbarItem = styled.div`
+export const StyledNavbarItem = styled.div<{ active: boolean }>`
     display: flex;
     align-items: center;
     gap: 10px;
@@ -38,9 +38,10 @@ export const StyledNavbarItem = styled.div`
     cursor: pointer;
     width: 100%;
     border-radius: 8px;
+    background: ${({ active, theme }) => (active ? theme.colors.gray20 : "transparent")};
 
     &:hover {
-        background-color: ${({ theme }) => theme.colors.gray10};
+        background: ${({ theme, active }) => (active ? theme.colors.gray20 : theme.colors.gray10)};
     }
 `;
 
@@ -68,7 +69,7 @@ export const StyledHeader = styled.header`
     align-items: center;
     height: 100%;
     width: 100%;
-    background-color: ${({ theme }) => theme.colors.white};
+    background: ${({ theme }) => theme.colors.white};
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray30};
     align-items: center;
     padding: 0 20px;

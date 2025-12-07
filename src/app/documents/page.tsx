@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/features/button";
 import { Spinner } from "@/components/features/loading/spinner";
-import { SearchInput } from "@/components/features/searchInput";
 import { Typography } from "@/components/features/typography";
 import { ProfileSelector } from "@/components/layouts/common/profileSelector";
 import { DocumentsList } from "@/components/layouts/documents/documentsList";
@@ -42,12 +41,12 @@ function DocumentsPage(): React.ReactElement {
             <Layout.NavBar>
                 <Layout.NavBar.Item
                     active
-                    icon={<LuFileText size={14} color={Theme.colors.black} />}
+                    icon={<LuFileText size={14} color={Theme.colors.gray100} />}
                     text="Documentos"
                 />
 
                 <Layout.NavBar.Item
-                    icon={<LuTextSelect size={14} color={Theme.colors.gray70} />}
+                    icon={<LuTextSelect size={14} color={Theme.colors.gray100} />}
                     text="Modelos"
                     onClick={() => router.push("/models")}
                 />
@@ -108,10 +107,6 @@ function DocumentsPage(): React.ReactElement {
                                 </div>
                             )}
                         </Button>
-
-                        <div style={{ width: 200 }}>
-                            <SearchInput hasShadow />
-                        </div>
 
                         <div
                             style={{

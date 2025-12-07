@@ -120,7 +120,7 @@ export const Root = styled.div<IRootProps>`
         font-family: ${({ theme }) => theme.fontFamily.timesNewRoman};
         font-size: 12pt;
         line-height: 1.5;
-        word-wrap: break-word;
+        word-wrap: normal;
     }
 
     hr {
@@ -202,10 +202,13 @@ export const Root = styled.div<IRootProps>`
             box-sizing: border-box;
             padding: 6px;
             position: relative;
+            word-break: normal;
 
             > * {
                 margin-bottom: 0;
-                white-space: pre-wrap;
+                white-space: normal;
+                word-break: normal;
+                overflow-wrap: break-word;
             }
 
             &:first-of-type {

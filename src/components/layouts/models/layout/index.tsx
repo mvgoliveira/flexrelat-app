@@ -59,15 +59,10 @@ interface IItemProps {
 
 const Item = ({ icon, text, active = false, onClick }: IItemProps): ReactElement => {
     return (
-        <StyledNavbarItem onClick={onClick}>
+        <StyledNavbarItem onClick={onClick} active={active}>
             {icon}
 
-            <Typography
-                tag="p"
-                fontSize={{ xs: "fs75" }}
-                color={active ? "black" : "gray70"}
-                fontWeight="medium"
-            >
+            <Typography tag="p" fontSize={{ xs: "fs75" }} color="gray100" fontWeight="medium">
                 {text}
             </Typography>
         </StyledNavbarItem>

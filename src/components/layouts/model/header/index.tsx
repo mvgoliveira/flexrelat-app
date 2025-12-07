@@ -58,11 +58,11 @@ export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
 
                     metadata.onChangeStatus("success");
 
-                    if (titleRef && titleRef.current && newTitle !== "Relatório sem título") {
+                    if (titleRef && titleRef.current && newTitle !== "Sem título") {
                         titleRef.current.textContent = response.name;
                         titleRef.current.style.color = Theme.colors.gray100;
                         setTitle(response.name);
-                    } else if (newTitle === "Relatório sem título") {
+                    } else if (newTitle === "Sem título") {
                         setTitle("");
                     }
                 } catch (error) {
@@ -84,7 +84,7 @@ export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
         if (titleRef.current && titleRef.current.textContent !== title) {
             if (!titleRef.current.textContent) {
                 titleRef.current!.style.color = Theme.colors.gray70;
-                titleRef.current!.textContent = "Relatório sem título";
+                titleRef.current!.textContent = "Sem título";
             }
 
             saveTitle(titleRef.current.textContent || "");
@@ -92,14 +92,14 @@ export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
 
         if (titleRef.current && titleRef.current.textContent === "" && title === "") {
             titleRef.current.style.color = Theme.colors.gray70;
-            titleRef.current.textContent = "Relatório sem título";
+            titleRef.current.textContent = "Sem título";
         }
     };
 
     const handleChangeTitle = async () => {
         if (readOnly) return;
 
-        if (titleRef.current && titleRef.current.textContent !== "Relatório sem título") {
+        if (titleRef.current && titleRef.current.textContent !== "Sem título") {
             titleRef.current.style.color = Theme.colors.gray100;
         }
     };
@@ -107,7 +107,7 @@ export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
     const handleClickTitle = () => {
         if (readOnly) return;
 
-        if (titleRef.current && titleRef.current.textContent === "Relatório sem título") {
+        if (titleRef.current && titleRef.current.textContent === "Sem título") {
             titleRef.current.textContent = "";
         }
     };
@@ -189,7 +189,7 @@ export const Header = ({ metadata, readOnly }: IHeaderProps): ReactElement => {
                                     onClick={handleClickTitle}
                                     ref={titleRef}
                                 >
-                                    {title === "" ? "Relatório sem título" : title}
+                                    {title === "" ? "Sem título" : title}
                                 </Typography>
                             </TitleContent>
 

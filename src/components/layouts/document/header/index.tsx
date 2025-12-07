@@ -9,6 +9,7 @@ import { updateDocumentTitle } from "@/repositories/documentAPI";
 import { createModel } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
+import html2canvas from "html2canvas";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
@@ -25,6 +26,7 @@ import {
     MdSaveAlt,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
+import { VscDebugConsole } from "react-icons/vsc";
 
 import { ModalCreateModel } from "../../modals/modalCreateModel";
 import {
@@ -55,7 +57,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     const toastErrorRef = useRef<{ publish: () => void } | null>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
 
-    const [title, setTitle] = useState<string>(metadata.title || "Relatório sem título");
+    const [title, setTitle] = useState<string>(metadata.title || "Sem título");
     const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
     const [isDataModalOpen, setIsDataModalOpen] = useState<boolean>(false);
     const [isCreateModelModalOpen, setIsCreateModelModalOpen] = useState<boolean>(false);
@@ -78,11 +80,11 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                     metadata.onChangeStatus("success");
 
-                    if (titleRef && titleRef.current && newTitle !== "Relatório sem título") {
+                    if (titleRef && titleRef.current && newTitle !== "Sem título") {
                         titleRef.current.textContent = response.name;
                         titleRef.current.style.color = Theme.colors.gray100;
                         setTitle(response.name);
-                    } else if (newTitle === "Relatório sem título") {
+                    } else if (newTitle === "Sem título") {
                         setTitle("");
                     }
                 } catch (error) {
@@ -102,7 +104,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         if (titleRef.current && titleRef.current.textContent !== title) {
             if (!titleRef.current.textContent) {
                 titleRef.current!.style.color = Theme.colors.gray70;
-                titleRef.current!.textContent = "Relatório sem título";
+                titleRef.current!.textContent = "Sem título";
             }
 
             saveTitle(titleRef.current.textContent || "");
@@ -110,18 +112,18 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
         if (titleRef.current && titleRef.current.textContent === "" && title === "") {
             titleRef.current.style.color = Theme.colors.gray70;
-            titleRef.current.textContent = "Relatório sem título";
+            titleRef.current.textContent = "Sem título";
         }
     };
 
     const handleChangeTitle = async () => {
-        if (titleRef.current && titleRef.current.textContent !== "Relatório sem título") {
+        if (titleRef.current && titleRef.current.textContent !== "Sem título") {
             titleRef.current.style.color = Theme.colors.gray100;
         }
     };
 
     const handleClickTitle = () => {
-        if (titleRef.current && titleRef.current.textContent === "Relatório sem título") {
+        if (titleRef.current && titleRef.current.textContent === "Sem título") {
             titleRef.current.textContent = "";
         }
     };
@@ -159,7 +161,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     //     const url = URL.createObjectURL(pdfBlob);
     //     const link = document.createElement("a");
     //     link.href = url;
-    //     const currentTitle = title || "Relatório sem título";
+    //     const currentTitle = title || "Sem título";
     //     link.download = currentTitle;
     //     link.click();
     //     URL.revokeObjectURL(url);
@@ -330,7 +332,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
         const opt = {
             margin: [85.039, 85.039, 56.693, 56.693] as [number, number, number, number],
-            filename: `${title || "Relatório sem título"}.pdf`,
+            filename: `${title || "Sem título"}.pdf`,
             image: { type: "webp" as const, quality: 0.98 },
             html2canvas: {
                 allowTaint: true,
@@ -354,12 +356,363 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         setIsDownloadLoading(false);
     };
 
-    // const handleDownloadDOCX = async () => {};
-
-    // const handleDebugConsole = async () => {
+    // const handleDownloadDOCX = async () => {
     //     const htmlContent = getHtmlContent();
-    //     console.log(htmlContent);
+
+    //     // Replace quick-chart with img
+    //     const filteredHtml = htmlContent.replaceAll(
+    //         /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
+    //         (match, chartData, width, height) => {
+    //             try {
+    //                 const url = `https://quickchart.io/chart?c=${chartData}`;
+    //                 return `
+    //                     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+    //                         <img src="${url}" style="width: ${width}px; height: ${height}px;" />
+    //                     </div>
+    //                 `;
+    //             } catch (e) {
+    //                 console.error("Erro ao processar chartdata:", e);
+    //                 return "";
+    //             }
+    //         }
+    //     );
+
+    //     const styles = `
+    //         <style>
+    //             h1,
+    //             h2,
+    //             h3,
+    //             h4,
+    //             h5,
+    //             h6,
+    //             p {
+    //                 margin-bottom: 12px;
+    //                 text-align: start;
+    //                 font-family: "Times New Roman, serif";
+    //                 font-size: 16px;
+    //                 line-height: 1.5;
+    //                 word-wrap: break-word;
+    //             }
+
+    //             h1,
+    //             h2,
+    //             h3,
+    //             h4,
+    //             h5,
+    //             h6 {
+    //                 font-weight: bold;
+    //             }
+
+    //             p:empty::before {
+    //                 content: " ";
+    //                 display: inline-block;
+    //                 height: 1.2em;
+    //             }
+
+    //             table {
+    //                 border-collapse: collapse;
+    //                 overflow: hidden;
+    //                 table-layout: fixed;
+    //                 width: 100%;
+    //                 margin-bottom: 12px;
+    //             }
+
+    //             table p {
+    //                 white-space: pre-wrap;
+    //             }
+
+    //             table p:empty {
+    //                 white-space: normal;
+    //             }
+
+    //             table tr:last-of-type {
+    //                 margin-bottom: 12px;
+    //             }
+
+    //             table tr:first-of-type td,
+    //             table tr:first-of-type th {
+    //                 border-top: 1px solid #000000;
+    //             }
+
+    //             table td,
+    //             table th {
+    //                 border-right: 1px solid #000000;
+    //                 border-bottom: 1px solid #000000;
+    //                 box-sizing: border-box;
+    //                 padding: 6px;
+    //                 position: relative;
+    //             }
+
+    //             table td > *,
+    //             table th > * {
+    //                 margin-bottom: 0 !important;
+    //             }
+
+    //             table td:first-of-type,
+    //             table th:first-of-type {
+    //                 border-left: 1px solid #000000;
+    //             }
+
+    //             table th {
+    //                 font-weight: bold;
+    //                 text-align: center;
+    //             }
+
+    //             table th p {
+    //                 text-align: start;
+    //             }
+
+    //             ul {
+    //                 list-style-type: disc;
+    //                 padding-left: 40px;
+    //             }
+
+    //             ol {
+    //                 list-style-type: decimal;
+    //                 padding-left: 40px;
+    //             }
+
+    //             blockquote {
+    //                 border-left: 4px solid #d1d5db;
+    //                 padding-left: 16px;
+    //                 margin-left: 0;
+    //                 margin-bottom: 12px;
+    //                 font-style: italic;
+    //                 background: rgba(249, 250, 251, 0.5);
+    //                 padding-top: 8px;
+    //                 padding-bottom: 8px;
+    //             }
+
+    //             blockquote p {
+    //                 margin-bottom: 0;
+    //             }
+
+    //             pre {
+    //                 background-color: #171717;
+    //                 background: #171717;
+    //                 color: #F6F6F6;
+    //                 font-family: monospace;
+    //                 padding: 16px;
+    //                 border-radius: 4px;
+    //                 margin-bottom: 12px;
+    //                 overflow-x: auto;
+    //                 line-height: 1.5;
+    //             }
+
+    //             pre code {
+    //                 background: none;
+    //                 color: inherit;
+    //                 font-size: 11pt;
+    //                 padding: 0;
+    //             }
+    //         </style>
+    //     `;
+
+    //     const finalHtml = `
+    //         <html>
+    //             <head>${styles}</head>
+    //             <body>${filteredHtml}</body>
+    //         </html>
+    //     `;
+
+    //     const blob = new Blob([finalHtml], {
+    //         type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    //     });
+
+    //     const url = URL.createObjectURL(blob);
+
+    //     const link = document.createElement("a");
+
+    //     link.href = url;
+    //     link.download = `${title || "Sem título"}.docx`;
+    //     link.click();
+    //     URL.revokeObjectURL(url);
     // };
+
+    const handleDebugConsole = async () => {
+        const htmlContent = getHtmlContent();
+
+        // Replace quick-chart with img
+        const filteredHtml = htmlContent.replaceAll(
+            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
+            (match, chartData, width, height) => {
+                try {
+                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    return `
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
+                            <img src="${url}" style="width: ${width}px; height: ${height}px;" />
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("Erro ao processar chartdata:", e);
+                    return "";
+                }
+            }
+        );
+
+        const styles = `
+            <style>
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6,
+                p {
+                    margin-bottom: 12px;
+                    text-align: start;
+                    font-family: "Times New Roman, serif";
+                    font-size: 16px;
+                    line-height: 1.5;
+                    word-wrap: break-word;
+                }
+
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6 {
+                    font-weight: bold;
+                }
+
+                p:empty::before {
+                    content: " ";
+                    display: inline-block;
+                    height: 1.2em;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    overflow: hidden;
+                    table-layout: fixed;
+                    width: 100%;
+                    margin-bottom: 12px;
+                }
+
+                table p {
+                    white-space: pre-wrap;
+                }
+
+                table p:empty {
+                    white-space: normal;
+                }
+
+                table tr:last-of-type {
+                    margin-bottom: 12px;
+                }
+
+                table tr:first-of-type td,
+                table tr:first-of-type th {
+                    border-top: 1px solid #000000;
+                }
+
+                table td,
+                table th {
+                    border-right: 1px solid #000000;
+                    border-bottom: 1px solid #000000;
+                    box-sizing: border-box;
+                    padding: 6px;
+                    position: relative;
+                }
+
+                table td > *,
+                table th > * {
+                    margin-bottom: 0 !important;
+                }
+
+                table td:first-of-type,
+                table th:first-of-type {
+                    border-left: 1px solid #000000;
+                }
+
+                table th {
+                    font-weight: bold;
+                    text-align: center;
+                }
+
+                table th p {
+                    text-align: start;
+                }
+
+                ul {
+                    list-style-type: disc;
+                    padding-left: 40px;
+                }
+
+                ol {
+                    list-style-type: decimal;
+                    padding-left: 40px;
+                }
+
+                blockquote {
+                    border-left: 4px solid #d1d5db;
+                    padding-left: 16px;
+                    margin-left: 0;
+                    margin-bottom: 12px;
+                    font-style: italic;
+                    background: rgba(249, 250, 251, 0.5);
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                }
+
+                blockquote p {
+                    margin-bottom: 0;
+                }
+
+                pre {
+                    background-color: #171717;
+                    background: #171717;
+                    color: #F6F6F6;
+                    font-family: monospace;
+                    padding: 16px;
+                    border-radius: 4px;
+                    margin-bottom: 12px;
+                    overflow-x: auto;
+                    line-height: 1.5;
+                }
+
+                pre code {
+                    background: none;
+                    color: inherit;
+                    font-size: 11pt;
+                    padding: 0;
+                }
+            </style>
+        `;
+
+        const finalHtml = `
+            <html>
+                <head>${styles}</head>
+                <body>${filteredHtml}</body>
+            </html>
+        `;
+
+        const el = document.createElement("div");
+        el.innerHTML = finalHtml;
+        el.style.position = "absolute";
+        el.style.width = "794px";
+        el.style.height = "1123px";
+        el.style.left = "-9999px";
+        el.style.top = "-9999px";
+        el.style.background = "white";
+        el.style.paddingTop = "113.385826772px";
+        el.style.paddingBottom = "75.590551181px";
+        el.style.paddingLeft = "113.385826772px";
+        el.style.paddingRight = "75.590551181px";
+
+        document.body.appendChild(el);
+
+        try {
+            const canvas = await html2canvas(el, { scale: 1 });
+            const img = canvas.toDataURL("image/png");
+            const imgWindow = window.open("");
+            if (imgWindow) imgWindow.document.write(`<img src='${img}' />`);
+            return img;
+        } finally {
+            document.body.removeChild(el);
+        }
+    };
 
     const handleBackToDocuments = () => {
         router.push(`/documents`);
@@ -423,35 +776,35 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         <IconChangeContainer>
                             <IconChangeAnimation>
                                 <AiLoadingIconContainer>
-                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
+                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray20} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <LiaSave size={20} color={Theme.colors.gray40} />
+                                    <LiaSave size={20} color={Theme.colors.gray20} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <MdSaveAlt size={20} color={Theme.colors.gray40} />
+                                    <MdSaveAlt size={20} color={Theme.colors.gray20} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray40} />
+                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray20} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <LiaSave size={20} color={Theme.colors.gray40} />
+                                    <LiaSave size={20} color={Theme.colors.gray20} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <MdSaveAlt size={20} color={Theme.colors.gray40} />
+                                    <MdSaveAlt size={20} color={Theme.colors.gray20} />
                                 </AiLoadingIconContainer>
                             </IconChangeAnimation>
                         </IconChangeContainer>
 
                         <Typography
                             tag="p"
-                            fontSize={{ xs: "fs50" }}
-                            color="gray50"
+                            fontSize={{ xs: "fs75" }}
+                            color="gray20"
                             fontWeight="medium"
                             textAlign="left"
                         >
@@ -495,7 +848,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                                     onClick={handleClickTitle}
                                     ref={titleRef}
                                 >
-                                    {title === "" ? "Relatório sem título" : title}
+                                    {title === "" ? "Sem título" : title}
                                 </Typography>
                             </TitleContent>
 
@@ -685,12 +1038,12 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                                     }
                                 /> */}
 
-                                {/* <Menu.Item
+                                <Menu.Item
                                     text="Depuração"
                                     onClick={handleDebugConsole}
                                     iconPosition="left"
                                     icon={<VscDebugConsole size={12} color={Theme.colors.black} />}
-                                /> */}
+                                />
                             </Menu.Content>
                         </Menu>
 
