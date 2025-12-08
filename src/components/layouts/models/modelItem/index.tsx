@@ -1,6 +1,5 @@
 import { Button } from "@/components/features/button";
 import { Menu } from "@/components/features/menu";
-import { Skeleton } from "@/components/features/skeleton";
 import { Typography } from "@/components/features/typography";
 import { ModalDeleteModel } from "@/components/layouts/modals/modalDeleteModel";
 import { ModelDataWithUser } from "@/repositories/modelAPI";
@@ -242,7 +241,7 @@ export const ModelItem = ({ model, onClick, onDelete, onEdit }: IModelItemProps)
 
             <Root key={model.id} onClick={() => onClick(model.publicCode)}>
                 <ImageContainer>
-                    {previewImg ? (
+                    {previewImg && (
                         <Image
                             src={previewImg}
                             alt="Model Thumbnail"
@@ -255,8 +254,6 @@ export const ModelItem = ({ model, onClick, onDelete, onEdit }: IModelItemProps)
                                 height: "100%",
                             }}
                         />
-                    ) : (
-                        <Skeleton width={200} height={120} color="gray30" />
                     )}
                 </ImageContainer>
 

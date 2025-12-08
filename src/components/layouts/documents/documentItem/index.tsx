@@ -1,6 +1,5 @@
 import { Button } from "@/components/features/button";
 import { Menu } from "@/components/features/menu";
-import { Skeleton } from "@/components/features/skeleton";
 import { Typography } from "@/components/features/typography";
 import { ModalDeleteDocument } from "@/components/layouts/modals/modalDeleteDocument";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -247,7 +246,7 @@ export const DocumentItem = ({
 
             <Root key={model.id} onClick={() => onClick(model.publicCode)}>
                 <ImageContainer>
-                    {previewImg ? (
+                    {previewImg && (
                         <Image
                             src={previewImg}
                             alt="Document Thumbnail"
@@ -260,8 +259,6 @@ export const DocumentItem = ({
                                 height: "100%",
                             }}
                         />
-                    ) : (
-                        <Skeleton width={200} height={120} color="gray30" />
                     )}
                 </ImageContainer>
 
@@ -337,7 +334,7 @@ export const DocumentItem = ({
                             <Image
                                 src={`https://ui-avatars.com/api/?background=random&name=${model.user.username}&bold=true`}
                                 alt="organization avatar"
-                                width={16}
+                                width={15}
                                 height={15}
                             />
                         </ProfileImage>

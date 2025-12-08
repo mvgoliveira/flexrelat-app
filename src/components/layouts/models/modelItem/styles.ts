@@ -4,7 +4,6 @@ export const Root = styled.div`
     display: flex;
     flex-direction: column;
     min-width: 200px;
-    max-width: 250px;
     flex-grow: 1;
     height: 200px;
     border: 1px solid ${({ theme }) => theme.colors.gray40};
@@ -44,7 +43,9 @@ export const Dot = styled.div`
 
 export const ProfileImage = styled.div`
     width: 15px;
+    min-width: 15px;
     height: 15px;
+    min-height: 15px;
     display: flex;
     align-items: center;
     justify-content: center;

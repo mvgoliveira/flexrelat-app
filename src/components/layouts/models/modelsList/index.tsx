@@ -1,22 +1,29 @@
 import { SearchInput } from "@/components/features/searchInput";
 import { Skeleton } from "@/components/features/skeleton";
 import { Typography } from "@/components/features/typography";
-import { deleteModel, ModelDataWithUser, getOwnModels } from "@/repositories/modelAPI";
+import { deleteModel, ModelDataWithUser } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
-import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 
 import { ModelItem } from "../modelItem";
-import { Root, EmptyState, Container } from "./styles";
+import { Root, EmptyState, Container, DocumentItemEmptyState } from "./styles";
 
 interface IModelsListProps {
     onModelClick: (publicCode: string) => void;
+    name: string;
+    models: ModelDataWithUser[];
+    status: "pending" | "success" | "error";
 }
 
-export const ModelsList = ({ onModelClick }: IModelsListProps): ReactElement => {
+export const ModelsList = ({
+    onModelClick,
+    name,
+    models,
+    status,
+}: IModelsListProps): ReactElement => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -26,15 +33,6 @@ export const ModelsList = ({ onModelClick }: IModelsListProps): ReactElement => 
     );
     const [order, setOrder] = useState<"desc" | "asc">("desc");
     const [searchTerm, setSearchTerm] = useState<string>("");
-
-    const { status: status, data: models } = useQuery({
-        queryKey: ["get_own_models"],
-        queryFn: async (): Promise<ModelDataWithUser[]> => {
-            const response: ModelDataWithUser[] = await getOwnModels();
-            return response;
-        },
-        refetchInterval: 5 * 60 * 1000,
-    });
 
     const handleDelete = async (modelId: string) => {
         const oldModelsData = orderedModels;
@@ -128,8 +126,8 @@ export const ModelsList = ({ onModelClick }: IModelsListProps): ReactElement => 
 
         // Aplicar filtro de busca
         const filteredDocuments = models.filter(document => {
-            const name = document.name ? document.name.toLocaleLowerCase() : "sem título";
-            return name.includes(searchTerm);
+            const title = document.name ? document.name.toLocaleLowerCase() : "sem título";
+            return title.includes(searchTerm);
         });
 
         // Aplicar ordenação aos resultados filtrados
@@ -166,7 +164,7 @@ export const ModelsList = ({ onModelClick }: IModelsListProps): ReactElement => 
                 }}
             >
                 <Typography tag="h2" fontSize={{ xs: "fs100" }} color="black" fontWeight="medium">
-                    Seus Modelos
+                    {name}
                 </Typography>
 
                 <div style={{ width: 200, height: 30 }}>
@@ -175,16 +173,48 @@ export const ModelsList = ({ onModelClick }: IModelsListProps): ReactElement => 
             </div>
 
             <Container>
-                {(status === "pending" || orderedModels.length <= 0) && (
+                {status === "pending" && (
                     <>
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
                     </>
+                )}
+
+                {status === "success" && orderedModels.length === 0 && (
+                    <EmptyState>
+                        <MdOutlineDocumentScanner size={18} color={Theme.colors.gray70} />
+
+                        <Typography
+                            tag="span"
+                            fontSize={{ xs: "fs75" }}
+                            color="gray70"
+                            fontWeight="regular"
+                        >
+                            Nenhum modelo encontrado
+                        </Typography>
+                    </EmptyState>
                 )}
 
                 {status === "success" &&

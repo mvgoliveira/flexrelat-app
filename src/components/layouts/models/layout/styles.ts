@@ -61,6 +61,7 @@ export const StyledContainer = styled.div`
     width: 100%;
     height: 100%;
     overflow: auto;
+    gap: 40px;
 `;
 
 export const StyledHeader = styled.header`

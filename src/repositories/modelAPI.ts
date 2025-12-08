@@ -64,6 +64,11 @@ export const getOwnModels = async (): Promise<ModelDataWithUser[]> => {
     return data;
 };
 
+export const getOfficialModels = async (): Promise<ModelDataWithUser[]> => {
+    const { data } = await client.get<ModelDataWithUser[]>(`${PREFIX}/official`);
+    return data;
+};
+
 export type UpdateModelData = {
     id: string;
     name: string;

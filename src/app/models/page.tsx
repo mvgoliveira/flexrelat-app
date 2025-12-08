@@ -6,7 +6,9 @@ import { ProfileSelector } from "@/components/layouts/common/profileSelector";
 import { Layout } from "@/components/layouts/models/layout";
 import { ModelsList } from "@/components/layouts/models/modelsList";
 import withSession from "@/hoc/withSession";
+import { getOfficialModels, getOwnModels, ModelDataWithUser } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { LuFileText, LuTextSelect } from "react-icons/lu";
@@ -19,6 +21,24 @@ function DocumentsPage(): React.ReactElement {
     const handleModelClick = (publicCode: string): void => {
         router.push(`/models/${publicCode}`);
     };
+
+    const { status: officialStatus, data: officialModels } = useQuery({
+        queryKey: ["get_official_models"],
+        queryFn: async (): Promise<ModelDataWithUser[]> => {
+            const response: ModelDataWithUser[] = await getOfficialModels();
+            return response;
+        },
+        refetchInterval: 5 * 60 * 1000,
+    });
+
+    const { status, data: models } = useQuery({
+        queryKey: ["get_own_models"],
+        queryFn: async (): Promise<ModelDataWithUser[]> => {
+            const response: ModelDataWithUser[] = await getOwnModels();
+            return response;
+        },
+        refetchInterval: 5 * 60 * 1000,
+    });
 
     useEffect(() => {
         return () => {
@@ -84,7 +104,19 @@ function DocumentsPage(): React.ReactElement {
                 </Layout.Content.Header>
 
                 <Layout.Content.Container>
-                    <ModelsList onModelClick={handleModelClick} />
+                    <ModelsList
+                        onModelClick={handleModelClick}
+                        name="Modelos Oficiais"
+                        status={officialStatus}
+                        models={officialModels || []}
+                    />
+
+                    <ModelsList
+                        onModelClick={handleModelClick}
+                        name="Seus Modelos"
+                        status={status}
+                        models={models || []}
+                    />
                 </Layout.Content.Container>
             </Layout.Content>
         </Layout>

@@ -10,7 +10,7 @@ import { ReactElement, useEffect, useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 
 import { DocumentItem } from "../documentItem";
-import { Root, EmptyState, Container } from "./styles";
+import { Root, EmptyState, Container, DocumentItemEmptyState } from "./styles";
 
 interface IDocumentsListProps {
     onDocumentClick: (publicCode: string) => void;
@@ -209,13 +209,30 @@ export const DocumentsList = ({ onDocumentClick }: IDocumentsListProps): ReactEl
             <Container>
                 {status === "pending" && (
                     <>
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
-                        <Skeleton width={200} height={200} color="gray20" />
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
+                        <DocumentItemEmptyState>
+                            <Skeleton width="100%" height={200} color="gray20" />
+                        </DocumentItemEmptyState>
                     </>
                 )}
 
