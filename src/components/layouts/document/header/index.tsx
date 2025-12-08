@@ -179,7 +179,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
             (match, chartData, width, height) => {
                 try {
-                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    const url = `https://quickchart.io/chart?c=${chartData}&w=${width * 1.3}&h=${height * 1.3}`;
                     return `
                         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
                             <img src="${url}" style="width: ${width}px; height: ${height}px;" />
@@ -204,9 +204,15 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     margin-bottom: 12px;
                     text-align: start;
                     font-family: "Times New Roman, serif";
-                    font-size: 16px;
+                    font-size: 12pt;
                     line-height: 1.5;
-                    word-wrap: break-word;
+                    word-wrap: normal;
+                }
+
+                p:empty::before {
+                    content: " ";
+                    display: inline-block;
+                    height: 12pt;
                 }
 
                 h1,
@@ -218,10 +224,20 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     font-weight: bold;
                 }
 
-                p:empty::before {
-                    content: " ";
-                    display: inline-block;
-                    height: 1.2em;
+                hr {
+                    margin-bottom: 12px;
+                    border: none;
+                    border-bottom: 1px solid #373737;
+                }
+
+                .layout h1,
+                .layout h2,
+                .layout h3,
+                .layout h4,
+                .layout h5,
+                .layout h6,
+                .layout p {
+                    margin-bottom: 0px;
                 }
 
                 table {
@@ -234,6 +250,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                 table p {
                     white-space: pre-wrap;
+                    line-height: 1;
                 }
 
                 table p:empty {
@@ -275,6 +292,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                 table th p {
                     text-align: start;
+                    line-height: 1;
                 }
 
                 ul {
@@ -537,7 +555,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
             /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
             (match, chartData, width, height) => {
                 try {
-                    const url = `https://quickchart.io/chart?c=${chartData}`;
+                    const url = `https://quickchart.io/chart?c=${chartData}&w=${width * 1.3}&h=${height * 1.3}`;
                     return `
                         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
                             <img src="${url}" style="width: ${width}px; height: ${height}px;" />
@@ -562,9 +580,15 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     margin-bottom: 12px;
                     text-align: start;
                     font-family: "Times New Roman, serif";
-                    font-size: 16px;
+                    font-size: 12pt;
                     line-height: 1.5;
-                    word-wrap: break-word;
+                    word-wrap: normal;
+                }
+
+                p:empty::before {
+                    content: " ";
+                    display: inline-block;
+                    height: 12pt;
                 }
 
                 h1,
@@ -576,10 +600,20 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                     font-weight: bold;
                 }
 
-                p:empty::before {
-                    content: " ";
-                    display: inline-block;
-                    height: 1.2em;
+                hr {
+                    margin-bottom: 12px;
+                    border: none;
+                    border-bottom: 1px solid #373737;
+                }
+
+                .layout h1,
+                .layout h2,
+                .layout h3,
+                .layout h4,
+                .layout h5,
+                .layout h6,
+                .layout p {
+                    margin-bottom: 0px;
                 }
 
                 table {
@@ -592,6 +626,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                 table p {
                     white-space: pre-wrap;
+                    line-height: 1;
                 }
 
                 table p:empty {
@@ -633,6 +668,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
                 table th p {
                     text-align: start;
+                    line-height: 1;
                 }
 
                 ul {
@@ -776,27 +812,27 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         <IconChangeContainer>
                             <IconChangeAnimation>
                                 <AiLoadingIconContainer>
-                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray20} />
+                                    <LiaFileDownloadSolid size={20} color={Theme.colors.white} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <LiaSave size={20} color={Theme.colors.gray20} />
+                                    <LiaSave size={20} color={Theme.colors.white} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <MdSaveAlt size={20} color={Theme.colors.gray20} />
+                                    <MdSaveAlt size={20} color={Theme.colors.white} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <LiaFileDownloadSolid size={20} color={Theme.colors.gray20} />
+                                    <LiaFileDownloadSolid size={20} color={Theme.colors.white} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <LiaSave size={20} color={Theme.colors.gray20} />
+                                    <LiaSave size={20} color={Theme.colors.white} />
                                 </AiLoadingIconContainer>
 
                                 <AiLoadingIconContainer>
-                                    <MdSaveAlt size={20} color={Theme.colors.gray20} />
+                                    <MdSaveAlt size={20} color={Theme.colors.white} />
                                 </AiLoadingIconContainer>
                             </IconChangeAnimation>
                         </IconChangeContainer>
@@ -804,7 +840,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                         <Typography
                             tag="p"
                             fontSize={{ xs: "fs75" }}
-                            color="gray20"
+                            color="white"
                             fontWeight="medium"
                             textAlign="left"
                         >

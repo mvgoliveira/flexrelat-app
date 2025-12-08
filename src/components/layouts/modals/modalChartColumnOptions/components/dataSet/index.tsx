@@ -37,9 +37,12 @@ export const DataSet = ({
 
     const columns = [
         {
-            type: "text",
+            type: "numeric",
             title: axis,
             tooltip: "Eixo-y do gráfico",
+            mask: "#.##0,00",
+            decimal: ",",
+            locale: "pt-BR",
         },
     ];
 
@@ -76,7 +79,18 @@ export const DataSet = ({
     const handleChangeData = (worksheet: any) => {
         const updatedData = worksheet.getData() as Array<Array<string | number>>;
         const filteredNewData = updatedData.filter(row => !row.some(cell => cell === ""));
-        changeData(filteredNewData.flat() as Array<string | number>);
+        const formattedData = filteredNewData.map(row => {
+            const cellValue = row[0];
+            if (typeof cellValue === "string") {
+                const numberValue = parseFloat(cellValue.replace(/\./g, "").replace(",", "."));
+                return isNaN(numberValue) ? cellValue : numberValue;
+            }
+            return cellValue;
+        });
+
+        console.log(formattedData);
+
+        changeData(formattedData.flat() as Array<string | number>);
     };
 
     const handleLoad = useCallback((worksheet: any) => {

@@ -27,6 +27,8 @@ export const DataConfiguration = ({
         []
     );
     const [dataLabels, setDataLabels] = useState<Array<string | number>>([]);
+    const [yPrefix, setYPrefix] = useState<string>("");
+    const [ySuffix, setYSuffix] = useState<string>("");
 
     const handleChangeDataSet = (index: number, data: number[]) => {
         if (metadata) {
@@ -146,6 +148,48 @@ export const DataConfiguration = ({
         }
     };
 
+    const handleChangePrefix = (selectedPrefix: string) => {
+        setYPrefix(selectedPrefix);
+
+        if (metadata) {
+            const newData = { ...metadata };
+
+            newData.options = {
+                ...newData.options,
+                plugins: {
+                    ...newData?.options?.plugins,
+                    tickFormat: {
+                        ...newData?.options?.plugins?.tickFormat,
+                        prefix: selectedPrefix,
+                    },
+                },
+            };
+
+            changeChartData(newData);
+        }
+    };
+
+    const handleChangeSuffix = (selectedSuffix: string) => {
+        setYSuffix(selectedSuffix);
+
+        if (metadata) {
+            const newData = { ...metadata };
+
+            newData.options = {
+                ...newData.options,
+                plugins: {
+                    ...newData?.options?.plugins,
+                    tickFormat: {
+                        ...newData?.options?.plugins?.tickFormat,
+                        suffix: selectedSuffix,
+                    },
+                },
+            };
+
+            changeChartData(newData);
+        }
+    };
+
     useEffect(() => {
         if (metadata) {
             setChartTitle(metadata?.options?.title?.text || "");
@@ -193,6 +237,24 @@ export const DataConfiguration = ({
                 value={yAxisLabel}
                 onChange={e => {
                     handleChangeScaleLabel("y", e.target.value);
+                }}
+            />
+
+            <Input
+                label="Prefixo do eixo-y"
+                placeholder="Insira o prefixo do eixo-y"
+                value={yPrefix}
+                onChange={e => {
+                    handleChangePrefix(e.target.value);
+                }}
+            />
+
+            <Input
+                label="Sufixo do eixo-y"
+                placeholder="Insira o prefixo do eixo-y"
+                value={ySuffix}
+                onChange={e => {
+                    handleChangeSuffix(e.target.value);
                 }}
             />
 

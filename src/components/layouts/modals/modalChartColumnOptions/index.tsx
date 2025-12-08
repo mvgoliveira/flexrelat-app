@@ -70,6 +70,12 @@ export type ChartColumnData = {
                 };
             }>;
         };
+        plugins?: {
+            tickFormat?: {
+                suffix?: string;
+                prefix?: string;
+            };
+        };
     };
 };
 

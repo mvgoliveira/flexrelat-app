@@ -170,6 +170,10 @@ export const Root = styled.div<IRootProps>`
         table-layout: fixed;
         width: 100%;
 
+        p {
+            line-height: 1;
+        }
+
         tr {
             &:last-of-type {
                 margin-bottom: 12px;

@@ -7,13 +7,13 @@ import { Root, StyledIcon, StyledInput } from "./styles";
 interface ISearchInputProps {
     placeholder?: string;
     hasShadow?: boolean;
-    onChange: (value: string) => void;
+    onChange?: (value: string) => void;
 }
 
 export const SearchInput = ({
     placeholder = "Buscar",
     hasShadow = false,
-    onChange,
+    onChange = () => {},
 }: ISearchInputProps): ReactElement => {
     return (
         <Root hasShadow={hasShadow}>

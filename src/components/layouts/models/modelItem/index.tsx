@@ -48,135 +48,153 @@ export const ModelItem = ({ model, onClick, onDelete, onEdit }: IModelItemProps)
                 );
 
                 const styles = `
-                <style>
-                    h1,
-                    h2,
-                    h3,
-                    h4,
-                    h5,
-                    h6,
-                    p {
-                        margin-bottom: 12px;
-                        text-align: start;
-                        font-family: "Times New Roman, serif";
-                        font-size: 16px;
-                        line-height: 1.5;
-                        word-wrap: break-word;
-                    }
-    
-                    h1,
-                    h2,
-                    h3,
-                    h4,
-                    h5,
-                    h6 {
-                        font-weight: bold;
-                    }
-    
-                    p:empty::before {
-                        content: " ";
-                        display: inline-block;
-                        height: 1.2em;
-                    }
-    
-                    table {
-                        border-collapse: collapse;
-                        overflow: hidden;
-                        table-layout: fixed;
-                        width: 100%;
-                        margin-bottom: 12px;
-                    }
-    
-                    table p {
-                        white-space: pre-wrap;
-                    }
-    
-                    table p:empty {
-                        white-space: normal;
-                    }
-    
-                    table tr:last-of-type {
-                        margin-bottom: 12px;
-                    }
-    
-                    table tr:first-of-type td,
-                    table tr:first-of-type th {
-                        border-top: 1px solid #000000;
-                    }
-    
-                    table td,
-                    table th {
-                        border-right: 1px solid #000000;
-                        border-bottom: 1px solid #000000;
-                        box-sizing: border-box;
-                        padding: 6px;
-                        position: relative;
-                    }
-    
-                    table td > *,
-                    table th > * {
-                        margin-bottom: 0 !important;
-                    }
-    
-                    table td:first-of-type,
-                    table th:first-of-type {
-                        border-left: 1px solid #000000;
-                    }
-    
-                    table th {
-                        font-weight: bold;
-                        text-align: center;
-                    }
-    
-                    table th p {
-                        text-align: start;
-                    }
-    
-                    ul {
-                        list-style-type: disc;
-                        padding-left: 40px;
-                    }
-    
-                    ol {
-                        list-style-type: decimal;
-                        padding-left: 40px;
-                    }
-    
-                    blockquote {
-                        border-left: 4px solid #d1d5db;
-                        padding-left: 16px;
-                        margin-left: 0;
-                        margin-bottom: 12px;
-                        font-style: italic;
-                        background: rgba(249, 250, 251, 0.5);
-                        padding-top: 8px;
-                        padding-bottom: 8px;
-                    }
-    
-                    blockquote p {
-                        margin-bottom: 0;
-                    }
-    
-                    pre {
-                        background-color: #171717;
-                        background: #171717;
-                        color: #F6F6F6;
-                        font-family: monospace;
-                        padding: 16px;
-                        border-radius: 4px;
-                        margin-bottom: 12px;
-                        overflow-x: auto;
-                        line-height: 1.5;
-                    }
-    
-                    pre code {
-                        background: none;
-                        color: inherit;
-                        font-size: 11pt;
-                        padding: 0;
-                    }
-                </style>
-            `;
+                    <style>
+                        h1,
+                        h2,
+                        h3,
+                        h4,
+                        h5,
+                        h6,
+                        p {
+                            margin-bottom: 12px;
+                            text-align: start;
+                            font-family: "Times New Roman, serif";
+                            font-size: 12pt;
+                            line-height: 1.5;
+                            word-wrap: normal;
+                        }
+
+                        p:empty::before {
+                            content: " ";
+                            display: inline-block;
+                            height: 12pt;
+                        }
+
+                        h1,
+                        h2,
+                        h3,
+                        h4,
+                        h5,
+                        h6 {
+                            font-weight: bold;
+                        }
+
+                        hr {
+                            margin-bottom: 12px;
+                            border: none;
+                            border-bottom: 1px solid #373737;
+                        }
+
+                        .layout h1,
+                        .layout h2,
+                        .layout h3,
+                        .layout h4,
+                        .layout h5,
+                        .layout h6,
+                        .layout p {
+                            margin-bottom: 0px;
+                        }
+
+                        table {
+                            border-collapse: collapse;
+                            overflow: hidden;
+                            table-layout: fixed;
+                            width: 100%;
+                            margin-bottom: 12px;
+                        }
+
+                        table p {
+                            white-space: pre-wrap;
+                            line-height: 1;
+                        }
+
+                        table p:empty {
+                            white-space: normal;
+                        }
+
+                        table tr:last-of-type {
+                            margin-bottom: 12px;
+                        }
+
+                        table tr:first-of-type td,
+                        table tr:first-of-type th {
+                            border-top: 1px solid #000000;
+                        }
+
+                        table td,
+                        table th {
+                            border-right: 1px solid #000000;
+                            border-bottom: 1px solid #000000;
+                            box-sizing: border-box;
+                            padding: 6px;
+                            position: relative;
+                        }
+
+                        table td > *,
+                        table th > * {
+                            margin-bottom: 0 !important;
+                        }
+
+                        table td:first-of-type,
+                        table th:first-of-type {
+                            border-left: 1px solid #000000;
+                        }
+
+                        table th {
+                            font-weight: bold;
+                            text-align: center;
+                        }
+
+                        table th p {
+                            text-align: start;
+                            line-height: 1;
+                        }
+
+                        ul {
+                            list-style-type: disc;
+                            padding-left: 40px;
+                        }
+
+                        ol {
+                            list-style-type: decimal;
+                            padding-left: 40px;
+                        }
+
+                        blockquote {
+                            border-left: 4px solid #d1d5db;
+                            padding-left: 16px;
+                            margin-left: 0;
+                            margin-bottom: 12px;
+                            font-style: italic;
+                            background: rgba(249, 250, 251, 0.5);
+                            padding-top: 8px;
+                            padding-bottom: 8px;
+                        }
+
+                        blockquote p {
+                            margin-bottom: 0;
+                        }
+
+                        pre {
+                            background-color: #171717;
+                            background: #171717;
+                            color: #F6F6F6;
+                            font-family: monospace;
+                            padding: 16px;
+                            border-radius: 4px;
+                            margin-bottom: 12px;
+                            overflow-x: auto;
+                            line-height: 1.5;
+                        }
+
+                        pre code {
+                            background: none;
+                            color: inherit;
+                            font-size: 11pt;
+                            padding: 0;
+                        }
+                    </style>
+                `;
 
                 const finalHtml = `
                 <html>

@@ -20,6 +20,7 @@ export const GeneralConfiguration = ({
     const [legendState, setLegendState] = useState<boolean>(false);
     const [xScaleLabelState, setXScaleLabelState] = useState<boolean>(false);
     const [yScaleLabelState, setYScaleLabelState] = useState<boolean>(false);
+    const [titleState, setTitleState] = useState<boolean>(true);
 
     const handleChangeStacked = (stackedValue: boolean) => {
         setStackedState(stackedValue);
@@ -148,6 +149,33 @@ export const GeneralConfiguration = ({
         }
     };
 
+    const handleChangeTitleState = (displayValue: boolean) => {
+        setTitleState(displayValue);
+
+        if (metadata && metadata.options) {
+            const newData = { ...metadata };
+
+            if (!newData.options) return;
+
+            newData.options = {
+                ...newData.options,
+                title: displayValue
+                    ? {
+                          ...metadata.options.title,
+                          display: true,
+                          text: "Título do Gráfico",
+                      }
+                    : {
+                          ...metadata.options.title,
+                          display: false,
+                          text: "",
+                      },
+            };
+
+            changeChartData(newData);
+        }
+    };
+
     useEffect(() => {
         if (metadata) {
             setStackedState(metadata.options?.scales?.xAxes?.[0]?.stacked ? true : false);
@@ -255,6 +283,24 @@ export const GeneralConfiguration = ({
                     size="small"
                     checked={legendState}
                     onClick={() => handleChangeLegend(!legendState)}
+                />
+            </InlineContainer>
+
+            <InlineContainer>
+                <Typography
+                    tag="p"
+                    fontSize={{ xs: "fs75" }}
+                    color="black"
+                    fontWeight="regular"
+                    textAlign="left"
+                >
+                    Título
+                </Typography>
+
+                <Switch
+                    size="small"
+                    checked={titleState}
+                    onClick={() => handleChangeTitleState(!titleState)}
                 />
             </InlineContainer>
 

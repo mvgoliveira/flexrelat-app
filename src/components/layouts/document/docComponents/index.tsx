@@ -258,6 +258,11 @@ const Element = ({
                             },
                         ],
                     },
+                    plugins: {
+                        tickFormat: {
+                            prefix: "",
+                        },
+                    },
                 },
             };
 
