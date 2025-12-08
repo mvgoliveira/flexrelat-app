@@ -9,6 +9,7 @@ import { Layout, SecondaryLayout } from "@/components/layouts/document/layout";
 import { NavHeader, TabHeaderType } from "@/components/layouts/document/navHeader";
 import { useDocumentContext } from "@/context/documentContext";
 import withSession from "@/hoc/withSession";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { Theme } from "@/themes";
 import { ReactElement, useState } from "react";
 import { MdOutlineAutoAwesomeMosaic, MdOutlineDocumentScanner } from "react-icons/md";
@@ -23,11 +24,19 @@ const leftTabs: TabHeaderType<LeftTabsValue>[] = [
         icon: <MdOutlineAutoAwesomeMosaic size={12} />,
         text: "Componentes",
     },
-    // {
-    //     value: "ai",
-    //     icon: <RiRobot2Line size={12} />,
-    //     text: "FlexBot",
-    // },
+];
+
+const leftTabsWithAi: TabHeaderType<LeftTabsValue>[] = [
+    {
+        value: "components",
+        icon: <MdOutlineAutoAwesomeMosaic size={12} />,
+        text: "Componentes",
+    },
+    {
+        value: "ai",
+        icon: <RiRobot2Line size={12} />,
+        text: "FlexBot",
+    },
 ];
 
 const rightTabs: TabHeaderType<RightTabsValue>[] = [
@@ -39,6 +48,8 @@ const rightTabs: TabHeaderType<RightTabsValue>[] = [
 ];
 
 function Document(): ReactElement {
+    const { width } = useWindowSize();
+
     const { getDocumentStatus, documentData } = useDocumentContext();
     const [activeLeftTab, setActiveLeftTab] = useState<LeftTabsValue>("components");
     const [activeRightTab, setActiveRightTab] = useState<RightTabsValue>("ai");
@@ -103,13 +114,13 @@ function Document(): ReactElement {
 
             <Layout.LeftNavBar>
                 <NavHeader
-                    headerItens={leftTabs}
+                    headerItens={width > 980 ? leftTabs : leftTabsWithAi}
                     activeTab={activeLeftTab}
                     setActiveLeftTab={activeTab => setActiveLeftTab(activeTab as LeftTabsValue)}
                 />
 
                 {activeLeftTab === "components" && <DocComponents />}
-                {/* {activeLeftTab === "ai" && <AiChat />} */}
+                {width < 980 && activeLeftTab === "ai" && <AiChat />}
             </Layout.LeftNavBar>
 
             <Layout.Content>
@@ -121,7 +132,6 @@ function Document(): ReactElement {
                     headerItens={rightTabs}
                     activeTab={activeRightTab}
                     setActiveLeftTab={activeTab => setActiveRightTab(activeTab as RightTabsValue)}
-                    hasCloseButton
                 />
 
                 <AiChat />

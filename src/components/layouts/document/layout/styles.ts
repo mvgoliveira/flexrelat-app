@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Root = styled.div`
+export const Root = styled.section`
     display: grid;
     grid-template-rows: 60px 1fr;
     grid-template-columns: auto 1fr auto;
@@ -9,7 +9,7 @@ export const Root = styled.div`
     background: ${({ theme }) => theme.colors.gray10};
 `;
 
-export const SecondaryRoot = styled.div`
+export const SecondaryRoot = styled.section`
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -39,7 +39,7 @@ export const StyledContent = styled.article`
     overflow: hidden;
 `;
 
-export const StyledLeftNavbar = styled.article`
+export const StyledLeftNavbar = styled.nav`
     grid-row: 2 / -1;
     display: flex;
     flex-direction: column;
@@ -50,7 +50,7 @@ export const StyledLeftNavbar = styled.article`
     overflow: hidden;
 `;
 
-export const StyledRightNavbar = styled.article`
+export const StyledRightNavbar = styled.nav`
     grid-row: 2 / -1;
     display: flex;
     flex-direction: column;
@@ -59,4 +59,8 @@ export const StyledRightNavbar = styled.article`
     background-color: ${({ theme }) => theme.colors.white};
     border-left: 1px solid ${({ theme }) => theme.colors.gray30};
     overflow: hidden;
+
+    @media (max-width: 980px) {
+        display: none;
+    }
 `;
