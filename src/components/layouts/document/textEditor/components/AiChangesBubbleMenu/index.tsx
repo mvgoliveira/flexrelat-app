@@ -127,34 +127,47 @@ export const AiChangesBubbleMenu = ({
                         .setMeta("addToHistory", false)
                         .run();
 
-                    editor
-                        .chain()
-                        .insertContentAt(pos + node.nodeSize, aiChange.new_content.html)
-                        .run();
+                    const insertPos = pos + node.nodeSize;
+                    const docSizeBefore = editor.state.doc.content.size;
+                    editor.chain().insertContentAt(insertPos, aiChange.new_content.html).run();
+                    const docSizeAfter = editor.state.doc.content.size;
+                    const insertedSize = docSizeAfter - docSizeBefore;
 
-                    const newNode = editor.state.doc.nodeAt(pos + node.nodeSize);
+                    // Marcar todos os nós inseridos com "change-add"
+                    let currentPos = insertPos;
+                    let processedSize = 0;
 
-                    if (newNode) {
+                    while (
+                        processedSize < insertedSize &&
+                        currentPos < editor.state.doc.content.size
+                    ) {
+                        const newNode = editor.state.doc.nodeAt(currentPos);
+
+                        if (!newNode) break;
+
                         const newNodeType = newNode.type.name;
                         editor
                             .chain()
-                            .setNodeSelection(pos + node.nodeSize)
+                            .setNodeSelection(currentPos)
                             .updateAttributes(newNodeType, {
                                 class: "change-add",
                             })
                             .setMeta("addToHistory", false)
                             .run();
+
+                        processedSize += newNode.nodeSize;
+                        currentPos += newNode.nodeSize;
                     }
 
                     setSelectedChanges([
                         {
                             from: pos,
-                            to: pos + node.nodeSize + 1,
+                            to: pos + node.nodeSize,
                             type: "remove",
                         },
                         {
-                            from: pos + node.nodeSize + 1,
-                            to: pos + node.nodeSize + 1,
+                            from: insertPos + 1,
+                            to: insertPos + insertedSize,
                             type: "add",
                         },
                     ]);
@@ -207,26 +220,41 @@ export const AiChangesBubbleMenu = ({
                             return;
                         }
 
+                        const docSizeBefore = editor.state.doc.content.size;
                         editor.chain().insertContentAt(insertPos, aiChange.new_content.html).run();
+                        const docSizeAfter = editor.state.doc.content.size;
+                        const insertedSize = docSizeAfter - docSizeBefore;
 
-                        const newNode = editor.state.doc.nodeAt(insertPos);
+                        // Marcar todos os nós inseridos com "change-add"
+                        let currentPos = insertPos;
+                        let processedSize = 0;
 
-                        if (newNode) {
+                        while (
+                            processedSize < insertedSize &&
+                            currentPos < editor.state.doc.content.size
+                        ) {
+                            const newNode = editor.state.doc.nodeAt(currentPos);
+
+                            if (!newNode) break;
+
                             const newNodeType = newNode.type.name;
                             editor
                                 .chain()
-                                .setNodeSelection(insertPos)
+                                .setNodeSelection(currentPos)
                                 .updateAttributes(newNodeType, {
                                     class: "change-add",
                                 })
                                 .setMeta("addToHistory", false)
                                 .run();
+
+                            processedSize += newNode.nodeSize;
+                            currentPos += newNode.nodeSize;
                         }
 
                         setSelectedChanges([
                             {
                                 from: insertPos + 1,
-                                to: insertPos + 1,
+                                to: insertPos + insertedSize,
                                 type: "add",
                             },
                         ]);
