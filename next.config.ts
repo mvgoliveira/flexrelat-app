@@ -18,14 +18,6 @@ const nextConfig: NextConfig = {
             },
         ],
     },
-    webpack: (config, { isServer }) => {
-        if (!isServer) {
-            config.resolve.fallback = {
-                fs: false, // or require.resolve('path-browserify') for path module
-            };
-        }
-        return config;
-    },
 };
 
 export default nextConfig;
