@@ -178,8 +178,8 @@ export const AiChat = (): ReactElement => {
                 const aiResponse = await sendMessage(
                     documentData.id,
                     "documents",
-                    selectedAttachments.map(attach => attach.value.data).join(", "),
-                    chatMessage.trim()
+                    chatMessage.trim(),
+                    selectedAttachments.map(attach => attach.value.data).join(", ")
                 );
 
                 setMessages(prevMessages => [...prevMessages, aiResponse]);
