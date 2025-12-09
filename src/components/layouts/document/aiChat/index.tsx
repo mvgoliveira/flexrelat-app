@@ -16,7 +16,7 @@ import { ReactElement, useRef, useState, MouseEvent } from "react";
 import { GrDocumentCsv, GrDocumentExcel, GrDocumentPdf, GrDocumentTxt } from "react-icons/gr";
 import { HiOutlinePaperClip } from "react-icons/hi";
 import { LuFileJson2 } from "react-icons/lu";
-import { MdCheck, MdClose, MdSend } from "react-icons/md";
+import { MdCheck, MdClose, MdDeleteOutline, MdSend } from "react-icons/md";
 import { RiBarChartBoxAiLine, RiBrainLine, RiChatAiLine } from "react-icons/ri";
 import { TbRobotOff } from "react-icons/tb";
 
@@ -255,7 +255,7 @@ export const AiChat = (): ReactElement => {
                     style={{
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "",
+                        justifyContent: "space-between",
                         width: "100%",
                     }}
                 >
@@ -279,6 +279,16 @@ export const AiChat = (): ReactElement => {
                         >
                             Mudanças sem aprovação
                         </Typography>
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", width: 20 }}>
+                        <Button
+                            height="20px"
+                            variant="tertiary"
+                            onClick={() => setIsClearModalOpen(true)}
+                        >
+                            <MdDeleteOutline size={14} color={Theme.colors.black} />
+                        </Button>
                     </div>
                 </div>
 
