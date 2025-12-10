@@ -17,7 +17,7 @@ export interface IModelItemProps {
     onClick: (publicCode: string) => void;
     onDelete: (id: string) => void;
     onEdit: (id: string) => void;
-    hasData: boolean;
+    hasDate: boolean;
 }
 
 export const ModelItem = ({
@@ -25,7 +25,7 @@ export const ModelItem = ({
     onClick,
     onDelete,
     onEdit,
-    hasData,
+    hasDate,
 }: IModelItemProps): ReactElement => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [previewImg, setPreviewImg] = useState<string>("");
@@ -351,7 +351,7 @@ export const ModelItem = ({
                                 {model.user.username}
                             </Typography>
 
-                            {hasData && (
+                            {hasDate && (
                                 <>
                                     <Dot />
 

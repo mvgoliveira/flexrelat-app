@@ -116,7 +116,7 @@ function DocumentsPage(): React.ReactElement {
                         name="Seus Modelos"
                         status={status}
                         models={models || []}
-                        hasData
+                        hasDate
                     />
                 </Layout.Content.Container>
             </Layout.Content>
