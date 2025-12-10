@@ -202,6 +202,8 @@ export const DataConfiguration = ({
                     data: dataset.data,
                 }))
             );
+            setYPrefix(metadata?.options?.plugins?.tickFormat?.prefix || "");
+            setYSuffix(metadata?.options?.plugins?.tickFormat?.suffix || "");
         }
     }, [metadata]);
 
