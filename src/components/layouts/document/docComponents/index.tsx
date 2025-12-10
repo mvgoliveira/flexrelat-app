@@ -390,6 +390,7 @@ const elementsGroups: IElementsGroupProps[] = [
                 name: "Formas Geométricas",
                 icon: <IconElementGeometric size={40} />,
                 coloredIcon: <IconElementGeometric size={40} color="blue50" />,
+                disabled: true,
             },
             {
                 value: "image",
