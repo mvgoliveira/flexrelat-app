@@ -116,6 +116,7 @@ function DocumentsPage(): React.ReactElement {
                         name="Seus Modelos"
                         status={status}
                         models={models || []}
+                        hasData
                     />
                 </Layout.Content.Container>
             </Layout.Content>

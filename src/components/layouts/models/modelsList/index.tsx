@@ -16,6 +16,7 @@ interface IModelsListProps {
     name: string;
     models: ModelDataWithUser[];
     status: "pending" | "success" | "error";
+    hasData?: boolean;
 }
 
 export const ModelsList = ({
@@ -23,6 +24,7 @@ export const ModelsList = ({
     name,
     models,
     status,
+    hasData = false,
 }: IModelsListProps): ReactElement => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -226,6 +228,7 @@ export const ModelsList = ({
                             onClick={() => onModelClick(model.publicCode)}
                             onDelete={() => handleDelete(model.id)}
                             onEdit={() => onModelClick(model.publicCode)}
+                            hasData={hasData}
                         />
                     ))}
 

@@ -17,9 +17,16 @@ export interface IModelItemProps {
     onClick: (publicCode: string) => void;
     onDelete: (id: string) => void;
     onEdit: (id: string) => void;
+    hasData: boolean;
 }
 
-export const ModelItem = ({ model, onClick, onDelete, onEdit }: IModelItemProps): ReactElement => {
+export const ModelItem = ({
+    model,
+    onClick,
+    onDelete,
+    onEdit,
+    hasData,
+}: IModelItemProps): ReactElement => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [previewImg, setPreviewImg] = useState<string>("");
 
@@ -344,16 +351,20 @@ export const ModelItem = ({ model, onClick, onDelete, onEdit }: IModelItemProps)
                                 {model.user.username}
                             </Typography>
 
-                            <Dot />
+                            {hasData && (
+                                <>
+                                    <Dot />
 
-                            <Typography
-                                tag="p"
-                                fontSize={{ xs: "fs50" }}
-                                color="gray80"
-                                fontWeight="regular"
-                            >
-                                {getShortElapsedTime(model.createdAt)}
-                            </Typography>
+                                    <Typography
+                                        tag="p"
+                                        fontSize={{ xs: "fs50" }}
+                                        color="gray80"
+                                        fontWeight="regular"
+                                    >
+                                        {getShortElapsedTime(model.createdAt)}
+                                    </Typography>
+                                </>
+                            )}
                         </div>
                     </div>
                 </Content>
