@@ -117,6 +117,7 @@ function DocumentsPage(): React.ReactElement {
                         status={status}
                         models={models || []}
                         hasDate
+                        hasEdit
                     />
                 </Layout.Content.Container>
             </Layout.Content>

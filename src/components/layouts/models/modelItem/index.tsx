@@ -18,6 +18,7 @@ export interface IModelItemProps {
     onDelete: (id: string) => void;
     onEdit: (id: string) => void;
     hasDate: boolean;
+    hasEdit: boolean;
 }
 
 export const ModelItem = ({
@@ -26,6 +27,7 @@ export const ModelItem = ({
     onDelete,
     onEdit,
     hasDate,
+    hasEdit,
 }: IModelItemProps): ReactElement => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [previewImg, setPreviewImg] = useState<string>("");
@@ -281,41 +283,47 @@ export const ModelItem = ({
                             {model.name}
                         </Typography>
 
-                        <Menu>
-                            <Menu.Trigger>
-                                <Button
-                                    height="25px"
-                                    width="25px"
-                                    variant="tertiary"
-                                    padding="0 0px"
-                                    onClick={e => e.stopPropagation()}
-                                >
-                                    <MdMoreHoriz size={16} color={Theme.colors.gray80} />
-                                </Button>
-                            </Menu.Trigger>
+                        {hasEdit && (
+                            <Menu>
+                                <Menu.Trigger>
+                                    <Button
+                                        height="25px"
+                                        width="25px"
+                                        variant="tertiary"
+                                        padding="0 0px"
+                                        onClick={e => e.stopPropagation()}
+                                    >
+                                        <MdMoreHoriz size={16} color={Theme.colors.gray80} />
+                                    </Button>
+                                </Menu.Trigger>
 
-                            <Menu.Content align="center">
-                                <Menu.Item
-                                    text="Excluir Modelo"
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        setIsDeleteModalOpen(true);
-                                    }}
-                                    iconPosition="left"
-                                    icon={<MdDeleteOutline size={14} color={Theme.colors.black} />}
-                                />
+                                <Menu.Content align="center">
+                                    <Menu.Item
+                                        text="Excluir Modelo"
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            setIsDeleteModalOpen(true);
+                                        }}
+                                        iconPosition="left"
+                                        icon={
+                                            <MdDeleteOutline size={14} color={Theme.colors.black} />
+                                        }
+                                    />
 
-                                <Menu.Item
-                                    text="Editar Modelo"
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        onEdit(model.id);
-                                    }}
-                                    iconPosition="left"
-                                    icon={<MdOutlineEdit size={14} color={Theme.colors.black} />}
-                                />
-                            </Menu.Content>
-                        </Menu>
+                                    <Menu.Item
+                                        text="Editar Modelo"
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            onEdit(model.id);
+                                        }}
+                                        iconPosition="left"
+                                        icon={
+                                            <MdOutlineEdit size={14} color={Theme.colors.black} />
+                                        }
+                                    />
+                                </Menu.Content>
+                            </Menu>
+                        )}
                     </div>
 
                     <div
