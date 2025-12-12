@@ -24,6 +24,7 @@ function DocumentsPage(): React.ReactElement {
 
     const { status: officialStatus, data: officialModels } = useQuery({
         queryKey: ["get_official_models"],
+        retry: false,
         queryFn: async (): Promise<ModelDataWithUser[]> => {
             const response: ModelDataWithUser[] = await getOfficialModels();
             return response;
@@ -33,6 +34,7 @@ function DocumentsPage(): React.ReactElement {
 
     const { status, data: models } = useQuery({
         queryKey: ["get_own_models"],
+        retry: false,
         queryFn: async (): Promise<ModelDataWithUser[]> => {
             const response: ModelDataWithUser[] = await getOwnModels();
             return response;
@@ -109,6 +111,7 @@ function DocumentsPage(): React.ReactElement {
                         name="Modelos Oficiais"
                         status={officialStatus}
                         models={officialModels || []}
+                        loadingComponentCount={1}
                     />
 
                     <ModelsList

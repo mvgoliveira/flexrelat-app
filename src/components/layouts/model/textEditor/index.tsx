@@ -88,7 +88,7 @@ const TextEditor = ({
         zoomRef.current = zoom;
     }, [zoom]);
 
-    const saveTitle = useMemo(
+    const saveContent = useMemo(
         () =>
             _.debounce(async (newContent: string) => {
                 try {
@@ -175,7 +175,7 @@ const TextEditor = ({
                         // Forçar salvamento após atualização
                         setTimeout(() => {
                             if (editorRef.current) {
-                                saveTitle(editorRef.current.getHTML());
+                                saveContent(editorRef.current.getHTML());
                             }
                         }, 100);
                     }
@@ -196,7 +196,7 @@ const TextEditor = ({
                         // Forçar salvamento após atualização
                         setTimeout(() => {
                             if (editorRef.current) {
-                                saveTitle(editorRef.current.getHTML());
+                                saveContent(editorRef.current.getHTML());
                             }
                         }, 100);
                     }
@@ -254,7 +254,7 @@ const TextEditor = ({
             editorRef.current = editor;
         },
         onUpdate: ({ editor }) => {
-            saveTitle(editor.getHTML());
+            saveContent(editor.getHTML());
         },
         editorProps: {
             handleDrop: (view, event) => {

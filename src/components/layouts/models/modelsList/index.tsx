@@ -18,6 +18,7 @@ interface IModelsListProps {
     status: "pending" | "success" | "error";
     hasDate?: boolean;
     hasEdit?: boolean;
+    loadingComponentCount?: number;
 }
 
 export const ModelsList = ({
@@ -27,6 +28,7 @@ export const ModelsList = ({
     status,
     hasDate = false,
     hasEdit = false,
+    loadingComponentCount = 8,
 }: IModelsListProps): ReactElement => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -179,30 +181,11 @@ export const ModelsList = ({
             <Container>
                 {status === "pending" && (
                     <>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
-                        <DocumentItemEmptyState>
-                            <Skeleton width="100%" height={200} color="gray20" />
-                        </DocumentItemEmptyState>
+                        {Array.from({ length: loadingComponentCount }).map((index, idx) => (
+                            <DocumentItemEmptyState key={`${name}-loading-${index}-${idx}`}>
+                                <Skeleton width="100%" height={200} color="gray20" />
+                            </DocumentItemEmptyState>
+                        ))}
                     </>
                 )}
 

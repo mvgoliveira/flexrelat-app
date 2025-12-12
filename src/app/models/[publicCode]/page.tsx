@@ -35,12 +35,11 @@ const rightTabs: TabHeaderType<RightTabsValue>[] = [
 ];
 
 function Model(): ReactElement {
-    const { getModelStatus, modelData } = useModelContext();
+    const { getModelStatus, modelData, isReadOnly, setIsReadOnly } = useModelContext();
     const { authenticatedUser } = useUserContext();
     const [activeLeftTab, setActiveLeftTab] = useState<LeftTabsValue>("components");
     const [activeRightTab, setActiveRightTab] = useState<RightTabsValue>("ai");
     const [saveStatus, setSaveStatus] = useState<"pending" | "success" | "error">("success");
-    const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
 
     useEffect(() => {
         if (authenticatedUser?.id !== modelData?.userId) {
@@ -48,6 +47,7 @@ function Model(): ReactElement {
         } else {
             setIsReadOnly(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authenticatedUser, modelData]);
 
     if (getModelStatus === "pending") return <></>;

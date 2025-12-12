@@ -39,6 +39,8 @@ type ModelContextType = {
     setAuthenticatedUser: Dispatch<SetStateAction<User | null>>;
     selectedChangeType: ChangesType | null;
     setSelectedChangeType: Dispatch<SetStateAction<ChangesType | null>>;
+    isReadOnly: boolean;
+    setIsReadOnly: Dispatch<SetStateAction<boolean>>;
 };
 
 const ModelContext = createContext<ModelContextType | null>(null);
@@ -53,6 +55,7 @@ export function ModelProvider({ children }: { children: ReactNode }): React.Reac
     const [messages, setMessages] = useState<Message[]>([]);
     const [loadingComponentId, setLoadingComponentId] = useState<string>("");
     const [selectedChangeType, setSelectedChangeType] = useState<ChangesType | null>(null);
+    const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
 
     const { status: getModelStatus, data: modelData } = useQuery({
         queryKey: ["get_model_data", publicCode],
@@ -360,6 +363,8 @@ export function ModelProvider({ children }: { children: ReactNode }): React.Reac
                 setAuthenticatedUser,
                 selectedChangeType,
                 setSelectedChangeType,
+                isReadOnly,
+                setIsReadOnly,
             }}
         >
             {children}

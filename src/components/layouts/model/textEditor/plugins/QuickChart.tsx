@@ -1,5 +1,6 @@
 import { ModalChartColumnOptions } from "@/components/layouts/modals/modalChartColumnOptions";
 import { ModalChartLineOptions } from "@/components/layouts/modals/modalChartLineOptions";
+import { useModelContext } from "@/context/modelContext";
 import styled from "@emotion/styled";
 import { useDisclosure } from "@mantine/hooks";
 import { Node, mergeAttributes } from "@tiptap/core";
@@ -33,6 +34,8 @@ const ChartContent = styled.div<{
 `;
 
 const QuickChartComponent = ({ node, updateAttributes }: any) => {
+    const { isReadOnly } = useModelContext();
+
     const id = node.attrs.id;
     const chartDataAttr = node.attrs.chartData;
     const className = node.attrs.class;
@@ -85,7 +88,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
 
     return (
         <>
-            {decodedData && decodedData.type === "scatter" && (
+            {!isReadOnly && decodedData && decodedData.type === "scatter" && (
                 <ModalChartLineOptions
                     isOpen={opened}
                     close={close}
@@ -97,7 +100,7 @@ const QuickChartComponent = ({ node, updateAttributes }: any) => {
                 />
             )}
 
-            {decodedData && decodedData.type === "bar" && (
+            {!isReadOnly && decodedData && decodedData.type === "bar" && (
                 <ModalChartColumnOptions
                     isOpen={opened}
                     close={close}
