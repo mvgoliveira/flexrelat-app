@@ -6,6 +6,7 @@ import { Tooltip } from "@/components/ui/tooltip";
 import {
     createDocumentData,
     DocumentDataResponse,
+    DocumentDataType,
     getDataByDocument,
     getDataContent,
     updateDocumentData,
@@ -81,12 +82,13 @@ export const ModalData = ({ isOpen, close, documentId }: IModalDataProps): React
 
     const handleCreateData = async (
         dataName: string,
-        dataValue: string | object
+        dataValue: string | object,
+        fileType: DocumentDataType
     ): Promise<void> => {
         setIsCreateLoading(true);
 
         try {
-            await createDocumentData(documentId, dataName, dataValue, "text");
+            await createDocumentData(documentId, dataName, dataValue, fileType);
             await refetch();
             setIsModalCreateDataOpen(false);
         } catch (error) {

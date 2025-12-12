@@ -6,7 +6,6 @@ import { deleteDocumentData, DocumentDataType } from "@/repositories/documentDat
 import { Theme } from "@/themes";
 import { ReactNode, useRef, useState } from "react";
 import { GrDocumentCsv, GrDocumentExcel, GrDocumentPdf, GrDocumentTxt } from "react-icons/gr";
-import { LuFileJson2 } from "react-icons/lu";
 import { MdDeleteOutline, MdMoreHoriz } from "react-icons/md";
 
 import { ModalDeleteDocumentData } from "../../../modalDeleteDocumentData";
@@ -76,7 +75,6 @@ export const DataItem = ({
                     {type === "pdf" && <GrDocumentPdf size={12} color={Theme.colors.black} />}
                     {type === "text" && <GrDocumentTxt size={12} color={Theme.colors.black} />}
                     {type === "csv" && <GrDocumentCsv size={12} color={Theme.colors.black} />}
-                    {type === "json" && <LuFileJson2 size={12} color={Theme.colors.black} />}
                     {(type === "xls" || type === "xlsx") && (
                         <GrDocumentExcel size={12} color={Theme.colors.black} />
                     )}

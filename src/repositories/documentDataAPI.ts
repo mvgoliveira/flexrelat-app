@@ -2,7 +2,7 @@ import { client } from "@/services/client";
 
 const PREFIX = "/documents-data";
 
-export type DocumentDataType = "csv" | "xls" | "xlsx" | "json" | "pdf" | "text";
+export type DocumentDataType = "csv" | "xls" | "xlsx" | "pdf" | "text";
 
 export type DocumentDataResponse = {
     id: string;
@@ -52,15 +52,20 @@ export const deleteDocumentData = async (dataId: string): Promise<void> => {
     await client.delete(`${PREFIX}/${dataId}`);
 };
 
-export const parseFileContent = async (file: File): Promise<string> => {
+interface IParseFileResponse {
+    text: string;
+    fileType: DocumentDataType;
+}
+
+export const parseFileContent = async (file: File): Promise<IParseFileResponse> => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const { data } = await client.post<{ text: string }>(`${PREFIX}/parser`, formData, {
+    const { data } = await client.post<IParseFileResponse>(`${PREFIX}/parser`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
     });
 
-    return data.text;
+    return data;
 };

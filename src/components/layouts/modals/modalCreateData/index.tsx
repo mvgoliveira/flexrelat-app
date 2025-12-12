@@ -4,7 +4,7 @@ import { Spinner } from "@/components/features/loading/spinner";
 import { Typography } from "@/components/features/typography";
 import { Modal } from "@/components/ui/modalRadix";
 import { Toast } from "@/components/ui/toast";
-import { parseFileContent } from "@/repositories/documentDataAPI";
+import { DocumentDataType, parseFileContent } from "@/repositories/documentDataAPI";
 import { Theme } from "@/themes";
 import { ReactElement, RefObject, useEffect, useState } from "react";
 import { ImUpload } from "react-icons/im";
@@ -15,7 +15,7 @@ import { StyledContent, StyledDragger } from "./styles";
 interface ICreateDataModalProps {
     open: boolean;
     setOpen: (open: boolean) => void;
-    onCreateData: (name: string, dataValue: string | object) => void;
+    onCreateData: (name: string, dataValue: string | object, fileType: DocumentDataType) => void;
     isLoading: boolean;
     toastErrorRef: RefObject<{
         publish: () => void;
@@ -31,15 +31,17 @@ export const ModalCreateData = ({
 }: ICreateDataModalProps): ReactElement => {
     const [name, setName] = useState<string>("");
     const [fileData, setFileData] = useState<string | object>("");
+    const [fileDataType, setFileDataType] = useState<DocumentDataType>("text");
 
     const handleCreateData = async (e: any): Promise<void> => {
         e.preventDefault();
-        onCreateData(name, fileData);
+        onCreateData(name, fileData, fileDataType);
     };
 
     const handleSendFile = async (file: File) => {
-        const text = await parseFileContent(file);
+        const { text, fileType } = await parseFileContent(file);
         setFileData(text);
+        setFileDataType(fileType);
     };
 
     const closeModal = (): void => {
@@ -50,11 +52,13 @@ export const ModalCreateData = ({
         if (!open) {
             setName("");
             setFileData("");
+            setFileDataType("text");
         }
 
         return () => {
             setName("");
             setFileData("");
+            setFileDataType("text");
         };
     }, [open]);
 
@@ -98,7 +102,7 @@ export const ModalCreateData = ({
 
                         <StyledDragger
                             maxCount={1}
-                            accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/json, application/pdf"
+                            accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
                             name="file"
                             customRequest={async ({ file, onSuccess, onError }) => {
                                 try {
@@ -139,7 +143,7 @@ export const ModalCreateData = ({
                                         fontWeight="regular"
                                         textAlign="center"
                                     >
-                                        Formatos suportados: .csv, .xls, .xlsx, .json, .pdf
+                                        Formatos suportados: .csv, .xls, .xlsx, .pdf
                                     </Typography>
                                 </div>
                             </div>
