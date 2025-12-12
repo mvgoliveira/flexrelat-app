@@ -121,6 +121,12 @@ export const ModalData = ({ isOpen, close, documentId }: IModalDataProps): React
         [saveChange]
     );
 
+    const handleDeleteData = (): void => {
+        setActiveId("");
+        setValue("");
+        refetch();
+    };
+
     useEffect(() => {
         setSaveStatus("success");
         setValue("");
@@ -189,21 +195,19 @@ export const ModalData = ({ isOpen, close, documentId }: IModalDataProps): React
                                 </div>
                             )}
 
-                            {status === "success" && data.length > 0 && (
-                                <>
-                                    {data.map(item => (
-                                        <DataItem
-                                            key={item.id}
-                                            id={item.id}
-                                            type={item.type}
-                                            name={item.name}
-                                            activeId={activeId}
-                                            onClick={() => handleChangeActiveId(item.id)}
-                                            refetchData={refetch}
-                                        />
-                                    ))}
-                                </>
-                            )}
+                            {status === "success" &&
+                                data.length > 0 &&
+                                data.map(item => (
+                                    <DataItem
+                                        key={item.id}
+                                        id={item.id}
+                                        type={item.type}
+                                        name={item.name}
+                                        activeId={activeId}
+                                        onClick={() => handleChangeActiveId(item.id)}
+                                        onDelete={handleDeleteData}
+                                    />
+                                ))}
                         </ConfigurationContent>
                     </ConfigurationContainer>
 
@@ -236,68 +240,77 @@ export const ModalData = ({ isOpen, close, documentId }: IModalDataProps): React
                             )}
                         </DataContent>
 
-                        <DataFooter>
-                            {saveStatus === "success" && (
-                                <Tooltip>
-                                    <Tooltip.Trigger>
-                                        <MdOutlineCloudDone size={12} color={Theme.colors.black} />
-                                    </Tooltip.Trigger>
-                                    <Tooltip.Content>
-                                        Todas as alterações foram salvas
-                                    </Tooltip.Content>
-                                </Tooltip>
-                            )}
+                        {!activeId && <DataFooter></DataFooter>}
 
-                            {saveStatus === "pending" && (
-                                <Tooltip>
-                                    <Tooltip.Trigger>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "5px",
-                                            }}
-                                        >
-                                            <MdOutlineCloudUpload
+                        {activeId && (
+                            <DataFooter>
+                                {saveStatus === "success" && (
+                                    <Tooltip>
+                                        <Tooltip.Trigger>
+                                            <MdOutlineCloudDone
                                                 size={12}
                                                 color={Theme.colors.black}
                                             />
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Content>
+                                            Todas as alterações foram salvas
+                                        </Tooltip.Content>
+                                    </Tooltip>
+                                )}
 
-                                            <Typography
-                                                tag="p"
-                                                fontSize={{ xs: "fs50" }}
-                                                color="black"
-                                                fontWeight="medium"
-                                                textAlign="left"
+                                {saveStatus === "pending" && (
+                                    <Tooltip>
+                                        <Tooltip.Trigger>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: "5px",
+                                                }}
                                             >
-                                                Salvando...
-                                            </Typography>
-                                        </div>
-                                    </Tooltip.Trigger>
-                                    <Tooltip.Content>Salvando alterações...</Tooltip.Content>
-                                </Tooltip>
-                            )}
+                                                <MdOutlineCloudUpload
+                                                    size={12}
+                                                    color={Theme.colors.black}
+                                                />
 
-                            {saveStatus === "error" && (
-                                <Tooltip>
-                                    <Tooltip.Trigger>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "5px",
-                                            }}
-                                        >
-                                            <MdOutlineCloudOff
-                                                size={12}
-                                                color={Theme.colors.red70}
-                                            />
-                                        </div>
-                                    </Tooltip.Trigger>
-                                    <Tooltip.Content>Erro ao salvar as alterações</Tooltip.Content>
-                                </Tooltip>
-                            )}
-                        </DataFooter>
+                                                <Typography
+                                                    tag="p"
+                                                    fontSize={{ xs: "fs50" }}
+                                                    color="black"
+                                                    fontWeight="medium"
+                                                    textAlign="left"
+                                                >
+                                                    Salvando...
+                                                </Typography>
+                                            </div>
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Content>Salvando alterações...</Tooltip.Content>
+                                    </Tooltip>
+                                )}
+
+                                {saveStatus === "error" && (
+                                    <Tooltip>
+                                        <Tooltip.Trigger>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: "5px",
+                                                }}
+                                            >
+                                                <MdOutlineCloudOff
+                                                    size={12}
+                                                    color={Theme.colors.red70}
+                                                />
+                                            </div>
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Content>
+                                            Erro ao salvar as alterações
+                                        </Tooltip.Content>
+                                    </Tooltip>
+                                )}
+                            </DataFooter>
+                        )}
                     </DataContainer>
                 </TopContainer>
             </Modal>

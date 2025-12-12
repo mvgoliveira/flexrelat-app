@@ -18,7 +18,7 @@ interface IDataItemProps extends React.HTMLAttributes<HTMLDivElement> {
     id: string;
     activeId: string;
     onClick: () => void;
-    refetchData: () => void;
+    onDelete: () => void;
 }
 
 export const DataItem = ({
@@ -26,7 +26,7 @@ export const DataItem = ({
     name,
     activeId,
     id,
-    refetchData,
+    onDelete,
     ...props
 }: IDataItemProps): ReactNode => {
     const toastErrorRef = useRef<{ publish: () => void } | null>(null);
@@ -38,7 +38,7 @@ export const DataItem = ({
         try {
             setIsLoading(true);
             await deleteDocumentData(id);
-            refetchData();
+            onDelete();
         } catch (error) {
             toastErrorRef.current?.publish();
         }
