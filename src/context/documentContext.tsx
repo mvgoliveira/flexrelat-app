@@ -164,7 +164,7 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
     const approveChange = async (change: AiChange): Promise<void> => {
         if (!editor) return;
 
-        // Se a mudança aprovada é a selecionada, desseleciona
+        // Se a mudança aprovada é a selecionada, des-seleciona
         if (selectedChange?.id === change.id) {
             setSelectedChange(null);
         }
@@ -268,18 +268,51 @@ export function DocumentProvider({ children }: { children: ReactNode }): React.R
                 }
 
                 if (change.type === "create") {
-                    const nodeType = node.type.name;
                     const insertPos = pos + node.nodeSize;
 
+                    // Calcular o tamanho do documento antes da inserção
+                    const docSizeBefore = editor.state.doc.content.size;
+
+                    // Inserir o conteúdo
                     editor
                         .chain()
-                        .setNodeSelection(insertPos)
-                        .setMeta("addToHistory", false)
-                        .updateAttributes(nodeType, {
-                            class: "",
-                        })
                         .insertContentAt(insertPos, change.new_content.html)
+                        .setMeta("addToHistory", false)
                         .run();
+
+                    // Calcular o tamanho inserido
+                    const docSizeAfter = editor.state.doc.content.size;
+                    const insertedSize = docSizeAfter - docSizeBefore;
+
+                    // Remover a classe "change-add" de todos os nós inseridos
+                    let currentPos = insertPos;
+                    let processedSize = 0;
+
+                    while (
+                        processedSize < insertedSize &&
+                        currentPos < editor.state.doc.content.size
+                    ) {
+                        const insertedNode = editor.state.doc.nodeAt(currentPos);
+
+                        if (!insertedNode) break;
+
+                        const insertedNodeType = insertedNode.type.name;
+
+                        // Remove a classe "change-add" se existir
+                        if (insertedNode.attrs["class"] === "change-add") {
+                            editor
+                                .chain()
+                                .setNodeSelection(currentPos)
+                                .updateAttributes(insertedNodeType, {
+                                    class: "",
+                                })
+                                .setMeta("addToHistory", false)
+                                .run();
+                        }
+
+                        processedSize += insertedNode.nodeSize;
+                        currentPos += insertedNode.nodeSize;
+                    }
                 }
 
                 try {
