@@ -5,11 +5,10 @@ import { ModalData } from "@/components/layouts/modals/modalData";
 import { Toast } from "@/components/ui/toast";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useDocumentContext } from "@/context/documentContext";
-import { updateDocumentTitle } from "@/repositories/documentAPI";
+import { deleteDocument, updateDocumentTitle } from "@/repositories/documentAPI";
 import { createModel } from "@/repositories/modelAPI";
 import { Theme } from "@/themes";
 import { getFormattedDate } from "@/utils/date";
-import html2canvas from "html2canvas";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
@@ -18,6 +17,7 @@ import { BiCopyAlt } from "react-icons/bi";
 import { LiaFileDownloadSolid, LiaSave } from "react-icons/lia";
 import {
     MdArrowBack,
+    MdDeleteOutline,
     MdMoreHoriz,
     MdOutlineCloudDone,
     MdOutlineCloudOff,
@@ -26,7 +26,6 @@ import {
     MdSaveAlt,
 } from "react-icons/md";
 import { TbDatabase } from "react-icons/tb";
-import { VscDebugConsole } from "react-icons/vsc";
 
 import { ModalCreateModel } from "../../modals/modalCreateModel";
 import {
@@ -53,8 +52,10 @@ interface IHeaderProps {
 
 export const Header = ({ metadata }: IHeaderProps): ReactElement => {
     const router = useRouter();
+    const { documentData } = useDocumentContext();
 
     const toastErrorRef = useRef<{ publish: () => void } | null>(null);
+    const toastDeleteErrorRef = useRef<{ publish: () => void } | null>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
 
     const [title, setTitle] = useState<string>(metadata.title || "Sem título");
@@ -128,46 +129,7 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         }
     };
 
-    // const handleDownloadPDF = async () => {
-    //     const htmlContent = getHtmlContent();
-
-    //     // Remove all id
-    //     let filteredHtml = htmlContent.replaceAll(/data-id="[^"]*"/g, "");
-
-    //     // Remove inline style min-width
-    //     filteredHtml = filteredHtml.replaceAll(/style="[^"]*min-width:[^;"]*;?"/g, "");
-
-    //     // Replace quick-chart with img
-    //     filteredHtml = filteredHtml.replaceAll(
-    //         /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
-    //         (match, chartData, width, height) => {
-    //             try {
-    //                 const url = `https://quickchart.io/chart?c=${chartData}`;
-    //                 const widthPt = parseInt(width) * 0.75; // Convert px to pt
-    //                 const heightPt = parseInt(height) * 0.75;
-    //                 return `
-    //                     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
-    //                         <img src="${url}" style="width: ${widthPt}pt; height: ${heightPt}pt;" />
-    //                     </div>
-    //                 `;
-    //             } catch (e) {
-    //                 console.error("Erro ao processar chartdata:", e);
-    //                 return "";
-    //             }
-    //         }
-    //     );
-
-    //     const pdfBlob = await pdf(<DocumentDownload html={filteredHtml} />).toBlob();
-    //     const url = URL.createObjectURL(pdfBlob);
-    //     const link = document.createElement("a");
-    //     link.href = url;
-    //     const currentTitle = title || "Sem título";
-    //     link.download = currentTitle;
-    //     link.click();
-    //     URL.revokeObjectURL(url);
-    // };
-
-    const handleDownloadPDFCanvas = async () => {
+    const handleDownloadPDF = async () => {
         setIsDownloadLoading(true);
 
         const html2pdf = (await import("html2pdf.js")).default;
@@ -374,382 +336,6 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         setIsDownloadLoading(false);
     };
 
-    // const handleDownloadDOCX = async () => {
-    //     const htmlContent = getHtmlContent();
-
-    //     // Replace quick-chart with img
-    //     const filteredHtml = htmlContent.replaceAll(
-    //         /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
-    //         (match, chartData, width, height) => {
-    //             try {
-    //                 const url = `https://quickchart.io/chart?c=${chartData}`;
-    //                 return `
-    //                     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
-    //                         <img src="${url}" style="width: ${width}px; height: ${height}px;" />
-    //                     </div>
-    //                 `;
-    //             } catch (e) {
-    //                 console.error("Erro ao processar chartdata:", e);
-    //                 return "";
-    //             }
-    //         }
-    //     );
-
-    //     const styles = `
-    //         <style>
-    //             h1,
-    //             h2,
-    //             h3,
-    //             h4,
-    //             h5,
-    //             h6,
-    //             p {
-    //                 margin-bottom: 12px;
-    //                 text-align: start;
-    //                 font-family: "Times New Roman, serif";
-    //                 font-size: 16px;
-    //                 line-height: 1.5;
-    //                 word-wrap: break-word;
-    //             }
-
-    //             h1,
-    //             h2,
-    //             h3,
-    //             h4,
-    //             h5,
-    //             h6 {
-    //                 font-weight: bold;
-    //             }
-
-    //             p:empty::before {
-    //                 content: " ";
-    //                 display: inline-block;
-    //                 height: 1.2em;
-    //             }
-
-    //             table {
-    //                 border-collapse: collapse;
-    //                 overflow: hidden;
-    //                 table-layout: fixed;
-    //                 width: 100%;
-    //                 margin-bottom: 12px;
-    //             }
-
-    //             table p {
-    //                 white-space: pre-wrap;
-    //             }
-
-    //             table p:empty {
-    //                 white-space: normal;
-    //             }
-
-    //             table tr:last-of-type {
-    //                 margin-bottom: 12px;
-    //             }
-
-    //             table tr:first-of-type td,
-    //             table tr:first-of-type th {
-    //                 border-top: 1px solid #000000;
-    //             }
-
-    //             table td,
-    //             table th {
-    //                 border-right: 1px solid #000000;
-    //                 border-bottom: 1px solid #000000;
-    //                 box-sizing: border-box;
-    //                 padding: 6px;
-    //                 position: relative;
-    //             }
-
-    //             table td > *,
-    //             table th > * {
-    //                 margin-bottom: 0 !important;
-    //             }
-
-    //             table td:first-of-type,
-    //             table th:first-of-type {
-    //                 border-left: 1px solid #000000;
-    //             }
-
-    //             table th {
-    //                 font-weight: bold;
-    //                 text-align: center;
-    //             }
-
-    //             table th p {
-    //                 text-align: start;
-    //             }
-
-    //             ul {
-    //                 list-style-type: disc;
-    //                 padding-left: 40px;
-    //             }
-
-    //             ol {
-    //                 list-style-type: decimal;
-    //                 padding-left: 40px;
-    //             }
-
-    //             blockquote {
-    //                 border-left: 4px solid #d1d5db;
-    //                 padding-left: 16px;
-    //                 margin-left: 0;
-    //                 margin-bottom: 12px;
-    //                 font-style: italic;
-    //                 background: rgba(249, 250, 251, 0.5);
-    //                 padding-top: 8px;
-    //                 padding-bottom: 8px;
-    //             }
-
-    //             blockquote p {
-    //                 margin-bottom: 0;
-    //             }
-
-    //             pre {
-    //                 background-color: #171717;
-    //                 background: #171717;
-    //                 color: #F6F6F6;
-    //                 font-family: monospace;
-    //                 padding: 16px;
-    //                 border-radius: 4px;
-    //                 margin-bottom: 12px;
-    //                 overflow-x: auto;
-    //                 line-height: 1.5;
-    //             }
-
-    //             pre code {
-    //                 background: none;
-    //                 color: inherit;
-    //                 font-size: 11pt;
-    //                 padding: 0;
-    //             }
-    //         </style>
-    //     `;
-
-    //     const finalHtml = `
-    //         <html>
-    //             <head>${styles}</head>
-    //             <body>${filteredHtml}</body>
-    //         </html>
-    //     `;
-
-    //     const blob = new Blob([finalHtml], {
-    //         type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    //     });
-
-    //     const url = URL.createObjectURL(blob);
-
-    //     const link = document.createElement("a");
-
-    //     link.href = url;
-    //     link.download = `${title || "Sem título"}.docx`;
-    //     link.click();
-    //     URL.revokeObjectURL(url);
-    // };
-
-    const handleDebugConsole = async () => {
-        const htmlContent = getHtmlContent();
-
-        // Replace quick-chart with img
-        const filteredHtml = htmlContent.replaceAll(
-            /<quick-chart[^>]*chartdata="([^"]+)"[^>]*width="([^"]+)"[^>]*height="([^"]+)"[^>]*><\/quick-chart>/g,
-            (match, chartData, width, height) => {
-                try {
-                    const url = `https://quickchart.io/chart?c=${chartData}&w=${width * 1.3}&h=${height * 1.3}`;
-                    return `
-                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 9pt;">
-                            <img src="${url}" style="width: ${width}px; height: ${height}px;" />
-                        </div>
-                    `;
-                } catch (e) {
-                    console.error("Erro ao processar chartdata:", e);
-                    return "";
-                }
-            }
-        );
-
-        const styles = `
-            <style>
-                h1,
-                h2,
-                h3,
-                h4,
-                h5,
-                h6,
-                p {
-                    margin-bottom: 12px;
-                    text-align: start;
-                    font-family: "Times New Roman, serif";
-                    font-size: 12pt;
-                    line-height: 1.5;
-                    word-wrap: normal;
-                }
-
-                p:empty::before {
-                    content: " ";
-                    display: inline-block;
-                    height: 12pt;
-                }
-
-                h1,
-                h2,
-                h3,
-                h4,
-                h5,
-                h6 {
-                    font-weight: bold;
-                }
-
-                hr {
-                    margin-bottom: 12px;
-                    border: none;
-                    border-bottom: 1px solid #373737;
-                }
-
-                .layout h1,
-                .layout h2,
-                .layout h3,
-                .layout h4,
-                .layout h5,
-                .layout h6,
-                .layout p {
-                    margin-bottom: 0px;
-                }
-
-                table {
-                    border-collapse: collapse;
-                    overflow: hidden;
-                    table-layout: fixed;
-                    width: 100%;
-                    margin-bottom: 12px;
-                }
-
-                table p {
-                    white-space: pre-wrap;
-                    line-height: 1;
-                }
-
-                table p:empty {
-                    white-space: normal;
-                }
-
-                table tr:last-of-type {
-                    margin-bottom: 12px;
-                }
-
-                table tr:first-of-type td,
-                table tr:first-of-type th {
-                    border-top: 1px solid #000000;
-                }
-
-                table td,
-                table th {
-                    border-right: 1px solid #000000;
-                    border-bottom: 1px solid #000000;
-                    box-sizing: border-box;
-                    padding: 6px;
-                    position: relative;
-                }
-
-                table td > *,
-                table th > * {
-                    margin-bottom: 0 !important;
-                }
-
-                table td:first-of-type,
-                table th:first-of-type {
-                    border-left: 1px solid #000000;
-                }
-
-                table th {
-                    font-weight: bold;
-                    text-align: center;
-                }
-
-                table th p {
-                    text-align: start;
-                    line-height: 1;
-                }
-
-                ul {
-                    list-style-type: disc;
-                    padding-left: 40px;
-                }
-
-                ol {
-                    list-style-type: decimal;
-                    padding-left: 40px;
-                }
-
-                blockquote {
-                    border-left: 4px solid #d1d5db;
-                    padding-left: 16px;
-                    margin-left: 0;
-                    margin-bottom: 12px;
-                    font-style: italic;
-                    background: rgba(249, 250, 251, 0.5);
-                    padding-top: 8px;
-                    padding-bottom: 8px;
-                }
-
-                blockquote p {
-                    margin-bottom: 0;
-                }
-
-                pre {
-                    background-color: #171717;
-                    background: #171717;
-                    color: #F6F6F6;
-                    font-family: monospace;
-                    padding: 16px;
-                    border-radius: 4px;
-                    margin-bottom: 12px;
-                    overflow-x: auto;
-                    line-height: 1.5;
-                }
-
-                pre code {
-                    background: none;
-                    color: inherit;
-                    font-size: 11pt;
-                    padding: 0;
-                }
-            </style>
-        `;
-
-        const finalHtml = `
-            <html>
-                <head>${styles}</head>
-                <body>${filteredHtml}</body>
-            </html>
-        `;
-
-        const el = document.createElement("div");
-        el.innerHTML = finalHtml;
-        el.style.position = "absolute";
-        el.style.width = "794px";
-        el.style.height = "1123px";
-        el.style.left = "-9999px";
-        el.style.top = "-9999px";
-        el.style.background = "white";
-        el.style.paddingTop = "113.385826772px";
-        el.style.paddingBottom = "75.590551181px";
-        el.style.paddingLeft = "113.385826772px";
-        el.style.paddingRight = "75.590551181px";
-
-        document.body.appendChild(el);
-
-        try {
-            const canvas = await html2canvas(el, { scale: 1 });
-            const img = canvas.toDataURL("image/png");
-            const imgWindow = window.open("");
-            if (imgWindow) imgWindow.document.write(`<img src='${img}' />`);
-            return img;
-        } finally {
-            document.body.removeChild(el);
-        }
-    };
-
     const handleBackToDocuments = () => {
         router.push(`/documents`);
     };
@@ -770,6 +356,17 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
         setIsCreateModelLoading(false);
     };
 
+    const handleDeleteDocument = async () => {
+        try {
+            if (documentData) {
+                await deleteDocument(documentData?.id);
+                router.push(`/documents`);
+            } else {
+                throw new Error("Documento não encontrado");
+            }
+        } catch (error) {}
+    };
+
     useEffect(() => {
         if (metadata.title) {
             setTitle(metadata.title);
@@ -783,6 +380,15 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
 
     return (
         <>
+            <Toast>
+                <Toast.Content ref={toastDeleteErrorRef} variant="error">
+                    <Toast.Title>Erro ao Excluir o Documento</Toast.Title>
+                    <Toast.Description>
+                        Não foi possível excluir o documento agora. Tente novamente mais tarde.
+                    </Toast.Description>
+                </Toast.Content>
+            </Toast>
+
             <Toast>
                 <Toast.Content ref={toastErrorRef} variant="error">
                     <Toast.Title>Erro na Criação do Modelo</Toast.Title>
@@ -1051,41 +657,31 @@ export const Header = ({ metadata }: IHeaderProps): ReactElement => {
                             </Menu.Trigger>
 
                             <Menu.Content>
-                                {/* <Menu.Item
+                                <Menu.Item
                                     text="Download em PDF"
                                     onClick={handleDownloadPDF}
                                     iconPosition="left"
                                     icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
-                                /> */}
-
-                                <Menu.Item
-                                    text="Download em PDF"
-                                    onClick={handleDownloadPDFCanvas}
-                                    iconPosition="left"
-                                    icon={<AiOutlineFilePdf size={12} color={Theme.colors.black} />}
-                                />
-
-                                {/* <Menu.Item
-                                    text="Download em DOCX"
-                                    onClick={handleDownloadDOCX}
-                                    iconPosition="left"
-                                    icon={
-                                        <AiOutlineFileWord size={12} color={Theme.colors.black} />
-                                    }
-                                /> */}
-
-                                <Menu.Item
-                                    text="Depuração"
-                                    onClick={handleDebugConsole}
-                                    iconPosition="left"
-                                    icon={<VscDebugConsole size={12} color={Theme.colors.black} />}
                                 />
                             </Menu.Content>
                         </Menu>
 
-                        <Button height="30px" width="30px" variant="tertiary">
-                            <MdMoreHoriz size={16} color={Theme.colors.gray100} />
-                        </Button>
+                        <Menu>
+                            <Menu.Trigger>
+                                <Button height="30px" width="30px" variant="tertiary">
+                                    <MdMoreHoriz size={16} color={Theme.colors.gray100} />
+                                </Button>
+                            </Menu.Trigger>
+
+                            <Menu.Content>
+                                <Menu.Item
+                                    text="Excluir Documento"
+                                    onClick={handleDeleteDocument}
+                                    iconPosition="left"
+                                    icon={<MdDeleteOutline size={12} color={Theme.colors.black} />}
+                                />
+                            </Menu.Content>
+                        </Menu>
                     </ButtonsContainer>
                 </RightContainer>
             </Root>

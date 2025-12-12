@@ -174,6 +174,8 @@ export const AiChangesBubbleMenu = ({
                                 type: "add",
                             },
                         ]);
+
+                        processingRef.current = false;
                     });
                 }
 

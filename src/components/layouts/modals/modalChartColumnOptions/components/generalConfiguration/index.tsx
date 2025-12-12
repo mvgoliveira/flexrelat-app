@@ -191,6 +191,7 @@ export const GeneralConfiguration = ({
             setYScaleLabelState(
                 metadata.options?.scales?.yAxes?.[0]?.scaleLabel?.display ? true : false
             );
+            setTitleState(metadata.options?.title?.display ? true : false);
         }
     }, [metadata]);
 
