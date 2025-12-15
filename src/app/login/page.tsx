@@ -1,5 +1,6 @@
 "use client";
 
+import { IconFill } from "@/assets/svgs/icons";
 import { Button } from "@/components/features/button";
 import { Spinner } from "@/components/features/loading/spinner";
 import { Typography } from "@/components/features/typography";
@@ -9,7 +10,6 @@ import { login } from "@/repositories/authAPI";
 import { Theme } from "@/themes";
 import { useRouter } from "next/navigation";
 import React, { KeyboardEvent, ReactElement, useRef, useState } from "react";
-import { GrDocumentText } from "react-icons/gr";
 import { MdEmail, MdLock } from "react-icons/md";
 
 import {
@@ -63,7 +63,7 @@ export default function LoginPage(): ReactElement {
             <LoginBox>
                 <Header>
                     <IconContainer>
-                        <GrDocumentText size={20} color={Theme.colors.white} />
+                        <IconFill size={25} />
                     </IconContainer>
 
                     <Typography

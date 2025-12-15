@@ -1,3 +1,4 @@
+import { IconFillWhite } from "@/assets/svgs/icons";
 import { Typography } from "@/components/features/typography";
 import { Theme } from "@/themes";
 import { IReactChildren } from "@/types/core";
@@ -27,11 +28,21 @@ const NavBar = ({ children }: IReactChildren): ReactElement => {
             <div
                 style={{
                     display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
                     width: "100%",
                     height: 50,
+                    paddingLeft: 20,
+                    gap: 10,
                     borderBottom: `1px solid ${Theme.colors.gray40}`,
                 }}
-            />
+            >
+                <IconFillWhite size={25} />
+
+                <Typography tag="span" fontSize={{ xs: "fs75" }} color="black" fontWeight="medium">
+                    FlexRelat
+                </Typography>
+            </div>
 
             <div
                 style={{

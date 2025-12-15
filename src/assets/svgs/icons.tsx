@@ -1,5 +1,5 @@
 import { Theme } from "@/themes";
-import { ISVGsDynamicColorAndSize } from "@/types/core";
+import { ISVGsDynamicColorAndSize, ISVGsDynamicSize } from "@/types/core";
 import React, { ReactElement } from "react";
 
 export const IconFormatInkHighlighter = ({
@@ -572,6 +572,124 @@ export const IconElementNotUniformColumns = ({
                 fill={Theme.colors[color ? "blue30" : "gray10"]}
                 stroke={Theme.colors[color || "gray60"]}
                 strokeDasharray="5 5"
+            />
+        </svg>
+    );
+};
+
+export const IconOutline = ({ size = 150 }: ISVGsDynamicSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 115 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M37.5 37.5L112.5 37.5L112.5 62C112.5 82.7107 95.7107 99.5 75 99.5L37.5 99.5L37.5 37.5Z"
+                stroke="#216ABD"
+                stroke-width="5"
+            />
+            <path
+                d="M77.5 72.5V147.415C57.955 146.128 42.5 129.871 42.5 110V72.5H77.5Z"
+                stroke="#216ABD"
+                stroke-width="5"
+            />
+            <mask id="path-3-inside-1_557_114" fill="white">
+                <path d="M40 150L-1.14441e-05 150L-1.74016e-06 39C-1.54703e-06 36.7909 1.79086 35 4 35L40 35L40 150Z" />
+            </mask>
+            <path
+                d="M40 150L-1.14441e-05 150L-1.74016e-06 39C-1.54703e-06 36.7909 1.79086 35 4 35L40 35L40 150Z"
+                stroke="#3091FF"
+                stroke-width="10"
+                mask="url(#path-3-inside-1_557_114)"
+            />
+            <path
+                d="M40 37.5H77.5V72.5H2.58496C3.87152 52.955 20.1295 37.5 40 37.5Z"
+                stroke="#3091FF"
+                stroke-width="5"
+            />
+            <path
+                d="M40 2.5H112.5V37.5H2.58496C3.87152 17.955 20.1295 2.5 40 2.5Z"
+                stroke="#3091FF"
+                stroke-width="5"
+            />
+        </svg>
+    );
+};
+
+export const IconFill = ({ size = 150 }: ISVGsDynamicSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 115 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M38 38L112 38L112 62C112 82.4345 95.4345 99 75 99L38 99L38 38Z"
+                fill="#216ABD"
+                stroke="#1C1B1F"
+                stroke-width="6"
+            />
+            <path
+                d="M77 73V146.878C57.9685 145.351 43 129.425 43 110V73H77Z"
+                fill="#216ABD"
+                stroke="#216ABD"
+                stroke-width="6"
+            />
+            <mask id="path-3-inside-1_557_114" fill="white">
+                <path d="M40 150V150C17.9086 150 -9.87847e-06 132.091 -7.94718e-06 110L-1.74016e-06 39C-1.54703e-06 36.7908 1.79086 35 4 35L40 35L40 150Z" />
+            </mask>
+            <path
+                d="M40 150V150C17.9086 150 -9.87847e-06 132.091 -7.94718e-06 110L-1.74016e-06 39C-1.54703e-06 36.7908 1.79086 35 4 35L40 35L40 150Z"
+                fill="#3091FF"
+                stroke="#1C1B1F"
+                stroke-width="12"
+                mask="url(#path-3-inside-1_557_114)"
+            />
+            <path
+                d="M40 38H77V72H3.12109C4.6482 52.9685 20.5755 38 40 38Z"
+                fill="#3091FF"
+                stroke="#1C1B1F"
+                stroke-width="6"
+            />
+            <path
+                d="M40 3.00001H112V37H3.12109C4.6482 17.9685 20.5755 3.00001 40 3.00001Z"
+                fill="#3091FF"
+                stroke="#1C1B1F"
+                stroke-width="6"
+            />
+        </svg>
+    );
+};
+
+export const IconFillWhite = ({ size = 150 }: ISVGsDynamicSize): ReactElement => {
+    return (
+        <svg height={size} viewBox="0 0 115 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M38 38L112 38L112 62C112 82.4345 95.4345 99 75 99L38 99L38 38Z"
+                fill="#216ABD"
+                stroke="white"
+                stroke-width="6"
+            />
+            <path
+                d="M77 73V146.878C57.9685 145.351 43 129.425 43 110V73H77Z"
+                fill="#216ABD"
+                stroke="#216ABD"
+                stroke-width="6"
+            />
+            <mask id="path-3-inside-1_557_114" fill="white">
+                <path d="M40 150V150C17.9086 150 -9.87847e-06 132.091 -7.94718e-06 110L-1.74016e-06 39C-1.54703e-06 36.7909 1.79086 35 4 35L40 35L40 150Z" />
+            </mask>
+            <path
+                d="M40 150V150C17.9086 150 -9.87847e-06 132.091 -7.94718e-06 110L-1.74016e-06 39C-1.54703e-06 36.7909 1.79086 35 4 35L40 35L40 150Z"
+                fill="#3091FF"
+                stroke="white"
+                stroke-width="12"
+                mask="url(#path-3-inside-1_557_114)"
+            />
+            <path
+                d="M40 38H77V72H3.12109C4.6482 52.9685 20.5755 38 40 38Z"
+                fill="#3091FF"
+                stroke="white"
+                stroke-width="6"
+            />
+            <path
+                d="M40 3H112V37H3.12109C4.6482 17.9685 20.5755 3 40 3Z"
+                fill="#3091FF"
+                stroke="white"
+                stroke-width="6"
             />
         </svg>
     );
