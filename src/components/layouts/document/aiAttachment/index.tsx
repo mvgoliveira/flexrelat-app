@@ -3,7 +3,6 @@ import { DocumentDataType } from "@/repositories/documentDataAPI";
 import { Theme } from "@/themes";
 import { ReactNode } from "react";
 import { GrDocumentCsv, GrDocumentExcel, GrDocumentPdf, GrDocumentTxt } from "react-icons/gr";
-import { LuFileJson2 } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
 
 import { CloseButton, Root } from "./styles";
@@ -29,7 +28,6 @@ export const AiChatAttachment = ({
                 {type === "pdf" && <GrDocumentPdf size={9} color={Theme.colors.blue60} />}
                 {type === "text" && <GrDocumentTxt size={9} color={Theme.colors.blue60} />}
                 {type === "csv" && <GrDocumentCsv size={9} color={Theme.colors.blue60} />}
-                {type === "json" && <LuFileJson2 size={9} color={Theme.colors.blue60} />}
                 {(type === "xls" || type === "xlsx") && (
                     <GrDocumentExcel size={9} color={Theme.colors.blue60} />
                 )}
