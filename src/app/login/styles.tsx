@@ -40,7 +40,7 @@ export const IconContainer = styled.div`
     height: 50px;
     width: 50px;
     max-width: 50px;
-    background: ${({ theme }) => theme.colors.gray100};
+    background: ${({ theme }) => theme.colors.black};
     border-radius: 50%;
     margin-bottom: 20px;
 `;
